@@ -68,7 +68,7 @@
         </el-table-column>
         <el-table-column prop="address" width="45" label="周期">
         </el-table-column>
-        <el-table-column prop="address" width="65" label="检查状态">
+        <el-table-column prop="address" width="65" label="检状态">
         </el-table-column>
         <el-table-column prop="address" width="63" label="检查">
           <template slot-scope="scope">
@@ -76,7 +76,7 @@
               type="info">检查</van-button>
           </template>
         </el-table-column>
-        <el-table-column prop="address" width="65" label="修复状态">
+        <el-table-column prop="address" width="65" label="修状态">
         </el-table-column>
         <el-table-column prop="address" width="63" label="修复">
           <template slot-scope="scope">
@@ -87,10 +87,9 @@
       </el-table>
     </div>
     <div class="pag">
-      <el-pagination background layout="prev, pager, next" :total="70">
+      <el-pagination background layout="prev, pager, next" :total="50">
       </el-pagination>
     </div>
-
     <div class="chart">
       <div id="myChart" style="height:100%;width:100%;"></div>
     </div>
@@ -237,8 +236,9 @@ export default {
 
 label {
   width: 35%;
-  display: block;
+  display: flex;
   font-size: 0.7rem;
+  justify-content: space-between;
   text-align: right;
 }
 
