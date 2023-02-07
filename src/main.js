@@ -50,6 +50,7 @@ Vue.prototype.$alex = Alex
 
 // router路由
 import router from './router'
+import '../src/assets/icon/iconfont.css'
 
 // 使用Vconsole控制台
 // import Vconsole from 'vconsole';
@@ -57,7 +58,6 @@ import router from './router'
 
 // productionTip设置为 false ，可以阻止 vue 在启动时生成生产提示
 Vue.config.productionTip = false
-import '../src/assets/icon/iconfont.css'
 
 new Vue({
   pinia,

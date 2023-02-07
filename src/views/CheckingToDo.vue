@@ -57,6 +57,7 @@
       <div class="form_item2">
         点检任务时间：2022.12.01
       </div>
+
     </div>
     <div class="tableBox">
       <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }" :data="tableData" border
@@ -67,7 +68,7 @@
         </el-table-column>
         <el-table-column prop="address" width="45" label="周期">
         </el-table-column>
-        <el-table-column prop="address" width="60" label="检查状态">
+        <el-table-column prop="address" width="65" label="检查状态">
         </el-table-column>
         <el-table-column prop="address" width="63" label="检查">
           <template slot-scope="scope">
@@ -75,7 +76,7 @@
               type="info">检查</van-button>
           </template>
         </el-table-column>
-        <el-table-column prop="address" width="60" label="修复状态">
+        <el-table-column prop="address" width="65" label="修复状态">
         </el-table-column>
         <el-table-column prop="address" width="63" label="修复">
           <template slot-scope="scope">
@@ -85,6 +86,11 @@
         </el-table-column>
       </el-table>
     </div>
+    <div class="pag">
+      <el-pagination background layout="prev, pager, next" :total="70">
+      </el-pagination>
+    </div>
+
     <div class="chart">
       <div id="myChart" style="height:100%;width:100%;"></div>
     </div>
@@ -165,7 +171,7 @@ export default {
     this.my.title = "点检待办事项"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
-    this.my.isTabBar = false; //是否开启TabBar
+    this.my.isTabBar = true; //是否开启TabBar
     this.drawLine();
   },
 
@@ -186,6 +192,15 @@ export default {
   padding: 14px 0;
 }
 
+.pag {
+  background-color: white;
+  padding: 10px 0;
+  justify-content: center;
+  display: flex;
+  overflow: hidden;
+  border-top: 1px solid #ededed;
+}
+
 .chart {
   width: 100%;
   height: 400px;
@@ -197,6 +212,7 @@ export default {
   flex-wrap: wrap;
   background-color: white;
   padding: 14px 10px;
+  border-top: 1px solid #ededed;
 }
 
 .form_item {
