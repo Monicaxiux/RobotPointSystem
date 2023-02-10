@@ -4,38 +4,37 @@
       <div class="form_item">
         <div class="inp">
           <label>分厂</label>
-          <el-select v-model="value" placeholder="请选择">
+          <el-input v-model="Branch" disabled placeholder="请输入内容"></el-input>
+          <!-- <el-select v-model="value" placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
-          </el-select>
+          </el-select> -->
         </div>
         <div class="inp">
           <label>机组</label>
-          <el-select v-model="value" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <el-select @change="selectline" v-model="from.line" placeholder="请选择">
+            <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
             </el-option>
           </el-select>
         </div>
       </div>
+
       <div class="form_item">
         <div class="inp">
-          <label>设备类型</label>
-          <el-select v-model="value" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <label>设备名称</label>
+          <el-select @change="selectdevice" v-model="from.deviceId" placeholder="请选择">
+            <el-option v-for="item in deviceList" :key="item.deviceId" :label="item.deviceName" :value="item.deviceId">
             </el-option>
           </el-select>
         </div>
         <div class="inp">
-          <label>点检周期</label>
-          <el-select v-model="value" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
+          <label>宝罗工号</label>
+          <el-input v-model="input" placeholder="请输入内容"></el-input>
         </div>
       </div>
       <div class="form_item">
         <div class="inp">
-          <label>点检单号</label>
+          <label>设备编码</label>
           <el-input v-model="input" placeholder="请输入内容"></el-input>
         </div>
         <div class="inp">
@@ -48,16 +47,30 @@
       </div>
       <div class="form_item">
         <div class="inp">
-          <label>设备编码</label>
+          <label>点检单号</label>
           <el-input v-model="input" placeholder="请输入内容"></el-input>
         </div>
         <div class="inp">
+          <label>点检周期</label>
+          <el-select v-model="value" placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="form_item">
+        <div class="inp">
+          <label>扫码</label>
+          <van-button style="width: 60%;margin-left: 10px;" @click="toQrCode" size="small" type="info">扫码</van-button>
+        </div>
+        <div class="inp">
+          <label>查询</label>
+          <van-button style="width: 60%;margin-left: 10px;" size="small" type="info">查询</van-button>
         </div>
       </div>
       <div class="form_item2">
         点检任务时间：2022.12.01
       </div>
-
     </div>
     <div class="tableBox">
       <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }" :data="tableData" border
@@ -97,13 +110,21 @@
 </template>
 
 <script>
+import { queryallline, querysimpleinfo, newestrecord } from '@/api/rollers'
 export default {
   name: "CheckingToDo",
   data() {
     return {
       my: this.$myStore(), //使用Pinia的值
       value: '',
+      Branch: '宝日汽车板',
       input: '',
+      from: {
+        line: '',
+        deviceId: ''
+      },//搜索条件
+      lineList: [],//机组下拉框
+      deviceList: [],//设备名称下拉框
       tableData: [
         {
           date: '1',
@@ -129,9 +150,6 @@ export default {
         label: '双皮奶'
       }],
       option: {
-        // legend: {
-        //   top: 'bottom'
-        // },
         toolbox: {
           show: false,
           feature: {
@@ -153,13 +171,13 @@ export default {
             },
             data: [
               { value: 40, name: 'rose 1' },
-              { value: 38, name: 'rose 2' },
-              { value: 32, name: 'rose 3' },
-              { value: 30, name: 'rose 4' },
-              { value: 28, name: 'rose 5' },
-              { value: 26, name: 'rose 6' },
-              { value: 22, name: 'rose 7' },
-              { value: 18, name: 'rose 8' }
+              { value: 20, name: 'rose 2' },
+              { value: 39.5, name: 'rose 3' },
+              // { value: 30, name: 'rose 4' },
+              // { value: 28, name: 'rose 5' },
+              // { value: 26, name: 'rose 6' },
+              // { value: 22, name: 'rose 7' },
+              // { value: 18, name: 'rose 8' }
             ]
           }
         ]
@@ -171,13 +189,38 @@ export default {
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
     this.my.isTabBar = true; //是否开启TabBar
+    // this.my.code = '';
     this.drawLine();
+    console.log(this.my.code, '扫码结果');
+    queryallline().then((res) => {
+      console.log(res.result);
+      this.lineList = res.result.line;
+    })
   },
 
   methods: {
+    // 扫码
+    toQrCode() {
+      this.$router.push({ path: '/test' })
+    },
+    // 底部线图
     drawLine() {
       let myChart = this.$echarts.init(document.getElementById("myChart"));
       myChart.setOption(this.option);
+    },
+    // 查询机组下设备列表
+    selectline(i) {
+      this.from.deviceId = ''
+      this.$eiInfo.parameter = {
+        productionLine: i
+      }
+      querysimpleinfo(this.$eiInfo).then((res) => {
+        console.log(res.result.deviceList);
+        this.deviceList = res.result.deviceList;
+      })
+    },
+    selectdevice(i) {
+      console.log(i);
     }
   },
 };

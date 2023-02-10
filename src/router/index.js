@@ -59,6 +59,14 @@ const router = new Router({
             component: () => import('../views/My.vue')
         },
         {
+            path: '/test',
+            name: 'Test',//我的
+            meta: {
+                index: 6
+            },
+            component: () => import('../views/utils/Test.vue')
+        },
+        {
             path: '/error',
             name: 'Error',//网络错误
             meta: {

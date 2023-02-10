@@ -45,16 +45,16 @@ import req from './utils/request'
 Vue.prototype.$req = req
 
 // 请求参数
-import Alex from './utils/myAlex'
-Vue.prototype.$alex = Alex
+import EiInfo from './utils/myEiInfo'
+Vue.prototype.$eiInfo = EiInfo
 
 // router路由
 import router from './router'
 import '../src/assets/icon/iconfont.css'
 
 // 使用Vconsole控制台
-// import Vconsole from 'vconsole';
-// let vConsole = new Vconsole();
+import Vconsole from 'vconsole';
+let vConsole = new Vconsole();
 
 // productionTip设置为 false ，可以阻止 vue 在启动时生成生产提示
 Vue.config.productionTip = false

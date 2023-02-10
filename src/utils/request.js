@@ -4,10 +4,7 @@ import { Notify } from 'vant';//Notify 消息提示
 import router from '../router'
 //实例化请求对象
 const req = axios.create({
-    // baseURL: 'https://safeedu.bnasafe.com',// 请求路径
-    // baseURL: 'http://pda.free.idcfengye.com',
-    // baseURL: 'http://192.168.0.162:8001',
-    baseURL: 'http://192.2.25.61:8001',
+    baseURL: 'http://192.168.0.26:8192',
     timeout: 7000 //请求超时时间
 })
 //请求拦截器

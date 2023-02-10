@@ -8,7 +8,8 @@ const myStore = defineStore('store', {
             isNavBar: true,//是否开启NavBar
             userStatus: false,//登录状态
             onLine: navigator.onLine,//是否有网
-            isScheduling: 1//1.轧辊下机排程 2.拆装区排程
+            isScheduling: 1,//1.轧辊下机排程 2.拆装区排程
+            code: ''
         }
     },
     getters: {

@@ -57,7 +57,7 @@ export default {
     // 登录
     submit() {
 
-      this.$notify({ type: "primary", message: "欢迎回来！" }),
+      this.$notify({ type: "success", message: "欢迎回来！" }),
         this.$router.replace({ path: "/home" }),
         this.my.userStatus = true
       // login(this.$alex).then((res) => {
