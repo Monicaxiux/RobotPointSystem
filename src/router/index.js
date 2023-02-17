@@ -59,10 +59,26 @@ const router = new Router({
             component: () => import('../views/My.vue')
         },
         {
-            path: '/test',
-            name: 'Test',//我的
+            path: '/toDoDetails',
+            name: 'ToDoDetails',//点检详情页
             meta: {
                 index: 6
+            },
+            component: () => import('../views/ToDoDetails.vue')
+        },
+        {
+            path: '/projectDetails',
+            name: 'ProjectDetails',//点检项详情页
+            meta: {
+                index: 7
+            },
+            component: () => import('../views/ProjectDetails.vue')
+        },
+        {
+            path: '/test',
+            name: 'Test',//测试页
+            meta: {
+                index: 8
             },
             component: () => import('../views/utils/Test.vue')
         },
@@ -70,7 +86,7 @@ const router = new Router({
             path: '/error',
             name: 'Error',//网络错误
             meta: {
-                index: 6
+                index: 9
             },
             component: () => import('../views/error/Error.vue')
         },
