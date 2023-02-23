@@ -1,18 +1,20 @@
 <template>
   <mu-container style="max-height: 90vh">
     <div style="text-align: center; font-size: 100px">
-      <i class="iconfont icon-guanlizhongxin-shezhi-03 i"></i>
+      <!-- <i class="iconfont icon-guanlizhongxin-shezhi-03 i"></i> -->
+      <van-icon class="i" name="shield-o" />
     </div>
     <h1>机器人智能点检系统</h1>
     <br />
     <div class="form">
       <div class="input">
-        <i class="iconfont icon-weibiaoti562"></i>
-        <input placeholder="请输入用户名" />
+        <!-- <i class="iconfont icon-weibiaoti562"></i> -->
+        <van-icon name="manager" />
+        <input v-model="userForm.loginName" placeholder="请输入用户名" />
       </div>
       <div class="input">
-        <i class="iconfont icon-ziyuanxhdpi"></i>
-        <input type="password" placeholder="请输入密码" />
+        <van-icon name="lock" />
+        <input v-model="userForm.password" type="password" placeholder="请输入密码" />
       </div>
       <div class="form_tools">
         <!-- <div>忘记密码?</div> -->
@@ -105,7 +107,7 @@ span {
 
 .i {
   color: #4291fb;
-  font-size: 63px;
+  font-size: 83px;
 }
 
 .mu-form-item-content {

@@ -65,3 +65,81 @@ export const itemallinfo = (eiInfo) => {
         data: eiInfo
     })
 }
+
+// 修改点检项次
+export const itemupdate = (eiInfo) => {
+    return req({
+        url: '/item/update',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 删除点检项次
+export const itemdelete = (eiInfo) => {
+    return req({
+        url: '/item/delete',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+
+// 新增点检项次
+export const itemadd = (eiInfo) => {
+    return req({
+        url: '/item/add',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 新增点检设备
+export const deviceadd = (eiInfo) => {
+    return req({
+        url: '/device/add',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 修改点检设备
+export const deviceupdate = (eiInfo) => {
+    return req({
+        url: '/device/update',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 删除点检设备
+export const devicedelete = (eiInfo) => {
+    return req({
+        url: '/device/delete',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询历史记录部分数据
+export const recordhistory = (eiInfo) => {
+    return req({
+        url: '/check/record/history/part',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 查询历史记录全部数据
+export const recordhistoryall = (eiInfo) => {
+    return req({
+        url: '/check/record/history/all',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询设备的所有信息 编辑前查询
+export const devicequeryallinfo = (eiInfo) => {
+    return req({
+        url: '/device/query/all/info',
+        method: 'post',
+        data: eiInfo
+    })
+}

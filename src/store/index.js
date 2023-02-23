@@ -11,7 +11,9 @@ const myStore = defineStore('store', {
             isScheduling: 1,
             code: '',
             recordId: '',
-            itemId: ''
+            itemId: '',
+            itemStatus: false,
+            deviceId: 0
         }
     },
     getters: {

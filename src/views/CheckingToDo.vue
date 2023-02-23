@@ -64,7 +64,7 @@
         </div>
       </div>
       <div class="form_item2">
-        点检任务时间：2022.12.01
+        点检任务时间：{{ time }}
       </div>
     </div>
     <div class="tableBox">
@@ -94,10 +94,11 @@
         </el-table-column> -->
       </el-table>
     </div>
-    <!-- <div class="pag">
-      <el-pagination background layout="prev, pager, next" :total="50">
+    <div class="pag">
+      <el-pagination :page-size="15" background @current-change="handleCurrentChange" :current-page="currentPage"
+        layout="prev, pager, next,total" :total="dataCount">
       </el-pagination>
-    </div> -->
+    </div>
     <div class="chart">
       <div id="myChart" style="height:100%;width:100%;"></div>
     </div>
@@ -114,6 +115,10 @@ export default {
       value: '',
       Branch: '宝日汽车板',
       input: '',
+      time: '',
+      deviceId: 0,
+      dataCount: 0,
+      currentPage: 0,
       line: '',
       from: {
         deviceId: '',
@@ -192,6 +197,10 @@ export default {
     this.my.isTabBar = true; //是否开启TabBar
     // this.my.code = '';
     this.drawLine();
+    setInterval(() => {
+      let x = new Date();
+      this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
+    }, 1000)
     console.log(this.my.code, '扫码结果');
     queryallline().then((res) => {
       console.log(res.result);
@@ -200,6 +209,10 @@ export default {
   },
 
   methods: {
+    handleCurrentChange(val) {
+      this.from.pageNum = val;
+      this.selectnew();
+    },
     // 扫码
     toQrCode() {
       this.$router.push({ path: '/test' })
@@ -227,13 +240,16 @@ export default {
       console.log(i);
       this.from.baoRobotNumber = this.deviceList[i].baoRobotNumber
       this.from.deviceNumber = this.deviceList[i].deviceNumber
+      this.deviceId = this.deviceList[i].deviceId
       this.selectnew();
     },
     // 查询数据
     selectnew() {
-      this.$eiInfo.parameter = this.from
+      this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
+      this.$eiInfo.parameter.deviceId = this.deviceId
       newestrecord(this.$eiInfo).then((res) => {
         this.tableData = res.result.record
+        this.dataCount = res.result.dataCount
       })
     },
     handleEdit(i, row, s) {
@@ -308,6 +324,7 @@ label {
   font-size: 0.7rem;
   justify-content: space-between;
   text-align: right;
+  white-space: nowrap;
 }
 
 .el-input {

@@ -75,10 +75,34 @@ const router = new Router({
             component: () => import('../views/ProjectDetails.vue')
         },
         {
+            path: '/addEquipment',
+            name: 'AddEquipment',//添加点检设备
+            meta: {
+                index: 8
+            },
+            component: () => import('../views/AddEquipment.vue')
+        },
+        {
+            path: '/historyDetails',
+            name: 'HistoryDetails',//点检历史记录
+            meta: {
+                index: 9
+            },
+            component: () => import('../views/HistoryDetails.vue')
+        },
+        {
+            path: '/precisionMaintenance',
+            name: 'PrecisionMaintenance',//精密维护
+            meta: {
+                index: 10
+            },
+            component: () => import('../views/PrecisionMaintenance.vue')
+        },
+        {
             path: '/test',
             name: 'Test',//测试页
             meta: {
-                index: 8
+                index: 11
             },
             component: () => import('../views/utils/Test.vue')
         },
@@ -86,7 +110,7 @@ const router = new Router({
             path: '/error',
             name: 'Error',//网络错误
             meta: {
-                index: 9
+                index: 12
             },
             component: () => import('../views/error/Error.vue')
         },

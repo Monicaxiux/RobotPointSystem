@@ -2,7 +2,9 @@
   <div>
     <NavBar v-show="my.isNavBar"></NavBar>
     <transition :name="transitionName">
+      <!-- <KeepAlive> -->
       <router-view class="rView" />
+      <!-- </KeepAlive> -->
     </transition>
     <van-tabbar v-show="my.isTabBar" route v-model="active" @change="onChange">
       <van-tabbar-item replace to="/home" icon="wap-home">首页</van-tabbar-item>

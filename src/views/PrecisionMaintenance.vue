@@ -1,132 +1,47 @@
 <template>
     <div>
         <van-cell-group>
-            <van-field label="巡检照片">
-                <template #input>
-                    {{ form.recordNumber }}
-                </template>
-            </van-field>
-            <van-field label="点检类型">
-                <template #input>
-                    {{ form.itemCycleResult }}
-                </template>
-            </van-field>
-            <van-field label="点检日期">
-                <template #input>
-                    {{ form.checkRecordDate }}
-                </template>
-            </van-field>
-            <van-field label="点检分厂">
-                <template #input>
-                    {{ form.factory }}
-                </template>
-            </van-field>
-            <van-field label="点检机组">
-                <template #input>
-                    {{ form.productionLine }}
-                </template>
-            </van-field>
-            <van-field label="点检设备">
-                <template #input>
-                    {{ form.deviceName }}
-                </template>
-            </van-field>
-            <van-field label="点检标题">
-                <template #input>
-                    {{ form.checkItem }}
-                </template>
-            </van-field>
-            <van-field label="点检内容">
-                <template #input>
-                    {{ form.checkDetails }}
-                </template>
-            </van-field>
-            <van-field label="巡检照片">
-                <template #input>
-                    <div style="display: flex;flex-wrap: wrap;">
-                        <div v-if="form.checkPic">
-                            <div style="width: 100%;">
-                                <img class="upimg" v-for="item, index in form.checkPic[0]"
-                                    @click="Preview(form.checkPic[0], index)" :src="item.url">
-                                <video class="upimg" controls v-for="item, index in form.checkPic[1]"
-                                    :src="item.url"></video>
-                            </div>
-                        </div>
-                        <div style="width: 100%;">
-                            <van-uploader accept="*" v-model="checkPic" multiple />
-                        </div>
-                    </div>
-                </template>
-            </van-field>
-            <van-field label="点检结果">
-                <template #input>
-                    <el-select size="mini" v-model="form.checkResult" placeholder="请选择">
-                        <el-option v-for="item in checkResultList" :key="item.value" :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </template>
-            </van-field>
-            <van-field label="问题描述">
-                <template #input>
-                    <van-field v-model="form.resultDetails" placeholder="请输入问题" />
-                </template>
-            </van-field>
-            <van-field label="下一步责任方">
-                <template #input>
-                    <el-select size="mini" v-model="form.responsible" placeholder="请选择">
-                        <el-option v-for="item in responsibleList" :key="item.value" :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </template>
-            </van-field>
-            <van-field label="检查人">
-                <template #input>
-                    {{ form.checkUser }}
-                    <!-- <van-field v-model="form.checkUser" disabled placeholder="请输入检查人" /> -->
+            <van-field v-model="Branch" label="分厂">
 
-                </template>
             </van-field>
-            <van-field label="修复图片">
+            <van-field label="机组">
                 <template #input>
-                    <div style="display: flex;flex-wrap: wrap;">
-                        <!-- <div style="width: 100%;">
-                            <img class="upimg" v-for="item, index in form.repairPic" @click="Preview(form.repairPic, index)"
-                                :src="item.url">
-                        </div> -->
-                        <div v-if="form.repairPic">
-                            <div style="width: 100%;">
-                                <img class="upimg" v-for="item, index in form.repairPic[0]"
-                                    @click="Preview(form.repairPic[0], index)" :src="item.url">
-                                <video class="upimg" controls v-for="item, index in form.repairPic[1]"
-                                    :src="item.url"></video>
-                            </div>
-                        </div>
-                        <div style="width: 100%;">
-                            <van-uploader accept="*" v-model="repairPic" multiple />
-                        </div>
-                    </div>
-                </template>
-            </van-field>
-            <van-field label="修复结果">
-                <template #input>
-                    <el-select size="mini" v-model="form.repairResult" placeholder="请选择">
-                        <el-option v-for="item in repairResultList" :key="item.value" :label="item.label"
-                            :value="item.value">
+                    <el-select v-model="line" placeholder="请选择">
+                        <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
                         </el-option>
                     </el-select>
                 </template>
             </van-field>
-            <van-field label="修复人">
+            <van-field label="设备类型">
                 <template #input>
-                    {{ form.repairUser }}
-                    <!-- <van-field v-model="form.repairUser" disabled placeholder="请输入修复人" /> -->
+                    <el-select v-model="line" placeholder="请选择">
+                        <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
+                        </el-option>
+                    </el-select>
                 </template>
             </van-field>
-            <van-field label="点检备注">
+            <van-field v-model="form.resultDetails" label="点检单号"></van-field>
+            <van-field label="点检状态">
                 <template #input>
-                    <van-field v-model="form.remark" placeholder="请输入备注信息" />
+                    <el-select v-model="line" placeholder="请选择">
+                        <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
+                        </el-option>
+                    </el-select>
+                </template>
+            </van-field>
+
+            <van-field v-model="form.resultDetails" label="设备编码"></van-field>
+            <van-field v-model="form.resultDetails" label="维护日期"></van-field>
+            <van-field v-model="form.resultDetails" label="维护标题"></van-field>
+            <van-field v-model="form.resultDetails" label="维护内容"></van-field>
+            <van-field label="维护前照片">
+                <template #input>
+                    <van-uploader accept="*" v-model="checkPic" multiple />
+                </template>
+            </van-field>
+            <van-field label="维护后照片">
+                <template #input>
+                    <van-uploader accept="*" v-model="repairPic" multiple />
                 </template>
             </van-field>
         </van-cell-group>
@@ -149,6 +64,7 @@ export default {
             my: this.$myStore(), //使用Pinia的值
             form: {},
             checkPic: [],
+            Branch: '宝日汽车板',
             repairPic: [],
             checkResultList: [
                 {
@@ -195,7 +111,7 @@ export default {
         };
     },
     mounted() {
-        this.my.title = "点检详情"; //页面标题
+        this.my.title = "精密维护"; //页面标题
         this.my.left = true; //NavBar是否开启返回按键
         this.my.isNavBar = true; //是否开启NavBar
         this.my.isTabBar = true; //是否开启TabBar

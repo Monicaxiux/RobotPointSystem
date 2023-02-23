@@ -18,17 +18,21 @@
         <div class="inp">
           <label>设备名称</label>
           <el-select @change="selectdevice" v-model="from.deviceId" placeholder="请选择">
-            <el-option v-for="(item, i) in deviceList" :key="item.deviceId" :label="item.deviceName" :value="i">
+            <el-option v-for="(item, i) in deviceList" :key="item.deviceId" :label="item.deviceName"
+              :value="item.deviceId">
             </el-option>
           </el-select>
         </div>
         <div class="inp">
-
         </div>
       </div>
       <div class="form_item2">
-        <van-button plain hairline size="mini" type="info">添加点检设备</van-button>
-        <van-button plain hairline size="mini" type="info">添加点检项目</van-button>
+        <van-button plain hairline @click="$router.push({ path: '/addEquipment' }), my.itemStatus = true" size="mini"
+          type="info">添加点检设备</van-button>
+        <van-button plain hairline :disabled="from.deviceId ? false : true"
+          @click="$router.push({ path: '/addEquipment' }), my.itemStatus = false" size="mini"
+          type="info">编辑点检设备</van-button>
+        <van-button plain hairline @click="handleEdit(0, 1)" size="mini" type="info">添加点检项目</van-button>
       </div>
 
     </div>
@@ -45,14 +49,15 @@
         </el-table-column>
         <el-table-column prop="address" width="65" label="操作">
           <template slot-scope="scope">
-            <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row)" size="mini" plain
+            <van-button style="width: 40px;" @click="handleEdit(scope.row, 2)" size="mini" plain
               type="info">编辑</van-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="pag">
-      <el-pagination background layout="prev, pager, next" :total="50">
+      <el-pagination background :page-size="15" @current-change="handleCurrentChange" :current-page="currentPage"
+        layout="prev, pager, next,total" :total="dataCount">
       </el-pagination>
     </div>
   </div>
@@ -69,6 +74,8 @@ export default {
       Branch: '宝日汽车板',
       input: '',
       line: '',
+      dataCount: 0,
+      currentPage: 1,
       tableData: [],
       lineList: [],//机组下拉框
       deviceList: [],//设备名称下拉框
@@ -103,12 +110,24 @@ export default {
   },
 
   methods: {
-    handleEdit(i, row) {
-      this.my.itemId = row.itemId;
+    handleCurrentChange(val) {
+      this.from.pageNum = val;
+      console.log(val);
+      this.selectnew();
+    },
+    handleEdit(row, s) {
+      if (s == 1) {
+        this.my.itemStatus = true;
+      } else {
+        this.my.itemId = row.itemId;
+        this.my.deviceId = this.from.deviceId;
+        this.my.itemStatus = false;
+      }
       this.$router.push({ path: "/projectDetails" });
     },
     // 查询机组下设备列表
     selectline(i) {
+      this.tableData = []
       this.from.deviceId = ''
       this.from.deviceNumber = ''
       this.from.baoRobotNumber = ''
@@ -123,18 +142,17 @@ export default {
     // 设备名称选择事件
     selectdevice(i) {
       console.log(i);
-      // this.from.baoRobotNumber = this.deviceList[i].baoRobotNumber
-      // this.from.deviceNumber = this.deviceList[i].deviceNumber
-
+      this.my.deviceId = i
       this.selectnew();
     },
     selectnew() {
       this.$eiInfo.parameter = {
         deviceId: this.from.deviceId,
-        pageNum: 1
+        pageNum: this.from.pageNum
       }
       itempartinfo(this.$eiInfo).then((res) => {
         this.tableData = res.result.result;
+        this.dataCount = res.result.dataCount
       })
     }
   },
@@ -198,6 +216,7 @@ label {
   font-size: 0.7rem;
   justify-content: space-between;
   text-align: right;
+  white-space: nowrap;
 }
 
 .el-input {
