@@ -21,7 +21,6 @@
             <van-button class="bt" @click="edit(2)" type="default">取消</van-button>
             <van-button class="bt" v-if="!my.itemStatus" @click="edit(3)" type="danger">删除</van-button>
         </div>
-
         <br />
         <br />
     </div>

@@ -7,7 +7,7 @@
       <van-grid-item icon="exchange" to="/AutoInfo" @click="my.scheduling = 9" text="设备资料管理" />
       <van-grid-item icon="exchange" to="/AutoInfo" @click="my.scheduling = 10" text="设备维护FAQ" />
       <van-grid-item icon="edit" to="/precisionMaintenance" @click="my.scheduling = 4" text="精密维护" />
-      <van-grid-item icon="shrink" to="/scheduling" @click="my.scheduling = 5" text="维护历史" />
+      <van-grid-item icon="shrink" to="/preservingHistory" @click="my.scheduling = 5" text="维护历史" />
       <van-grid-item icon="description" to="/scheduling" @click="my.scheduling = 6" text="备件查询" />
       <van-grid-item icon="records" to="/rollInfo" text="备件领用记录" />
       <van-grid-item icon="photo-o" to="/scheduling" @click="my.scheduling = 8" text="备件采购管理" />

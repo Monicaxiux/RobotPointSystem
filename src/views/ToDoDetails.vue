@@ -45,11 +45,16 @@
                 <template #input>
                     <div style="display: flex;flex-wrap: wrap;">
                         <div v-if="form.checkPic">
-                            <div style="width: 100%;">
-                                <img class="upimg" v-for="item, index in form.checkPic[0]"
-                                    @click="Preview(form.checkPic[0], index)" :src="item.url">
-                                <video class="upimg" controls v-for="item, index in form.checkPic[1]"
-                                    :src="item.url"></video>
+                            <div style="width: 100%;display: flex;flex-wrap: wrap;">
+                                <div style="width: 100%;">
+                                    <img class="upimg" v-for="item, index in form.checkPic[0]"
+                                        @click="Preview(form.checkPic[0], index)" :src="item.url">
+                                </div>
+                                <div style="width: 100%;">
+
+                                    <video style="width: 100%;height: 100px;" controls
+                                        v-for="item, index in form.checkPic[1]" @click="play(item)" :src="item.url"></video>
+                                </div>
                             </div>
                         </div>
                         <div style="width: 100%;">
@@ -96,11 +101,16 @@
                                 :src="item.url">
                         </div> -->
                         <div v-if="form.repairPic">
-                            <div style="width: 100%;">
-                                <img class="upimg" v-for="item, index in form.repairPic[0]"
-                                    @click="Preview(form.repairPic[0], index)" :src="item.url">
-                                <video class="upimg" controls v-for="item, index in form.repairPic[1]"
-                                    :src="item.url"></video>
+                            <div style="width: 100%;display: flex;flex-wrap: wrap;">
+                                <div style="width: 100%;">
+                                    <img class="upimg" v-for="item, index in form.repairPic[0]"
+                                        @click="Preview(form.repairPic[0], index)" :src="item.url">
+                                </div>
+                                <div style="width: 100%;">
+                                    <video class="upimg" controls v-for="item, index in form.repairPic[1]"
+                                        :src="item.url"></video>
+                                </div>
+
                             </div>
                         </div>
                         <div style="width: 100%;">
@@ -234,6 +244,9 @@ export default {
     },
 
     methods: {
+        play(url) {
+            console.log(url);
+        },
         Preview(x, index) {
             console.log(x);
             let imgList = []

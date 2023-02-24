@@ -56,11 +56,13 @@
       <div class="form_item">
         <div class="inp">
           <label>扫码</label>
-          <van-button style="width: 60%;margin-left: 10px;" @click="toQrCode" size="small" type="info">扫码</van-button>
+          <van-button disabled style="width: 60%;margin-left: 10px;" @click="toQrCode" size="small"
+            type="info">扫码</van-button>
         </div>
         <div class="inp">
           <label>查询</label>
           <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small" type="info">查询</van-button>
+          <van-button @click="clear" style="width: 60%;margin-left: 10px;" size="small" type="info">清空</van-button>
         </div>
       </div>
       <div class="form_item2">
@@ -175,14 +177,7 @@ export default {
               borderRadius: 8
             },
             data: [
-              { value: 40, name: '' },
-              { value: 20, name: '' },
-              { value: 39.5, name: '' },
-              // { value: 30, name: 'rose 4' },
-              // { value: 28, name: 'rose 5' },
-              // { value: 26, name: 'rose 6' },
-              // { value: 22, name: 'rose 7' },
-              // { value: 18, name: 'rose 8' }
+
             ]
           }
         ]
@@ -213,6 +208,14 @@ export default {
       this.from.pageNum = val;
       this.selectnew();
     },
+    clear() {
+      this.tableData = []
+      this.from.deviceId = ''
+      this.from.deviceNumber = ''
+      this.from.baoRobotNumber = ''
+      this.line = ''
+      this.dataCount = 0
+    },
     // 扫码
     toQrCode() {
       this.$router.push({ path: '/test' })
@@ -224,9 +227,11 @@ export default {
     },
     // 查询机组下设备列表
     selectline(i) {
+      this.tableData = []
       this.from.deviceId = ''
       this.from.deviceNumber = ''
       this.from.baoRobotNumber = ''
+      this.dataCount = 0
       this.$eiInfo.parameter = {
         productionLine: i
       }
@@ -248,8 +253,14 @@ export default {
       this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
       this.$eiInfo.parameter.deviceId = this.deviceId
       newestrecord(this.$eiInfo).then((res) => {
+        if (res.sys.status == 1) {
+          this.$notify({ type: "warning", message: res.sys.msg })
+
+        }
         this.tableData = res.result.record
         this.dataCount = res.result.dataCount
+        this.option.series[0].data = res.result.countFinish
+        this.drawLine();
       })
     },
     handleEdit(i, row, s) {

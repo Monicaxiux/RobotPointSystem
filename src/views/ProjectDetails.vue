@@ -18,10 +18,8 @@
                     </el-select>
                 </template>
             </van-field>
-            <van-field label="点检标题" v-model="form.checkTitle" :disabled="my.itemStatus == 1 ? false : true"
-                placeholder="请输入点检标题" />
-            <van-field label="点检内容" v-model="form.checkDetails" :disabled="my.itemStatus == 1 ? false : true"
-                placeholder="请输入点检内容" />
+            <van-field label="点检标题" v-model="form.checkTitle" placeholder="请输入点检标题" />
+            <van-field label="点检内容" v-model="form.checkDetails" placeholder="请输入点检内容" />
             <van-field label="点检周期">
                 <template #input>
                     <el-select v-model="form.checkCycle" placeholder="请选择点检周期">

@@ -30,7 +30,9 @@ const router = new Router({
             path: '/checkingToDo',
             name: 'CheckingToDo',//点检待办事项
             meta: {
-                index: 2
+                index: 2,
+                keepAlive: true
+
             },
             component: () => import('../views/CheckingToDo.vue')
         },
@@ -38,7 +40,9 @@ const router = new Router({
             path: '/projectMaintenance',
             name: 'ProjectMaintenance',//点检项目维护
             meta: {
-                index: 3
+                index: 3,
+                keepAlive: true
+
             },
             component: () => import('../views/ProjectMaintenance.vue')
         },
@@ -46,7 +50,8 @@ const router = new Router({
             path: '/spotCheckHistory',
             name: 'SpotCheckHistory',//点检历史
             meta: {
-                index: 4
+                index: 4,
+                keepAlive: true
             },
             component: () => import('../views/SpotCheckHistory.vue')
         },
@@ -97,6 +102,14 @@ const router = new Router({
                 index: 10
             },
             component: () => import('../views/PrecisionMaintenance.vue')
+        },
+        {
+            path: '/preservingHistory',
+            name: 'PreservingHistory',//维护历史
+            meta: {
+                index: 10
+            },
+            component: () => import('../views/PreservingHistory.vue')
         },
         {
             path: '/test',

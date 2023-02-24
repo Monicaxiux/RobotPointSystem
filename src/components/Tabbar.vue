@@ -1,11 +1,15 @@
 <template>
   <div>
     <NavBar v-show="my.isNavBar"></NavBar>
-    <transition :name="transitionName">
-      <!-- <KeepAlive> -->
-      <router-view class="rView" />
-      <!-- </KeepAlive> -->
-    </transition>
+    <!-- <transition :name="transitionName"> -->
+    <!-- <KeepAlive> -->
+    <!-- <router-view class="rView" /> -->
+    <!-- </KeepAlive> -->
+    <keep-alive>
+      <router-view class="rView" v-if="$route.meta.keepAlive" />
+    </keep-alive>
+    <router-view class="rView" v-if="!$route.meta.keepAlive" />
+    <!-- </transition> -->
     <van-tabbar v-show="my.isTabBar" route v-model="active" @change="onChange">
       <van-tabbar-item replace to="/home" icon="wap-home">首页</van-tabbar-item>
       <van-tabbar-item replace to="/search" icon="search">查询</van-tabbar-item>

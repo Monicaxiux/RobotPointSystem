@@ -4,8 +4,8 @@ import { Notify } from 'vant';//Notify 消息提示
 import router from '../router'
 //实例化请求对象
 const req = axios.create({
-    // baseURL: 'http://192.168.0.26:8192',
-    baseURL: 'http://47.101.183.203:8192',
+    baseURL: 'http://192.168.0.26:8192',
+    // baseURL: 'http://47.101.183.203:8192',
     // timeout: 7000 //请求超时时间
 })
 //请求拦截器

@@ -143,3 +143,23 @@ export const devicequeryallinfo = (eiInfo) => {
         data: eiInfo
     })
 }
+
+
+// 查询部分维护记录信息
+export const maintainquerypart = (eiInfo) => {
+    return req({
+        url: '/maintain/query/part',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+
+// 查询单条维护记录全部数据
+export const maintainqueryall = (eiInfo) => {
+    return req({
+        url: '/maintain/query/all',
+        method: 'post',
+        data: eiInfo
+    })
+}

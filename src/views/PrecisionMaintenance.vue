@@ -29,7 +29,6 @@
                     </el-select>
                 </template>
             </van-field>
-
             <van-field v-model="form.resultDetails" label="设备编码"></van-field>
             <van-field v-model="form.resultDetails" label="维护日期"></van-field>
             <van-field v-model="form.resultDetails" label="维护标题"></van-field>
@@ -37,11 +36,6 @@
             <van-field label="维护前照片">
                 <template #input>
                     <van-uploader accept="*" v-model="checkPic" multiple />
-                </template>
-            </van-field>
-            <van-field label="维护后照片">
-                <template #input>
-                    <van-uploader accept="*" v-model="repairPic" multiple />
                 </template>
             </van-field>
         </van-cell-group>
