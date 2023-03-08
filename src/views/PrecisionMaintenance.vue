@@ -6,36 +6,34 @@
             </van-field>
             <van-field label="机组">
                 <template #input>
-                    <el-select v-model="line" placeholder="请选择">
+                    <el-select @change="selectline" v-model="line" placeholder="请选择">
                         <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
                         </el-option>
                     </el-select>
                 </template>
             </van-field>
-            <van-field label="设备类型">
+            <van-field label="设备名称">
                 <template #input>
-                    <el-select v-model="line" placeholder="请选择">
-                        <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
+                    <el-select v-model="form.deviceId" placeholder="请选择">
+                        <el-option v-for="item in deviceList" :key="item.deviceId" :label="item.deviceName"
+                            :value="item.deviceId">
                         </el-option>
                     </el-select>
                 </template>
             </van-field>
-            <van-field v-model="form.resultDetails" label="点检单号"></van-field>
-            <van-field label="点检状态">
+            <!-- <van-field v-model="form.resultDetails" label="设备编码"></van-field> -->
+            <van-field label="维护日期">
                 <template #input>
-                    <el-select v-model="line" placeholder="请选择">
-                        <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
-                        </el-option>
-                    </el-select>
+                    <van-cell :value="form.createDate" @click="show = true" />
+                    <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="show"
+                        @confirm="onConfirm" />
                 </template>
             </van-field>
-            <van-field v-model="form.resultDetails" label="设备编码"></van-field>
-            <van-field v-model="form.resultDetails" label="维护日期"></van-field>
-            <van-field v-model="form.resultDetails" label="维护标题"></van-field>
-            <van-field v-model="form.resultDetails" label="维护内容"></van-field>
+            <van-field v-model="form.maintainTitle" label="维护标题"></van-field>
+            <van-field v-model="form.maintainDetails" label="维护内容"></van-field>
             <van-field label="维护前照片">
                 <template #input>
-                    <van-uploader accept="*" v-model="checkPic" multiple />
+                    <van-uploader accept="*" v-model="form.beforeMaintainPic" multiple />
                 </template>
             </van-field>
         </van-cell-group>
@@ -49,101 +47,68 @@
 </template>
 
 <script>
-import { recordallinfo, recorduploaddata } from '@/api/rollers'
+import { maintaincreatenew, querysimpleinfo, queryallline } from '@/api/rollers'
 import { ImagePreview } from 'vant';
 export default {
     name: "Home",
     data() {
         return {
             my: this.$myStore(), //使用Pinia的值
-            form: {},
+            line: '',
+            form: {
+                deviceId: '',
+                resultDetails: '',
+                createDate: '',
+                maintainTitle: '',
+                maintainDetails: '',
+                beforeMaintainPic: []
+            },
+            date: '',
             checkPic: [],
+            show: false,
             Branch: '宝日汽车板',
             repairPic: [],
-            checkResultList: [
-                {
-                    value: '检查正常',
-                    label: '检查正常'
-                },
-                {
-                    value: '检查异常',
-                    label: '检查异常'
-                }
-            ],
-            repairResultList: [
-                {
-                    value: '修复正常',
-                    label: '修复正常'
-                },
-                {
-                    value: '需要跟踪',
-                    label: '需要跟踪'
-                },
-                {
-                    value: '无法修复',
-                    label: '无法修复'
-                }
-            ],
-            responsibleList: [
-                {
-                    value: '机械',
-                    label: '机械'
-                },
-                {
-                    value: '电气',
-                    label: '电气'
-                },
-                {
-                    value: '仪表',
-                    label: '仪表'
-                },
-                {
-                    value: '无需修复',
-                    label: '无需修复'
-                }
-            ],
+            lineList: [],
+            deviceList: []
         };
     },
     mounted() {
-        this.my.title = "精密维护"; //页面标题
+        this.my.title = "创建精密维护计划"; //页面标题
         this.my.left = true; //NavBar是否开启返回按键
         this.my.isNavBar = true; //是否开启NavBar
         this.my.isTabBar = true; //是否开启TabBar
-        console.log(this.my.recordId);
-        this.$eiInfo.parameter = {
-            recordId: this.my.recordId
-        }
-
-        recordallinfo(this.$eiInfo).then((res) => {
-            console.log(res.result.result);
-            this.form = JSON.parse(JSON.stringify(res.result.result))
-            this.form.repairUser = '乙'
-            this.form.checkUser = '甲'
-            if (this.form.checkPic) {
-                for (let i = 0; i < this.form.checkPic[0].length; i++) {
-                    this.form.checkPic[0][i] = { url: this.form.checkPic[0][i] }
-                }
-                if (this.form.checkPic[1]) {
-                    for (let i = 0; i < this.form.checkPic[1].length; i++) {
-                        this.form.checkPic[1][i] = { url: this.form.checkPic[1][i] }
-                    }
-                }
-            }
-            if (this.form.repairPic) {
-                for (let i = 0; i < this.form.repairPic[0].length; i++) {
-                    this.form.repairPic[0][i] = { url: this.form.repairPic[0][i] }
-                }
-                if (this.form.repairPic[1]) {
-                    for (let i = 0; i < this.form.repairPic[1].length; i++) {
-                        this.form.repairPic[1][i] = { url: this.form.repairPic[1][i] }
-                    }
-                }
-            }
-
+        queryallline().then((res) => {
+            console.log(res.result);
+            this.lineList = res.result.line;
         })
     },
 
     methods: {
+        // 查询机组下设备列表
+        selectline(i) {
+            this.form.deviceId = ''
+            this.$eiInfo.parameter = {
+                productionLine: i
+            }
+            querysimpleinfo(this.$eiInfo).then((res) => {
+                console.log(res.result.deviceList);
+                this.deviceList = res.result.deviceList;
+            })
+        },
+        formatDate(date) {
+            console.log(date);
+            let y = date.getFullYear()
+            let m = date.getMonth() + 1
+            m = m < 10 ? ('0' + m) : m
+            let d = date.getDate()
+            d = d < 10 ? ('0' + d) : d
+            let dateTime = y + '-' + m + '-' + d;
+            return dateTime;
+        },
+        onConfirm(date) {
+            this.show = false;
+            this.form.createDate = this.formatDate(date);
+        },
         Preview(x, index) {
             console.log(x);
             let imgList = []
@@ -160,35 +125,28 @@ export default {
         edit(s) {
             switch (s) {
                 case 1:
-                    if (!this.form.checkPic && this.checkPic.length == 0) {
-                        this.$notify({ type: "warning", message: "请上传检查照片！" })
-                    } else if (this.form.checkResult == "") {
-                        this.$notify({ type: "warning", message: "请选择点检结果！" })
-                    } else {
-                        let formData = new FormData();
-                        formData.append('recordId', this.form.recordId);
-                        formData.append('checkResult', this.form.checkResult);
-                        formData.append('resultDetails', this.form.resultDetails);
-                        formData.append('responsible', this.form.responsible);
-                        formData.append('checkUser', this.form.checkUser);
-                        formData.append('repairResult', this.form.repairResult);
-                        formData.append('repairUser', this.form.repairUser);
-                        formData.append('remark', this.form.remark);
-                        console.log(this.checkPic);
-                        for (let i = 0; i < this.checkPic.length; i++) {
-                            formData.append('checkPic', this.checkPic[i].file);
-                        }
-                        for (let i = 0; i < this.repairPic.length; i++) {
-                            formData.append('repairPic', this.repairPic[i].file);
-                        }
-
-                        // console.log(cList);
-                        // console.log(rList);
-                        recorduploaddata(formData).then((res) => {
-                            this.$notify({ type: "success", message: res.sys.msg })
-                            this.$router.back();
-                        })
+                    // if (this.form.) {
+                    //     this.$notify({ type: "warning", message: "请上传维护前照片！" })
+                    // } else if (this.form.checkResult == "") {
+                    //     this.$notify({ type: "warning", message: "请选择点检结果！" })
+                    // } else {
+                    let formData = new FormData();
+                    formData.append('deviceId', this.form.deviceId);
+                    formData.append('createDate', this.form.createDate);
+                    formData.append('maintainTitle', this.form.maintainTitle);
+                    formData.append('maintainDetails', this.form.maintainDetails);
+                    // formData.append('beforeMaintainPic', this.form.beforeMaintainPic);
+                    for (let i = 0; i < this.form.beforeMaintainPic.length; i++) {
+                        formData.append('beforeMaintainPic', this.form.beforeMaintainPic[i].file);
                     }
+
+                    // console.log(cList);
+                    // console.log(rList);
+                    maintaincreatenew(formData).then((res) => {
+                        this.$notify({ type: "success", message: res.sys.msg })
+                        this.$router.back();
+                    })
+                    // }
 
                     break;
                 case 2:
@@ -203,10 +161,46 @@ export default {
 
 
 <style scoped>
+.van-button--info {
+    color: #fff;
+    background-color: #687dbb;
+    border: 1px solid #687dbb;
+}
+
+/deep/.el-pagination.is-background .el-pager li:not(.disabled).active {
+    background-color: #687dbb;
+}
+
+/deep/.el-input {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/.el-input__inner {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/ .el-input--suffix .el-input__inner {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/.el-input__icon {
+    height: 116%;
+}
+
 .upimg {
     width: 80px;
     height: 80px;
     object-fit: cover;
+}
+
+/deep/ .van-button--plain.van-button--info {
+    color: white;
 }
 
 .bottom_box {

@@ -8,7 +8,7 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            redirect: '/home'
+            redirect: '/login'
         },
         {
             path: '/login',
@@ -107,9 +107,18 @@ const router = new Router({
             path: '/preservingHistory',
             name: 'PreservingHistory',//维护历史
             meta: {
-                index: 10
+                index: 10,
+                keepAlive: true
             },
             component: () => import('../views/PreservingHistory.vue')
+        },
+        {
+            path: '/preservingHistoryDetails',
+            name: 'PreservingHistoryDetails',//维护详情
+            meta: {
+                index: 10
+            },
+            component: () => import('../views/PreservingHistoryDetails.vue')
         },
         {
             path: '/test',

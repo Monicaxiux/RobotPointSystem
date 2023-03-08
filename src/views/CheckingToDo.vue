@@ -119,7 +119,7 @@ export default {
       input: '',
       time: '',
       deviceId: 0,
-      dataCount: 0,
+      dataCount: null,
       currentPage: 0,
       line: '',
       from: {
@@ -157,34 +157,54 @@ export default {
         label: '已完成'
       }],
       option: {
-        toolbox: {
-          show: false,
-          feature: {
-            mark: { show: false },
-            dataView: { show: false, readOnly: false },
-            restore: { show: false },
-            saveAsImage: { show: false }
-          }
+        title: {
+          text: '',
+          subtext: '',
+          left: 'center'
         },
+        tooltip: {
+          trigger: 'item'
+        },
+        // legend: {
+        //   orient: 'vertical',
+        //   left: 'left'
+        // },
         series: [
           {
-            name: 'Nightingale Chart',
+            name: '统计',
             type: 'pie',
-            radius: [40, 120],
-            center: ['50%', '50%'],
-            roseType: 'area',
-            itemStyle: {
-              borderRadius: 8
-            },
-            data: [
-
-            ]
+            radius: '50%',
+            data: [],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
           }
         ]
       }
-    };
+    }
   },
-
+  activated() {
+    this.selectnew();
+    this.my.title = "点检待办事项"; //页面标题
+    this.my.left = true; //NavBar是否开启返回按键
+    this.my.isNavBar = true; //是否开启NavBar
+    this.my.isTabBar = true; //是否开启TabBar
+    // this.my.code = '';
+    this.drawLine();
+    setInterval(() => {
+      let x = new Date();
+      this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
+    }, 1000)
+    console.log(this.my.code, '扫码结果');
+    queryallline().then((res) => {
+      console.log(res.result);
+      this.lineList = res.result.line;
+    })
+  },
   mounted() {
     this.my.title = "点检待办事项"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
@@ -214,7 +234,7 @@ export default {
       this.from.deviceNumber = ''
       this.from.baoRobotNumber = ''
       this.line = ''
-      this.dataCount = 0
+      this.dataCount = null
     },
     // 扫码
     toQrCode() {
@@ -231,7 +251,7 @@ export default {
       this.from.deviceId = ''
       this.from.deviceNumber = ''
       this.from.baoRobotNumber = ''
-      this.dataCount = 0
+      this.dataCount = null
       this.$eiInfo.parameter = {
         productionLine: i
       }
@@ -254,8 +274,11 @@ export default {
       this.$eiInfo.parameter.deviceId = this.deviceId
       newestrecord(this.$eiInfo).then((res) => {
         if (res.sys.status == 1) {
-          this.$notify({ type: "warning", message: res.sys.msg })
+          if (res.sys.msg == '点检项次') {
 
+          } else {
+            this.$notify({ type: "warning", message: res.sys.msg })
+          }
         }
         this.tableData = res.result.record
         this.dataCount = res.result.dataCount
@@ -278,12 +301,44 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .form {
   display: flex;
   flex-wrap: wrap;
   background-color: white;
   padding: 14px 0;
+}
+
+.van-button--info {
+  color: #fff;
+  background-color: #687dbb;
+  border: 1px solid #687dbb;
+}
+
+/deep/.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #687dbb;
+}
+
+/deep/.el-input {
+  width: 110px !important;
+  margin-left: 4px;
+  height: 32px;
+}
+
+/deep/.el-input__inner {
+  width: 110px !important;
+  margin-left: 4px;
+  height: 32px;
+}
+
+/deep/ .el-input--suffix .el-input__inner {
+  width: 110px !important;
+  margin-left: 4px;
+  height: 32px;
+}
+
+/deep/.el-input__icon {
+  height: 116%;
 }
 
 .pag {
@@ -336,27 +391,5 @@ label {
   justify-content: space-between;
   text-align: right;
   white-space: nowrap;
-}
-
-.el-input {
-  width: 110px !important;
-  margin-left: 4px;
-  height: 32px;
-}
-
-.el-input__inner {
-  width: 110px !important;
-  margin-left: 4px;
-  height: 32px;
-}
-
-.el-input--suffix .el-input__inner {
-  width: 110px !important;
-  margin-left: 4px;
-  height: 32px;
-}
-
-.el-input__icon {
-  height: 116%;
 }
 </style>

@@ -7,8 +7,8 @@
     <h1>机器人智能点检系统</h1>
     <br />
     <div class="form">
+      <br>
       <div class="input">
-        <!-- <i class="iconfont icon-weibiaoti562"></i> -->
         <van-icon name="manager" />
         <input v-model="userForm.loginName" placeholder="请输入用户名" />
       </div>
@@ -16,13 +16,14 @@
         <van-icon name="lock" />
         <input v-model="userForm.password" type="password" placeholder="请输入密码" />
       </div>
-      <div class="form_tools">
-        <!-- <div>忘记密码?</div> -->
-      </div>
+      <!-- <div class="form_tools"> -->
+      <!-- <div>忘记密码?</div> -->
+      <!-- </div> -->
       <div class="btn" @click="submit">登录</div>
       <span>注册</span>
     </div>
-
+    <br />
+    <br />
   </mu-container>
 </template>
 
@@ -58,10 +59,10 @@ export default {
   methods: {
     // 登录
     submit() {
-
-      this.$notify({ type: "success", message: "欢迎回来！" }),
-        this.$router.replace({ path: "/home" }),
-        this.my.userStatus = true
+      this.$toast.success('欢迎回来');
+      // this.$notify({ type: "success", message: "欢迎回来！" })
+      this.$router.replace({ path: "/home" })
+      this.my.userStatus = true
       // login(this.$alex).then((res) => {
       //   res
       //     ? (this.$notify({ type: "primary", message: "欢迎回来！" }),
@@ -89,7 +90,7 @@ export default {
   margin: 0 auto;
   text-align: center;
   border-radius: 20px;
-  /* box-shadow: 1px 4px 10px 1px rgb(0 0 0 / 22%); */
+  box-shadow: 1px 4px 10px 1px rgb(0 0 0 / 17%);
 }
 
 .form_tools {
@@ -99,14 +100,14 @@ export default {
 }
 
 span {
-  margin: 30px 0px;
+  margin: 10px 0px;
   display: block;
   font-size: 18px;
   width: 100%;
 }
 
 .i {
-  color: #4291fb;
+  color: #687dbb;
   font-size: 83px;
 }
 
@@ -138,7 +139,7 @@ span {
 h1 {
   /* margin-top: 220px !important; */
   text-align: center;
-  color: #1d92d7;
+  color: #687dbb;
   font-size: 2rem;
   font-weight: normal;
 }
@@ -150,8 +151,10 @@ h1 {
   height: 55px;
   font-size: 18px;
   text-align: center;
+  font-weight: bold;
   line-height: 55px;
-  background: linear-gradient(-45deg, #338aff, #3cf0c5, #338aff, #3cf0c5);
+  // background: linear-gradient(-45deg, #338aff, #3cf0c5, #338aff, #3cf0c5);
+  background: linear-gradient(-45deg, #338aff, #687dbb, #338aff, #687dbb);
   background-size: 600%;
   -webkit-animation: anime 8s linear infinite;
   animation: anime 8s linear infinite;

@@ -20,6 +20,7 @@ Vue.use(Notify);//Notify 消息提示
 Vue.use(Dialog);//Dialog 弹出框
 Vue.use(Toast);//Toast 轻提示
 Vue.use(Vant);
+Vue.prototype.$toast = Toast
 
 // MuseUi库
 import MuseUI from 'muse-ui';

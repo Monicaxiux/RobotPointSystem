@@ -1,9 +1,17 @@
 <template>
     <div>
         <van-cell-group>
-            <van-field label="分厂" v-model="form.factoryId" placeholder="请输入分厂" />
-            <van-field label="产线" v-model="form.productionLineId" placeholder="请输入产线" />
-            <van-field label="设备编号" v-model="form.deviceNumber" type="digit" placeholder="请输入设备编号" />
+            <van-field label="分厂" v-model="factoryId" disabled placeholder="请输入分厂" />
+            <van-field label="产线">
+                <template #input>
+                    <el-select size="mini" v-model="form.productionLineId" placeholder="请选择">
+                        <el-option v-for="item in productionLineIdList" :key="item.lineId" :label="item.lineName"
+                            :value="item.lineId">
+                        </el-option>
+                    </el-select>
+                </template>
+            </van-field>
+            <van-field label="设备编号" v-model="form.deviceNumber" placeholder="请输入设备编号" />
             <van-field label="宝罗工号" v-model="form.baoRobotNumber" placeholder="请输入宝罗工号" />
             <van-field label="设备名称" v-model="form.deviceName" placeholder="请输入设备名称" />
             <van-field label="主要功能" v-model="form.mainFunction" placeholder="请输入主要功能" />
@@ -27,7 +35,7 @@
 </template>
 
 <script>
-import { deviceupdate, devicedelete, devicequeryallinfo, deviceadd } from '@/api/rollers'
+import { deviceupdate, devicedelete, devicequeryallinfo, deviceadd, queryallline } from '@/api/rollers'
 export default {
     name: "Home",
     data() {
@@ -45,8 +53,11 @@ export default {
                 mainFunction: '',
                 deviceBrand: '',
                 deviceModel: '',
-                uptime: ''
+                uptime: '',
+                productionLineId: ''
             },
+            productionLineIdList: [],
+            factoryId: '宝日汽车板'
         };
     },
     created() {
@@ -63,12 +74,17 @@ export default {
             console.log('是添加');
         } else {
             console.log('是编辑');
+            this.$eiInfo.parameter = {
+                deviceId: this.my.deviceId
+            }
+            devicequeryallinfo(this.$eiInfo).then((res) => {
+                this.form = res.result.result;
+            })
+
         }
-        this.$eiInfo.parameter = {
-            deviceId: this.my.deviceId
-        }
-        devicequeryallinfo(this.$eiInfo).then((res) => {
-            this.form = res.result.result;
+        queryallline().then((res) => {
+            console.log(res);
+            this.productionLineIdList = res.result.line;
         })
     },
 
@@ -93,7 +109,7 @@ export default {
             let month = nowTime.getMonth();
             let day = nowTime.getDate();
             // 循环数组 填写最小时间和最大时间范围 推进数组
-            for (let i = 2020; i < 2099; i++) {
+            for (let i = 1998; i < 2099; i++) {
                 this.yearColumns.push(i);
             }
             // 格式化时间并截取
@@ -205,5 +221,11 @@ export default {
 
 .bt {
     width: 100px;
+}
+
+.van-button--info {
+    color: #fff;
+    background-color: #687dbb;
+    border: 1px solid #687dbb;
 }
 </style>

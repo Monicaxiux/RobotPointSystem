@@ -23,6 +23,26 @@ export default {
 </script>
 
 <style scoped>
+/deep/ .van-nav-bar__title {
+  max-width: 60%;
+  margin: 0 auto;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/deep/ .van-nav-bar {
+  background-color: #4f68b0db;
+}
+
+/deep/ .van-nav-bar__content {
+  height: 40px;
+}
+
+/deep/ .van-nav-bar .van-icon {
+  color: white;
+}
+
 #NavBar {
   position: fixed;
   width: 100%;

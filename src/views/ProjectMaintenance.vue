@@ -60,6 +60,8 @@
         layout="prev, pager, next,total" :total="dataCount">
       </el-pagination>
     </div>
+    <br />
+    <br />
   </div>
 </template>
 
@@ -74,7 +76,7 @@ export default {
       Branch: '宝日汽车板',
       input: '',
       line: '',
-      dataCount: 0,
+      dataCount: null,
       currentPage: 1,
       tableData: [],
       lineList: [],//机组下拉框
@@ -97,11 +99,23 @@ export default {
       }],
     };
   },
+  activated() {
+    this.selectnew();
+    this.my.title = "点检项目维护"; //页面标题
+    this.my.left = true; //NavBar是否开启返回按键
+    this.my.isNavBar = true; //是否开启NavBar
+    this.my.isTabBar = true; //是否开启TabBar
+
+    queryallline().then((res) => {
+      console.log(res.result);
+      this.lineList = res.result.line;
+    })
+  },
   mounted() {
     this.my.title = "点检项目维护"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
-    this.my.isTabBar = false; //是否开启TabBar
+    this.my.isTabBar = true; //是否开启TabBar
 
     queryallline().then((res) => {
       console.log(res.result);
@@ -127,6 +141,7 @@ export default {
     },
     // 查询机组下设备列表
     selectline(i) {
+      this.dataCount = null
       this.tableData = []
       this.from.deviceId = ''
       this.from.deviceNumber = ''
@@ -159,7 +174,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .form {
   display: flex;
   flex-wrap: wrap;
@@ -219,25 +234,36 @@ label {
   white-space: nowrap;
 }
 
-.el-input {
+
+.van-button--info {
+  color: #fff;
+  background-color: #687dbb;
+  border: 1px solid #687dbb;
+}
+
+/deep/.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #687dbb;
+}
+
+/deep/.el-input {
   width: 110px !important;
   margin-left: 4px;
   height: 32px;
 }
 
-.el-input__inner {
+/deep/.el-input__inner {
   width: 110px !important;
   margin-left: 4px;
   height: 32px;
 }
 
-.el-input--suffix .el-input__inner {
+/deep/ .el-input--suffix .el-input__inner {
   width: 110px !important;
   margin-left: 4px;
   height: 32px;
 }
 
-.el-input__icon {
+/deep/.el-input__icon {
   height: 116%;
 }
 </style>

@@ -1,18 +1,21 @@
 <template>
   <div>
     <NavBar v-show="my.isNavBar"></NavBar>
-    <!-- <transition :name="transitionName"> -->
     <!-- <KeepAlive> -->
     <!-- <router-view class="rView" /> -->
     <!-- </KeepAlive> -->
     <keep-alive>
+      <!-- <transition :name="transitionName"> -->
+
       <router-view class="rView" v-if="$route.meta.keepAlive" />
+      <!-- </transition> -->
     </keep-alive>
+    <!-- <transition :name="transitionName"> -->
     <router-view class="rView" v-if="!$route.meta.keepAlive" />
     <!-- </transition> -->
     <van-tabbar v-show="my.isTabBar" route v-model="active" @change="onChange">
       <van-tabbar-item replace to="/home" icon="wap-home">首页</van-tabbar-item>
-      <van-tabbar-item replace to="/search" icon="search">查询</van-tabbar-item>
+      <!-- <van-tabbar-item replace to="/search" icon="search">查询</van-tabbar-item> -->
       <van-tabbar-item replace to="/my" icon="manager">我的</van-tabbar-item>
     </van-tabbar>
   </div>
@@ -59,7 +62,7 @@ export default {
 .slide-left-enter-active,
 .slide-left-leave-active {
   will-change: transform;
-  transition: all 300ms;
+  transition: all 100ms;
   position: absolute;
 }
 
@@ -87,5 +90,9 @@ export default {
   height: 92vh;
   overflow-y: auto;
   margin-top: 47px;
+}
+
+.van-tabbar-item--active {
+  color: #687dbb !important;
 }
 </style>

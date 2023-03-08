@@ -163,3 +163,40 @@ export const maintainqueryall = (eiInfo) => {
         data: eiInfo
     })
 }
+
+// 创建精密维护记录
+export const maintaincreatenew = (formData) => {
+    return req({
+        url: '/maintain/create/new',
+        method: 'post',
+        transformRequest: [function (data, headers) {
+            // 去除post请求默认的Content-Type
+            delete headers.post['Content-Type']
+            return data
+        }],
+        data: formData
+    })
+}
+
+// 删除维护记录
+export const deleterecord = (eiInfo) => {
+    return req({
+        url: '/maintain/delete/record',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 维护完成后保存记录
+export const updaterecord = (formData) => {
+    return req({
+        url: '/maintain/update/record',
+        method: 'post',
+        transformRequest: [function (data, headers) {
+            // 去除post请求默认的Content-Type
+            delete headers.post['Content-Type']
+            return data
+        }],
+        data: formData
+    })
+}

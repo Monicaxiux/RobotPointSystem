@@ -35,12 +35,26 @@
                 <div class="inp">
                     <label>起始时间</label>
                     <van-cell :value="from.startDate" @click="show = true" />
-                    <van-calendar v-model="show" @confirm="onConfirm" />
+                    <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="show"
+                        @confirm="onConfirm" />
                 </div>
                 <div class="inp">
                     <label>结束时间</label>
                     <van-cell :value="from.endDate" @click="show2 = true" />
-                    <van-calendar v-model="show2" @confirm="onConfirm2" />
+                    <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="show2"
+                        @confirm="onConfirm2" />
+                </div>
+            </div>
+            <div class="form_item">
+                <div class="inp">
+
+                </div>
+                <div class="inp">
+                    <label>查询</label>
+                    <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small"
+                        type="info">查询</van-button>
+                    <van-button @click="clear" style="width: 60%;margin-left: 10px;" size="small"
+                        type="info">清空</van-button>
                 </div>
             </div>
         </div>
@@ -49,16 +63,18 @@
                 border style="width: 100%;font-size: 0.6rem">
                 <el-table-column type="index" width="35" label="序号">
                 </el-table-column>
-                <el-table-column prop="itemTitle" label="项目">
+                <el-table-column prop="maintainTitle" label="标题">
                 </el-table-column>
-                <el-table-column prop="checkDate" width="115" label="周期">
+                <el-table-column prop="maintainTitle" width="115" label="状态">
                 </el-table-column>
-                <el-table-column prop="maintainStatus" width="65" label="检状态">
+                <el-table-column prop="createDate" width="65" label="日期">
                 </el-table-column>
-                <el-table-column prop="address" width="63" label="检查">
+                <el-table-column prop="createUser" width="65" label="维护人">
+                </el-table-column>
+                <el-table-column prop="address" width="63" label="详情">
                     <template slot-scope="scope">
                         <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row, 1)" size="mini" plain
-                            type="info">检查</van-button>
+                            type="info">详情</van-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -87,7 +103,7 @@ export default {
             show2: false,
             deviceId: 0,
             line: '',
-            dataCount: 0,
+            dataCount: null,
             currentPage: 1,
             from: {
                 deviceId: '',
@@ -113,7 +129,18 @@ export default {
             }]
         };
     },
-
+    activated() {
+        this.selectnew();
+        this.my.title = "维护历史"; //页面标题
+        this.my.left = true; //NavBar是否开启返回按键
+        this.my.isNavBar = true; //是否开启NavBar
+        this.my.isTabBar = true; //是否开启TabBar
+        // this.my.code = '';
+        queryallline().then((res) => {
+            console.log(res.result);
+            this.lineList = res.result.line;
+        })
+    },
     mounted() {
         this.my.title = "维护历史"; //页面标题
         this.my.left = true; //NavBar是否开启返回按键
@@ -127,6 +154,15 @@ export default {
     },
 
     methods: {
+        clear() {
+            this.tableData = []
+            this.dataCount = null
+            this.from.deviceId = ''
+            this.from.maintainStatus = ''
+            this.from.startDate = ''
+            this.from.endDate = ''
+            this.from.pageNum = 1
+        },
         handleCurrentChange(val) {
             this.from.pageNum = val;
             console.log(val);
@@ -145,10 +181,12 @@ export default {
         onConfirm(date) {
             this.show = false;
             this.from.startDate = this.formatDate(date);
+            this.selectnew();
         },
         onConfirm2(date) {
             this.show2 = false;
             this.from.endDate = this.formatDate(date);
+            this.selectnew();
         },
         // 扫码
         toQrCode() {
@@ -156,6 +194,7 @@ export default {
         },
         // 查询机组下设备列表
         selectline(i) {
+            this.dataCount = null
             this.tableData = [];
             this.from.deviceId = ''
             this.$eiInfo.parameter = {
@@ -179,7 +218,7 @@ export default {
             this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
             this.$eiInfo.parameter.deviceId = this.deviceId
             maintainquerypart(this.$eiInfo).then((res) => {
-                this.tableData = res.result.result;
+                this.tableData = res.result.maintainRecord;
                 this.dataCount = res.result.dataCount
             })
         },
@@ -187,7 +226,7 @@ export default {
             switch (s) {
                 case 1:
                     this.my.recordId = row.recordId;
-                    this.$router.push({ path: "/historyDetails" });
+                    this.$router.push({ path: "/preservingHistoryDetails" });
                     break;
                 case 2:
 
@@ -198,12 +237,62 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .form {
     display: flex;
     flex-wrap: wrap;
     background-color: white;
     padding: 14px 0;
+}
+
+.van-button--info {
+    color: #fff;
+    background-color: #687dbb;
+    border: 1px solid #687dbb;
+}
+
+/deep/.el-input {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/.el-pagination.is-background .el-pager li:not(.disabled).active {
+    background-color: #687dbb;
+}
+
+/deep/.el-input__inner {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/ .el-input--suffix .el-input__inner {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/.el-input__icon {
+    height: 116%;
+}
+
+.van-cell {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    /* padding: 10px 16px; */
+    margin-left: 10px;
+    border-bottom: 1px solid;
+    overflow: hidden;
+    color: #323233;
+    font-size: 14px;
+    line-height: 24px;
+
+    background-color: #fff;
 }
 
 .pag {

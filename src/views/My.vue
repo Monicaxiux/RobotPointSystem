@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="call"><a>权限管理</a><a>></a></div>
     <div @click="logOut" class="call"><a>退出登录</a><a>></a></div>
     <div @click="updateApp" class="call"><a>检查更新</a><a>></a></div>
   </div>
@@ -32,7 +33,9 @@ export default {
           confirmButtonColor: "#197cca",
         })
         .then(() => {
-          this.$notify({ type: "primary", message: "已退出登录！" });
+          this.$toast.success('已退出登录！');
+
+          // this.$notify({ type: "primary", message: "已退出登录！" });
           this.my.userStatus = false; //将登录状态取消
           this.$router.push({ path: "/login" });
         })
@@ -72,7 +75,7 @@ export default {
 }
 
 .call a {
-  color: black;
+  color: #395197bd;
   font-size: 15px;
   font-weight: 600;
 }

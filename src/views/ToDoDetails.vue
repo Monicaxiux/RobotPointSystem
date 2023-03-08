@@ -1,7 +1,7 @@
 <template>
     <div>
         <van-cell-group>
-            <van-field label="巡检照片">
+            <van-field label="委托单号">
                 <template #input>
                     {{ form.recordNumber }}
                 </template>
@@ -318,6 +318,12 @@ export default {
     height: 60px;
     align-items: center;
     justify-content: space-evenly;
+}
+
+.van-button--info {
+    color: #fff;
+    background-color: #687dbb;
+    border: 1px solid #687dbb;
 }
 
 .bt {

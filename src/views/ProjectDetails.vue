@@ -28,7 +28,12 @@
                     </el-select>
                 </template>
             </van-field>
-            <van-field label="点检间隔" v-model="form.cycleInterval" placeholder="请输入点检间隔" />
+            <van-field label="点检间隔" placeholder="请输入点检间隔">
+                <template #input>
+                    <van-field style="width: 150px;" type="digit" v-model="form.cycleInterval" placeholder="请输入点检间隔" />
+                    {{ form.cycleInterval }}{{ form.checkCycle == 1 ? '日' : form.checkCycle == 2 ? '周' : '月' }}一次
+                </template>
+            </van-field>
             <van-field label="点检结果类型">
                 <template #input>
                     <el-select @change="change" v-model="form.itemResultType" placeholder="请选择结果类型">
@@ -228,6 +233,35 @@ export default {
     /* flex-wrap: wrap; */
     align-items: center;
     justify-content: space-evenly;
+}
+
+
+.van-button--info {
+    color: #fff;
+    background-color: #687dbb;
+    border: 1px solid #687dbb;
+}
+
+/deep/.el-input {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/.el-input__inner {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/ .el-input--suffix .el-input__inner {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+}
+
+/deep/.el-input__icon {
+    height: 116%;
 }
 
 .bt {
