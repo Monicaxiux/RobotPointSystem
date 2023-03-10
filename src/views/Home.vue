@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <span>点检管理</span><br />
+      <span>机器人点检</span><br />
       <div class="box_nr">
         <div @click="toRoute('/checkingToDo', 1)">
           <img style="width: 100%;" src="../assets/icon/b.svg" />
@@ -19,14 +19,49 @@
           点检历史
         </div>
       </div>
-      <!-- <van-grid style="margin-top: 5px" square column-num="3" :gutter="5">
-        <van-grid-item icon="newspaper-o" to="/checkingToDo" @click="my.scheduling = 1" text="点检待办事项" />
-        <van-grid-item icon="notes-o" to="/projectMaintenance" @click="my.scheduling = 2" text="点检项维护" />
-        <van-grid-item icon="exchange" to="/spotCheckHistory" @click="my.scheduling = 3" text="点检历史" />
-      </van-grid> -->
     </div>
     <div class="box">
-      <span>备件管理</span><br />
+      <span>精密维护</span><br />
+      <div class="box_nr">
+        <div @click="toRoute('/precisionMaintenance', 4)">
+          <img style="width: 100%;" src="../assets/icon/g.svg" />
+          <br />
+          创建精密维护
+        </div>
+        <div @click="toRoute('/preservingHistory', 5)">
+          <img style="width: 100%;" src="../assets/icon/h.svg" />
+          <br />
+          维护历史
+        </div>
+        <div @click="toRoute('/preservingHistory', 5)">
+          <img style="width: 100%;" src="../assets/icon/h.svg" />
+          <br />
+          维护历史
+        </div>
+        <div @click="toRoute('/preservingHistory', 5)">
+          <img style="width: 100%;" src="../assets/icon/h.svg" />
+          <br />
+          维护历史
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <span>设备管理</span><br />
+      <div class="box_nr">
+        <div>
+          <img style="width: 100%;" src="../assets/icon/i.svg" />
+          <br />
+          资料管理
+        </div>
+        <div>
+          <img style="width: 100%;" src="../assets/icon/j.svg" />
+          <br />
+          故障记录
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <span>设备备件</span><br />
       <div class="box_nr">
         <div>
           <img style="width: 100%;" src="../assets/icon/d.svg" />
@@ -44,54 +79,8 @@
           领用记录
         </div>
       </div>
-      <!-- <h2></h2>
-      <van-grid style="margin-top: 5px" square column-num="3" :gutter="5">
-        <van-grid-item icon="description" to="/scheduling" @click="my.scheduling = 6" text="备件查询" />
-        <van-grid-item icon="records" to="/rollInfo" text="备件领用记录" />
-        <van-grid-item icon="photo-o" to="/scheduling" @click="my.scheduling = 8" text="备件采购管理" />
-        <van-grid-item icon="photo-o" to="/scheduling" @click="my.scheduling = 8" text="权限管理" />
-      </van-grid> -->
     </div>
-    <div class="box">
-      <span>精密维护</span><br />
-      <div class="box_nr">
-        <div @click="toRoute('/precisionMaintenance', 4)">
-          <img style="width: 100%;" src="../assets/icon/g.svg" />
-          <br />
-          精密维护
-        </div>
-        <div @click="toRoute('/preservingHistory', 5)">
-          <img style="width: 100%;" src="../assets/icon/h.svg" />
-          <br />
-          维护历史
-        </div>
-      </div>
-      <!-- <h2></h2>
-      <van-grid style="margin-top: 5px" square column-num="3" :gutter="5">
-        <van-grid-item icon="edit" to="/precisionMaintenance" @click="my.scheduling = 4" text="精密维护" />
-        <van-grid-item icon="shrink" to="/preservingHistory" @click="my.scheduling = 5" text="维护历史" />
-      </van-grid> -->
-    </div>
-    <div class="box">
-      <span>设备管理</span><br />
-      <div class="box_nr">
-        <div>
-          <img style="width: 100%;" src="../assets/icon/i.svg" />
-          <br />
-          资料管理
-        </div>
-        <div>
-          <img style="width: 100%;" src="../assets/icon/j.svg" />
-          <br />
-          设备维护
-        </div>
-      </div>
-      <!-- <h2></h2>
-      <van-grid style="margin-top: 5px" square column-num="3" :gutter="5">
-        <van-grid-item icon="exchange" to="/AutoInfo" @click="my.scheduling = 9" text="设备资料管理" />
-        <van-grid-item icon="exchange" to="/AutoInfo" @click="my.scheduling = 10" text="设备维护FAQ" />
-      </van-grid> -->
-    </div>
+
 
     <br />
     <br />

@@ -61,8 +61,8 @@
         <div class="tableBox">
             <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }" :data="tableData"
                 border style="width: 100%;font-size: 0.6rem">
-                <el-table-column type="index" width="35" label="序号">
-                </el-table-column>
+                <!-- <el-table-column type="index" width="35" label="序号">
+                </el-table-column> -->
                 <el-table-column prop="maintainTitle" label="标题">
                 </el-table-column>
                 <el-table-column prop="maintainTitle" width="115" label="状态">

@@ -34,7 +34,7 @@ const router = new Router({
                 keepAlive: true
 
             },
-            component: () => import('../views/CheckingToDo.vue')
+            component: () => import('../views/RoboticSpotCheck/CheckingToDo.vue')
         },
         {
             path: '/projectMaintenance',
@@ -44,7 +44,7 @@ const router = new Router({
                 keepAlive: true
 
             },
-            component: () => import('../views/ProjectMaintenance.vue')
+            component: () => import('../views/RoboticSpotCheck/ProjectMaintenance.vue')
         },
         {
             path: '/spotCheckHistory',
@@ -53,7 +53,7 @@ const router = new Router({
                 index: 4,
                 keepAlive: true
             },
-            component: () => import('../views/SpotCheckHistory.vue')
+            component: () => import('../views/RoboticSpotCheck/SpotCheckHistory.vue')
         },
         {
             path: '/my',
@@ -63,13 +63,21 @@ const router = new Router({
             },
             component: () => import('../views/My.vue')
         },
+         {
+            path: '/todo',
+            name: 'ToDo',//我的
+            meta: {
+                index: 5
+            },
+            component: () => import('../views/ToDo.vue')
+        },
         {
             path: '/toDoDetails',
             name: 'ToDoDetails',//点检详情页
             meta: {
                 index: 6
             },
-            component: () => import('../views/ToDoDetails.vue')
+            component: () => import('../views/RoboticSpotCheck/ToDoDetails.vue')
         },
         {
             path: '/projectDetails',
@@ -77,7 +85,7 @@ const router = new Router({
             meta: {
                 index: 7
             },
-            component: () => import('../views/ProjectDetails.vue')
+            component: () => import('../views/RoboticSpotCheck/ProjectDetails.vue')
         },
         {
             path: '/addEquipment',
@@ -85,7 +93,7 @@ const router = new Router({
             meta: {
                 index: 8
             },
-            component: () => import('../views/AddEquipment.vue')
+            component: () => import('../views/RoboticSpotCheck/AddEquipment.vue')
         },
         {
             path: '/historyDetails',
@@ -101,7 +109,7 @@ const router = new Router({
             meta: {
                 index: 10
             },
-            component: () => import('../views/PrecisionMaintenance.vue')
+            component: () => import('../views/PrecisionMaintenance/PrecisionMaintenance.vue')
         },
         {
             path: '/preservingHistory',
@@ -110,7 +118,7 @@ const router = new Router({
                 index: 10,
                 keepAlive: true
             },
-            component: () => import('../views/PreservingHistory.vue')
+            component: () => import('../views/PrecisionMaintenance/PreservingHistory.vue')
         },
         {
             path: '/preservingHistoryDetails',
@@ -118,7 +126,7 @@ const router = new Router({
             meta: {
                 index: 10
             },
-            component: () => import('../views/PreservingHistoryDetails.vue')
+            component: () => import('../views/PrecisionMaintenance/PreservingHistoryDetails.vue')
         },
         {
             path: '/test',

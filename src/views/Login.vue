@@ -4,21 +4,24 @@
       <!-- <i class="iconfont icon-guanlizhongxin-shezhi-03 i"></i> -->
       <van-icon class="i" name="shield-o" />
     </div>
-    <h1>机器人智能点检系统</h1>
+    <h1>机器人点检系统</h1>
     <br />
     <div class="form">
       <br>
+      <span style="text-align: left;">工号</span>
+
       <div class="input">
         <van-icon name="manager" />
-        <input v-model="userForm.loginName" placeholder="请输入用户名" />
+        <input v-model="userForm.loginName" placeholder="请输入工号" />
       </div>
+      <span style="text-align: left;">密码</span>
       <div class="input">
         <van-icon name="lock" />
         <input v-model="userForm.password" type="password" placeholder="请输入密码" />
       </div>
-      <!-- <div class="form_tools"> -->
-      <!-- <div>忘记密码?</div> -->
-      <!-- </div> -->
+      <div class="form_tools">
+        <div style="text-align: right;">忘记密码?</div>
+      </div>
       <div class="btn" @click="submit">登录</div>
       <span>注册</span>
     </div>
@@ -59,10 +62,19 @@ export default {
   methods: {
     // 登录
     submit() {
-      this.$toast.success('欢迎回来');
-      // this.$notify({ type: "success", message: "欢迎回来！" })
-      this.$router.replace({ path: "/home" })
-      this.my.userStatus = true
+
+      this.$toast.loading({
+        message: '加载中...',
+        duration: 0,
+        forbidClick: true,
+      });
+      setTimeout(() => {
+        this.$toast.clear();
+        this.$toast.success('欢迎回来');
+        this.$router.replace({ path: "/home" })
+        this.my.userStatus = true
+      }, 3000);
+
       // login(this.$alex).then((res) => {
       //   res
       //     ? (this.$notify({ type: "primary", message: "欢迎回来！" }),
@@ -96,13 +108,13 @@ export default {
 .form_tools {
   width: 100%;
   text-align: left;
-  margin-bottom: 40px;
+  margin-bottom: 9px;
 }
 
 span {
   margin: 10px 0px;
   display: block;
-  font-size: 18px;
+  font-size: 16px;
   width: 100%;
 }
 

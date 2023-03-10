@@ -23,16 +23,6 @@
           </el-select>
         </div>
         <div class="inp">
-          <label>宝罗工号</label>
-          <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
-        </div>
-      </div>
-      <div class="form_item">
-        <div class="inp">
-          <label>设备编码</label>
-          <el-input v-model="from.deviceNumber" placeholder="请输入内容"></el-input>
-        </div>
-        <div class="inp">
           <label>点检状态</label>
           <el-select @change="selectnew" v-model="from.checkStatus" placeholder="请选择">
             <el-option v-for="item in checkStatusList" :key="item.value" :label="item.label" :value="item.value">
@@ -42,22 +32,11 @@
       </div>
       <div class="form_item">
         <div class="inp">
-          <label>点检单号</label>
-          <el-input v-model="input" placeholder="请输入内容"></el-input>
-        </div>
-        <div class="inp">
           <label>点检周期</label>
           <el-select @change="selectnew" v-model="from.checkCycle" placeholder="请选择">
             <el-option v-for="item in checkCycleList" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-        </div>
-      </div>
-      <div class="form_item">
-        <div class="inp">
-          <label>扫码</label>
-          <van-button disabled style="width: 60%;margin-left: 10px;" @click="toQrCode" size="small"
-            type="info">扫码</van-button>
         </div>
         <div class="inp">
           <label>查询</label>
@@ -65,50 +44,52 @@
           <van-button @click="clear" style="width: 60%;margin-left: 10px;" size="small" type="info">清空</van-button>
         </div>
       </div>
-      <div class="form_item2">
-        点检任务时间：{{ time }}
+      <div class="form_item">
+        <div class="inp">
+          <label>起始时间</label>
+          <van-cell :value="from.startDate" @click="show = true" />
+          <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="show"
+            @confirm="onConfirm" />
+        </div>
+        <div class="inp">
+          <label>结束时间</label>
+          <van-cell :value="from.endDate" @click="show2 = true" />
+          <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="show2"
+            @confirm="onConfirm2" />
+        </div>
       </div>
     </div>
     <div class="tableBox">
       <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }" :data="tableData" border
         style="width: 100%;font-size: 0.6rem">
-        <el-table-column type="index" width="35" label="序号">
+        <!-- <el-table-column type="index" width="35" label="序号">
+        </el-table-column> -->
+        <el-table-column prop="itemTitle" label="项目">
         </el-table-column>
-        <el-table-column prop="checkTitle" label="项目">
-        </el-table-column>
-        <el-table-column prop="checkCycle" width="45" label="周期">
+        <el-table-column prop="checkDate" width="115" label="周期">
         </el-table-column>
         <el-table-column prop="checkStatus" width="65" label="检状态">
         </el-table-column>
-        <el-table-column prop="address" width="63" label="检查">
+        <el-table-column prop="address" width="63" label="详情">
           <template slot-scope="scope">
             <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row, 1)" size="mini" plain
-              type="info">检查</van-button>
+              type="info">详情</van-button>
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="address" width="65" label="修状态">
-        </el-table-column>
-        <el-table-column prop="address" width="63" label="修复">
-          <template slot-scope="scope">
-            <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row)" size="mini" plain
-              type="info">修复</van-button>
-          </template>
-        </el-table-column> -->
       </el-table>
     </div>
     <div class="pag">
-      <el-pagination :page-size="15" background @current-change="handleCurrentChange" :current-page="currentPage"
+      <el-pagination background :page-size="15" @current-change="handleCurrentChange" :current-page="currentPage"
         layout="prev, pager, next,total" :total="dataCount">
       </el-pagination>
     </div>
-    <div class="chart">
-      <div id="myChart" style="height:100%;width:100%;"></div>
-    </div>
+    <br />
+    <br />
   </div>
 </template>
 
 <script>
-import { queryallline, querysimpleinfo, newestrecord } from '@/api/rollers'
+import { queryallline, querysimpleinfo, recordhistory } from '@/api/rollers'
 export default {
   name: "CheckingToDo",
   data() {
@@ -117,11 +98,12 @@ export default {
       value: '',
       Branch: '宝日汽车板',
       input: '',
-      time: '',
+      show: false,
+      show2: false,
       deviceId: 0,
-      dataCount: null,
-      currentPage: 0,
       line: '',
+      dataCount: null,
+      currentPage: 1,
       from: {
         deviceId: '',
         baoRobotNumber: '',
@@ -155,68 +137,27 @@ export default {
       }, {
         value: 2,
         label: '已完成'
-      }],
-      option: {
-        title: {
-          text: '',
-          subtext: '',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item'
-        },
-        // legend: {
-        //   orient: 'vertical',
-        //   left: 'left'
-        // },
-        series: [
-          {
-            name: '统计',
-            type: 'pie',
-            radius: '50%',
-            data: [],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      }
-    }
+      }]
+    };
   },
   activated() {
     this.selectnew();
-    this.my.title = "点检待办事项"; //页面标题
+    this.my.title = "历史信息"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
     this.my.isTabBar = true; //是否开启TabBar
     // this.my.code = '';
-    this.drawLine();
-    setInterval(() => {
-      let x = new Date();
-      this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
-    }, 1000)
-    console.log(this.my.code, '扫码结果');
     queryallline().then((res) => {
       console.log(res.result);
       this.lineList = res.result.line;
     })
   },
   mounted() {
-    this.my.title = "点检待办事项"; //页面标题
+    this.my.title = "历史信息"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
     this.my.isTabBar = true; //是否开启TabBar
     // this.my.code = '';
-    this.drawLine();
-    setInterval(() => {
-      let x = new Date();
-      this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
-    }, 1000)
-    console.log(this.my.code, '扫码结果');
     queryallline().then((res) => {
       console.log(res.result);
       this.lineList = res.result.line;
@@ -224,34 +165,56 @@ export default {
   },
 
   methods: {
-    handleCurrentChange(val) {
-      this.from.pageNum = val;
-      this.selectnew();
-    },
     clear() {
       this.tableData = []
-      this.from.deviceId = ''
-      this.from.deviceNumber = ''
-      this.from.baoRobotNumber = ''
-      this.line = ''
       this.dataCount = null
+      this.from.deviceId = ''
+      this.from.baoRobotNumber = ''
+      this.from.pageNum = 1
+      this.from.recordNumber = ''
+      this.from.checkCycle = 1
+      this.from.checkStatus = 0
+      this.from.deviceNumber = ''
+
+      this.from.endDate = ''
+      this.from.startDate = ''
+    },
+    handleCurrentChange(val) {
+      this.from.pageNum = val;
+      console.log(val);
+      this.selectnew();
+    },
+    formatDate(date) {
+      console.log(date);
+      let y = date.getFullYear()
+      let m = date.getMonth() + 1
+      m = m < 10 ? ('0' + m) : m
+      let d = date.getDate()
+      d = d < 10 ? ('0' + d) : d
+      let dateTime = y + '-' + m + '-' + d;
+      return dateTime;
+    },
+    onConfirm(date) {
+      this.show = false;
+      this.from.startDate = this.formatDate(date);
+      this.selectnew();
+    },
+    onConfirm2(date) {
+      this.show2 = false;
+      this.from.endDate = this.formatDate(date);
+      this.selectnew();
     },
     // 扫码
     toQrCode() {
       this.$router.push({ path: '/test' })
     },
-    // 底部线图
-    drawLine() {
-      let myChart = this.$echarts.init(document.getElementById("myChart"));
-      myChart.setOption(this.option);
-    },
     // 查询机组下设备列表
     selectline(i) {
-      this.tableData = []
+      this.tableData = [];
+      this.dataCount = null
       this.from.deviceId = ''
       this.from.deviceNumber = ''
       this.from.baoRobotNumber = ''
-      this.dataCount = null
       this.$eiInfo.parameter = {
         productionLine: i
       }
@@ -270,27 +233,21 @@ export default {
     },
     // 查询数据
     selectnew() {
-      this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
-      this.$eiInfo.parameter.deviceId = this.deviceId
-      newestrecord(this.$eiInfo).then((res) => {
-        if (res.sys.status == 1) {
-          if (res.sys.msg == '点检项次') {
+      if (this.deviceId) {
+        this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
+        this.$eiInfo.parameter.deviceId = this.deviceId
+        recordhistory(this.$eiInfo).then((res) => {
+          this.tableData = res.result.result;
+          this.dataCount = res.result.dataCount
+        })
+      }
 
-          } else {
-            this.$notify({ type: "warning", message: res.sys.msg })
-          }
-        }
-        this.tableData = res.result.record
-        this.dataCount = res.result.dataCount
-        this.option.series[0].data = res.result.countFinish
-        this.drawLine();
-      })
     },
     handleEdit(i, row, s) {
       switch (s) {
         case 1:
           this.my.recordId = row.recordId;
-          this.$router.push({ path: "/toDoDetails" });
+          this.$router.push({ path: "/historyDetails" });
           break;
         case 2:
 
@@ -309,36 +266,22 @@ export default {
   padding: 14px 0;
 }
 
-.van-button--info {
-  color: #fff;
-  background-color: #687dbb;
-  border: 1px solid #687dbb;
-}
+.van-cell {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  /* padding: 10px 16px; */
+  margin-left: 10px;
+  border-bottom: 1px solid;
+  overflow: hidden;
+  color: #323233;
+  font-size: 14px;
+  line-height: 24px;
 
-/deep/.el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #687dbb;
-}
-
-/deep/.el-input {
-  width: 110px !important;
-  margin-left: 4px;
-  height: 32px;
-}
-
-/deep/.el-input__inner {
-  width: 110px !important;
-  margin-left: 4px;
-  height: 32px;
-}
-
-/deep/ .el-input--suffix .el-input__inner {
-  width: 110px !important;
-  margin-left: 4px;
-  height: 32px;
-}
-
-/deep/.el-input__icon {
-  height: 116%;
+  background-color: #fff;
 }
 
 .pag {
@@ -391,5 +334,37 @@ label {
   justify-content: space-between;
   text-align: right;
   white-space: nowrap;
+}
+
+.van-button--info {
+  color: #fff;
+  background-color: #687dbb;
+  border: 1px solid #687dbb;
+}
+
+/deep/.el-input {
+  width: 110px !important;
+  margin-left: 4px;
+  height: 32px;
+}
+
+/deep/.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #687dbb;
+}
+
+/deep/.el-input__inner {
+  width: 110px !important;
+  margin-left: 4px;
+  height: 32px;
+}
+
+/deep/ .el-input--suffix .el-input__inner {
+  width: 110px !important;
+  margin-left: 4px;
+  height: 32px;
+}
+
+/deep/.el-input__icon {
+  height: 116%;
 }
 </style>

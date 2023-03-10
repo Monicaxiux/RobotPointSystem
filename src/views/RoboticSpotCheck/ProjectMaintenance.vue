@@ -39,8 +39,8 @@
     <div class="tableBox">
       <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }" :data="tableData" border
         style="width: 100%;font-size: 0.6rem">
-        <el-table-column type="index" width="35" label="序号">
-        </el-table-column>
+        <!-- <el-table-column type="index" width="35" label="序号">
+        </el-table-column> -->
         <el-table-column prop="checkTitle" label="项目">
         </el-table-column>
         <el-table-column prop="checkCycle" width="65" label="类型">
