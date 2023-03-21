@@ -59,6 +59,7 @@ export default {
         that.codeUrl = result;
         that.my.code = result;
         console.log(result);
+
         that.closeScan();
         that.$router.back();
 

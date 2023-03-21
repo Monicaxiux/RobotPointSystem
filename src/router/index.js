@@ -101,7 +101,7 @@ const router = new Router({
             meta: {
                 index: 9
             },
-            component: () => import('../views/HistoryDetails.vue')
+            component: () => import('../views/RoboticSpotCheck/HistoryDetails.vue')
         },
         {
             path: '/precisionMaintenance',
@@ -120,6 +120,15 @@ const router = new Router({
             },
             component: () => import('../views/PrecisionMaintenance/PreservingHistory.vue')
         },
+         {
+            path: '/profile',
+            name: 'Profile',//维护历史
+            meta: {
+                index: 10,
+                keepAlive: true
+            },
+            component: () => import('../views/SparePartsManagement/Profile.vue')
+        },
         {
             path: '/preservingHistoryDetails',
             name: 'PreservingHistoryDetails',//维护详情
@@ -127,6 +136,30 @@ const router = new Router({
                 index: 10
             },
             component: () => import('../views/PrecisionMaintenance/PreservingHistoryDetails.vue')
+        },
+        {
+            path: '/EditTemplate',
+            name: 'EditTemplate',//编辑模板
+            meta: {
+                index: 10
+            },
+            component: () => import('../views/PrecisionMaintenance/EditTemplate.vue')
+        },
+         {
+            path: '/ToBeMaintained',
+            name: 'ToBeMaintained',//待维护
+            meta: {
+                index: 10
+            },
+            component: () => import('../views/PrecisionMaintenance/ToBeMaintained.vue')
+        },
+        {
+            path: '/FaultLog',
+            name: 'FaultLog',//待维护
+            meta: {
+                index: 10
+            },
+            component: () => import('../views/SparePartsManagement/FaultLog.vue')
         },
         {
             path: '/test',

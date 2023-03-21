@@ -4,15 +4,12 @@
       <!-- <i class="iconfont icon-guanlizhongxin-shezhi-03 i"></i> -->
       <van-icon class="i" name="shield-o" />
     </div>
-    <h1>机器人点检系统</h1>
-    <br />
+    <h1>设备智能化运维<br />管理系统</h1>
     <div class="form">
-      <br>
       <span style="text-align: left;">工号</span>
-
       <div class="input">
         <van-icon name="manager" />
-        <input v-model="userForm.loginName" placeholder="请输入工号" />
+        <input v-model="userForm.workNumber" placeholder="请输入工号" />
       </div>
       <span style="text-align: left;">密码</span>
       <div class="input">
@@ -23,7 +20,7 @@
         <div style="text-align: right;">忘记密码?</div>
       </div>
       <div class="btn" @click="submit">登录</div>
-      <span>注册</span>
+      <!-- <span>注册</span> -->
     </div>
     <br />
     <br />
@@ -37,21 +34,10 @@ export default {
     return {
       my: this.$myStore(), //使用Pinia
       // 登录表单验证
-      loginNameRules: [
-        { validate: (val) => !!val, message: "必须填写用户名" },
-        { validate: (val) => val.length >= 3, message: "用户名长度大于3" },
-      ],
-      passwordRules: [
-        { validate: (val) => !!val, message: "必须填写密码" },
-        {
-          validate: (val) => val.length >= 1 && val.length <= 10,
-          message: "密码长度大于1小于10",
-        },
-      ],
       // 登录表单
       userForm: {
-        loginName: "Admin0",
-        password: "0",
+        workNumber: "",
+        password: "",
       },
     };
   },
@@ -62,32 +48,42 @@ export default {
   methods: {
     // 登录
     submit() {
+      // this.$toast.loading({
+      //   message: '加载中...',
+      //   duration: 0,
+      //   forbidClick: true,
+      // });
+      // setTimeout(() => {
+      //   this.$toast.clear();
+      //   this.$toast.success('欢迎回来');
+      //   this.$router.replace({ path: "/home" })
+      //   this.my.userStatus = true
+      // }, 1300);
 
-      this.$toast.loading({
-        message: '加载中...',
-        duration: 0,
-        forbidClick: true,
-      });
-      setTimeout(() => {
-        this.$toast.clear();
-        this.$toast.success('欢迎回来');
-        this.$router.replace({ path: "/home" })
-        this.my.userStatus = true
-      }, 3000);
+      this.$eiInfo.parameter = this.userForm
+      if (this.userForm.workNumber == "" || this.userForm.password == "") {
+        this.$toast.fail('请输入账号或密码！');
+      } else {
+        login(this.$eiInfo).then((res) => {
+          if (res.sys.status != -1) {
+            this.$toast.success('欢迎回来');
+            this.my.userInfo = res.userInfo.user;
+            this.$router.replace({ path: "/home" })
+            this.my.userStatus = true
+          } else {
+            this.$toast.fail('工号或密码错误');
 
-      // login(this.$alex).then((res) => {
-      //   res
-      //     ? (this.$notify({ type: "primary", message: "欢迎回来！" }),
-      //       this.$router.replace({ path: "/home" }),
-      //       (this.my.userStatus = true))
-      //     : this.clear();
-      // })
+            this.clear();
+          }
+
+        })
+      }
+
     },
     // 清空文本框与验证规则
     clear() {
-      this.$refs.form.clear();
       this.userForm = {
-        loginName: "",
+        workNumber: "",
         password: "",
       };
     },
@@ -96,7 +92,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .form {
-  max-width: 95%;
+  max-width: 87%;
   // max-height: 281px;
   padding: 20px;
   margin: 0 auto;
@@ -131,7 +127,7 @@ span {
   width: 100%;
   display: flex;
   align-items: center;
-  height: 55px;
+  height: 32px;
   margin-bottom: 20px;
   border: 1px solid #bdb6b68f;
   padding: 20px;
@@ -152,19 +148,20 @@ h1 {
   /* margin-top: 220px !important; */
   text-align: center;
   color: #687dbb;
-  font-size: 2rem;
-  font-weight: normal;
+  font-size: 1.6rem;
+
+  font-weight: bold;
 }
 
 .btn {
   color: rgba(255, 255, 255, 0.9);
   border-radius: 9px;
   width: 100%;
-  height: 55px;
-  font-size: 18px;
+  height: 40px;
+  font-size: 15px;
   text-align: center;
   font-weight: bold;
-  line-height: 55px;
+  line-height: 40px;
   // background: linear-gradient(-45deg, #338aff, #3cf0c5, #338aff, #3cf0c5);
   background: linear-gradient(-45deg, #338aff, #687dbb, #338aff, #687dbb);
   background-size: 600%;

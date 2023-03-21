@@ -6,7 +6,7 @@
                     {{ form.recordNumber }}
                 </template>
             </van-field>
-            <van-field label="点检类型">
+            <!-- <van-field label="点检类型">
                 <template #input>
                     {{ form.itemCycleResult }}
                 </template>
@@ -30,7 +30,7 @@
                 <template #input>
                     {{ form.deviceName }}
                 </template>
-            </van-field>
+            </van-field> -->
             <van-field label="点检标题">
                 <template #input>
                     {{ form.checkItem }}
@@ -70,6 +70,14 @@
                             :value="item.value">
                         </el-option>
                     </el-select>
+                </template>
+            </van-field>
+            <van-field v-if="form.checkResult == '检查异常'" label="是否模板">
+                <template #input>
+                    <van-radio-group v-model="needMaintain" direction="horizontal">
+                        <van-radio name="1">是</van-radio>
+                        <van-radio name="0">否</van-radio>
+                    </van-radio-group>
                 </template>
             </van-field>
             <van-field label="问题描述">
@@ -158,6 +166,7 @@ export default {
         return {
             my: this.$myStore(), //使用Pinia的值
             form: {},
+            needMaintain: '0',
             checkPic: [],
             repairPic: [],
             checkResultList: [
@@ -277,6 +286,8 @@ export default {
                         formData.append('repairResult', this.form.repairResult);
                         formData.append('repairUser', this.form.repairUser);
                         formData.append('remark', this.form.remark);
+                        formData.append('needMaintain', parseInt(this.needMaintain));
+                        formData.append('userId', this.my.userInfo.id);
                         console.log(this.checkPic);
                         for (let i = 0; i < this.checkPic.length; i++) {
                             formData.append('checkPic', this.checkPic[i].file);

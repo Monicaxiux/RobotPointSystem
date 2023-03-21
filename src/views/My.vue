@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="call"><a>权限管理</a><a>></a></div>
+    <div class="call"><a>修改密码</a><a>></a></div>
     <div @click="logOut" class="call"><a>退出登录</a><a>></a></div>
     <div @click="updateApp" class="call"><a>检查更新</a><a>></a></div>
   </div>
@@ -75,7 +76,7 @@ export default {
 }
 
 .call a {
-  color: #395197bd;
+  color: #000000bd;
   font-size: 15px;
   font-weight: 600;
 }

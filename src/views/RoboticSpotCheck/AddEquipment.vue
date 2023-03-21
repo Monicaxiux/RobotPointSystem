@@ -12,7 +12,7 @@
                 </template>
             </van-field>
             <van-field label="设备编号" v-model="form.deviceNumber" placeholder="请输入设备编号" />
-            <van-field label="宝罗工号" v-model="form.baoRobotNumber" placeholder="请输入宝罗工号" />
+            <van-field label="设备工号" v-model="form.baoRobotNumber" placeholder="请输入设备工号" />
             <van-field label="设备名称" v-model="form.deviceName" placeholder="请输入设备名称" />
             <van-field label="主要功能" v-model="form.mainFunction" placeholder="请输入主要功能" />
             <van-field label="设备品牌" v-model="form.deviceBrand" placeholder="请输入设备品牌" />
@@ -27,7 +27,7 @@
         <div class="bottom_box">
             <van-button class="bt" @click="edit(1)" type="info">提交</van-button>
             <van-button class="bt" @click="edit(2)" type="default">取消</van-button>
-            <van-button class="bt" v-if="!my.itemStatus" @click="edit(3)" type="danger">删除</van-button>
+            <van-button class="bt" v-if="my.itemStatus == 2" @click="edit(3)" type="danger">删除</van-button>
         </div>
         <br />
         <br />
@@ -70,9 +70,9 @@ export default {
         this.my.isNavBar = true; //是否开启NavBar
         this.my.isTabBar = true; //是否开启TabBar
         console.log(this.my.itemId);
-        if (this.my.itemStatus) {
+        if (this.my.itemStatus == 1) {
             console.log('是添加');
-        } else {
+        } else if (this.my.itemStatus == 2) {
             console.log('是编辑');
             this.$eiInfo.parameter = {
                 deviceId: this.my.deviceId
@@ -132,7 +132,7 @@ export default {
         edit(s) {
             switch (s) {
                 case 1:
-                    if (this.my.itemStatus) {
+                    if (this.my.itemStatus == 1) {
                         console.log('是添加');
                         this.$eiInfo.parameter = {
                             factoryId: parseInt(this.form.factoryId),
@@ -151,7 +151,7 @@ export default {
                                 this.$router.back();
                             }
                         })
-                    } else {
+                    } else if (this.my.itemStatus == 2) {
                         this.$eiInfo.parameter = {
                             id: this.my.deviceId,
                             factoryId: parseInt(this.form.factoryId),

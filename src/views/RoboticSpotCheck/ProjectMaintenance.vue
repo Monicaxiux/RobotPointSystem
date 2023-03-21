@@ -27,11 +27,10 @@
         </div>
       </div>
       <div class="form_item2">
-        <van-button plain hairline @click="$router.push({ path: '/addEquipment' }), my.itemStatus = true" size="mini"
+        <van-button plain hairline @click="$router.push({ path: '/addEquipment' }), my.itemStatus = 1" size="mini"
           type="info">添加点检设备</van-button>
         <van-button plain hairline :disabled="from.deviceId ? false : true"
-          @click="$router.push({ path: '/addEquipment' }), my.itemStatus = false" size="mini"
-          type="info">编辑点检设备</van-button>
+          @click="$router.push({ path: '/addEquipment' }), my.itemStatus = 2" size="mini" type="info">编辑点检设备</van-button>
         <van-button plain hairline @click="handleEdit(0, 1)" size="mini" type="info">添加点检项目</van-button>
       </div>
 
@@ -131,11 +130,11 @@ export default {
     },
     handleEdit(row, s) {
       if (s == 1) {
-        this.my.itemStatus = true;
+        this.my.itemStatus = 1;
       } else {
         this.my.itemId = row.itemId;
         this.my.deviceId = this.from.deviceId;
-        this.my.itemStatus = false;
+        this.my.itemStatus = 2;
       }
       this.$router.push({ path: "/projectDetails" });
     },

@@ -11,7 +11,7 @@
                     {{ form.deviceNumber }}
                 </template>
             </van-field>
-            <van-field label="宝罗工号">
+            <van-field label="设备工号">
                 <template #input>
                     {{ form.baoRobotNumber }}
                 </template>

@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="box">
-      <span>机器人点检</span><br />
+      <span>设备点检</span><br />
       <div class="box_nr">
         <div @click="toRoute('/checkingToDo', 1)">
           <img style="width: 100%;" src="../assets/icon/b.svg" />
           <br />
-          待办事项
+          日常点检
         </div>
         <div @click="toRoute('/projectMaintenance', 2)">
           <img style="width: 100%;" src="../assets/icon/a.svg" />
@@ -23,23 +23,23 @@
     <div class="box">
       <span>精密维护</span><br />
       <div class="box_nr">
+        <div @click="toRoute('/ToBeMaintained', 5)">
+          <img style="width: 100%;" src="../assets/icon/k.svg" />
+          <br />
+          待维护
+        </div>
         <div @click="toRoute('/precisionMaintenance', 4)">
           <img style="width: 100%;" src="../assets/icon/g.svg" />
           <br />
-          创建精密维护
+          创建计划
         </div>
-        <div @click="toRoute('/preservingHistory', 5)">
+        <div @click="toRoute('/EditTemplate', 5)">
           <img style="width: 100%;" src="../assets/icon/h.svg" />
           <br />
-          维护历史
+          编辑模板
         </div>
         <div @click="toRoute('/preservingHistory', 5)">
-          <img style="width: 100%;" src="../assets/icon/h.svg" />
-          <br />
-          维护历史
-        </div>
-        <div @click="toRoute('/preservingHistory', 5)">
-          <img style="width: 100%;" src="../assets/icon/h.svg" />
+          <img style="width: 100%;" src="../assets/icon/l.svg" />
           <br />
           维护历史
         </div>
@@ -48,15 +48,15 @@
     <div class="box">
       <span>设备管理</span><br />
       <div class="box_nr">
-        <div>
-          <img style="width: 100%;" src="../assets/icon/i.svg" />
-          <br />
-          资料管理
-        </div>
-        <div>
+        <div @click="toRoute('/FaultLog', 5)">
           <img style="width: 100%;" src="../assets/icon/j.svg" />
           <br />
           故障记录
+        </div>
+        <div @click="toRoute('/profile', 5)">
+          <img style="width: 100%;" src="../assets/icon/i.svg" />
+          <br />
+          资料管理
         </div>
       </div>
     </div>
@@ -66,17 +66,22 @@
         <div>
           <img style="width: 100%;" src="../assets/icon/d.svg" />
           <br />
-          备件查询
+          备件总库
         </div>
         <div>
           <img style="width: 100%;" src="../assets/icon/e.svg" />
           <br />
-          采购管理
+          备件领用
         </div>
         <div>
           <img style="width: 100%;" src="../assets/icon/f.svg" />
           <br />
-          领用记录
+          备件采购
+        </div>
+        <div>
+          <img style="width: 100%;" src="../assets/icon/m.svg" />
+          <br />
+          备件入库
         </div>
       </div>
     </div>
@@ -96,7 +101,7 @@ export default {
     };
   },
   mounted() {
-    this.my.title = "宝武机器人点检系统"; //页面标题
+    this.my.title = "首页"; //页面标题
     this.my.left = false; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
     this.my.isTabBar = true; //是否开启TabBar
@@ -149,6 +154,7 @@ span {
   display: block;
   color: #687dbb;
   font-weight: bold;
+  text-align: left;
   padding: 5px 0;
   border-bottom: 1px dashed #697dba80;
 }

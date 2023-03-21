@@ -7,7 +7,7 @@ export const queryallline = (eiInfo) => {
         data: eiInfo
     })
 }
-// 查询设备的id宝罗工号名称信息
+// 查询设备的id设备工号名称信息
 export const querysimpleinfo = (eiInfo) => {
     return req({
         url: '/device/query/simple/info',
@@ -65,6 +65,16 @@ export const itemallinfo = (eiInfo) => {
         data: eiInfo
     })
 }
+
+// 新增点检项次 临时项次
+export const addtemp = (eiInfo) => {
+    return req({
+        url: '/item/add/temp',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
 
 // 修改点检项次
 export const itemupdate = (eiInfo) => {
@@ -198,5 +208,57 @@ export const updaterecord = (formData) => {
             return data
         }],
         data: formData
+    })
+}
+
+// 查询部分维护记录信息
+export const querypart = (eiInfo) => {
+    return req({
+        url: '/maintain/record/query/part',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询精密维护模板信息
+export const queryinfo = (eiInfo) => {
+    return req({
+        url: '/maintain/item/query/info',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 修改一个精密维护模板
+export const maintainitemupdate = (eiInfo) => {
+    return req({
+        url: '/maintain/item/update',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 新增一个精密维护模板
+export const maintainitemadd = (eiInfo) => {
+    return req({
+        url: '/maintain/item/add',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 删除一个精密维护模板
+export const maintainitemdelete = (eiInfo) => {
+    return req({
+        url: '/maintain/item/delete',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询登录用户的待办点检
+export const recordtobedone = (eiInfo) => {
+    return req({
+        url: '/check/record/to/be/done',
+        method: 'post',
+        data: eiInfo
     })
 }

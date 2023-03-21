@@ -12,8 +12,9 @@ const myStore = defineStore('store', {
             code: '',
             recordId: '',
             itemId: '',
-            itemStatus: false,
-            deviceId: 0
+            itemStatus: 1,
+            deviceId: 0,
+            userInfo:null
         }
     },
     getters: {

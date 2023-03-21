@@ -1,9 +1,9 @@
 <template>
     <div>
         <van-cell-group>
-            <van-field v-model="Branch" label="分厂">
+            <!-- <van-field v-model="Branch" disabled label="分厂">
 
-            </van-field>
+            </van-field> -->
             <van-field label="机组">
                 <template #input>
                     <el-select @change="selectline" v-model="line" placeholder="请选择">
@@ -21,16 +21,25 @@
                     </el-select>
                 </template>
             </van-field>
-            <!-- <van-field v-model="form.resultDetails" label="设备编码"></van-field> -->
+            <van-field v-model="form.itemId" label="项次编号"></van-field>
             <van-field label="维护日期">
                 <template #input>
-                    <van-cell :value="form.createDate" @click="show = true" />
+                    <van-cell :value="form.planFinishDate" @click="show = true" />
                     <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="show"
                         @confirm="onConfirm" />
                 </template>
             </van-field>
-            <van-field v-model="form.maintainTitle" label="维护标题"></van-field>
-            <van-field v-model="form.maintainDetails" label="维护内容"></van-field>
+            <!-- <van-field v-model="form.maintainTitle" label="维护标题"></van-field> -->
+            <!-- <van-field label="维护标题">
+                <template #input>
+                    <el-select v-model="form.maintainTitle" placeholder="请选择">
+                        <el-option v-for="item in maintainTitleList" :key="item.value" :label="item.title"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </template>
+            </van-field> -->
+            <!-- <van-field v-model="form.maintainDetails" label="维护内容"></van-field> -->
             <van-field label="维护前照片">
                 <template #input>
                     <van-uploader accept="*" v-model="form.beforeMaintainPic" multiple />
@@ -58,7 +67,7 @@ export default {
             form: {
                 deviceId: '',
                 resultDetails: '',
-                createDate: '',
+                planFinishDate: '',
                 maintainTitle: '',
                 maintainDetails: '',
                 beforeMaintainPic: []
@@ -69,7 +78,8 @@ export default {
             Branch: '宝日汽车板',
             repairPic: [],
             lineList: [],
-            deviceList: []
+            deviceList: [],
+            maintainTitleList: []
         };
     },
     mounted() {
@@ -107,7 +117,7 @@ export default {
         },
         onConfirm(date) {
             this.show = false;
-            this.form.createDate = this.formatDate(date);
+            this.form.planFinishDate = this.formatDate(date);
         },
         Preview(x, index) {
             console.log(x);
@@ -132,7 +142,7 @@ export default {
                     // } else {
                     let formData = new FormData();
                     formData.append('deviceId', this.form.deviceId);
-                    formData.append('createDate', this.form.createDate);
+                    formData.append('planFinishDate', this.form.planFinishDate);
                     formData.append('maintainTitle', this.form.maintainTitle);
                     formData.append('maintainDetails', this.form.maintainDetails);
                     // formData.append('beforeMaintainPic', this.form.beforeMaintainPic);

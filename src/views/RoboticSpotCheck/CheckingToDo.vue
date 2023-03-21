@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="form">
-      <div class="form_item">
+      <!-- <div class="form_item">
         <div class="inp">
           <label>分厂</label>
           <el-input v-model="Branch" disabled placeholder="请输入内容"></el-input>
@@ -23,7 +23,7 @@
           </el-select>
         </div>
         <div class="inp">
-          <label>宝罗工号</label>
+          <label>设备工号</label>
           <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
         </div>
       </div>
@@ -52,21 +52,30 @@
             </el-option>
           </el-select>
         </div>
-      </div>
+      </div> -->
       <div class="form_item">
         <div class="inp">
-          <label>扫码</label>
-          <van-button disabled style="width: 60%;margin-left: 10px;" @click="toQrCode" size="small"
-            type="info">扫码</van-button>
+          <label>扫描设备码</label>
+          <img @click="toQrCode" style="width: 20%;margin-left: 10px;" src="../../assets/icon/qrCode.svg" />
         </div>
         <div class="inp">
-          <label>查询</label>
-          <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small" type="info">查询</van-button>
-          <van-button @click="clear" style="width: 60%;margin-left: 10px;" size="small" type="info">清空</van-button>
+          <label>设备工号</label>
+          <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
         </div>
+      </div>
+      <div class="form_item">
+        <van-button @click="(selectnew(), my.code = '')" style="width: 60%;margin-left: 10px;" size="small"
+          type="info">查询</van-button>
+        <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;color: #687dbb;"
+          size="small" type="info">清空</van-button>
+        <van-button @click="$router.push({ path: '/projectDetails' }), my.itemStatus = 3"
+          style="width: 60%;margin:0 10px;" size="small" type="info">新增临时项次</van-button>
       </div>
       <div class="form_item2">
         点检任务时间：{{ time }}
+        <div v-if="deviceInfo">
+          设备名称：{{ deviceInfo.deviceName }}<br />设备机组：{{ deviceInfo.productionLine }}
+        </div>
       </div>
     </div>
     <div class="tableBox">
@@ -120,15 +129,16 @@ export default {
       time: '',
       deviceId: 0,
       dataCount: null,
+      deviceInfo: null,
       currentPage: 0,
       line: '',
       from: {
-        deviceId: '',
+        // deviceId: '',
         baoRobotNumber: '',
-        deviceNumber: '',
-        checkStatus: 0,
-        checkCycle: 1,
-        recordNumber: '',
+        // deviceNumber: '',
+        // checkStatus: 0,
+        // checkCycle: 1,
+        // recordNumber: '',
         pageNum: 1
       },//搜索条件
       lineList: [],//机组下拉框
@@ -189,34 +199,34 @@ export default {
   },
   activated() {
     this.selectnew();
-    this.my.title = "点检待办事项"; //页面标题
+    this.my.title = "日常点检"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
     this.my.isTabBar = true; //是否开启TabBar
     // this.my.code = '';
     this.drawLine();
-    setInterval(() => {
-      let x = new Date();
-      this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
-    }, 1000)
-    console.log(this.my.code, '扫码结果');
+    // setInterval(() => {
+    //   let x = new Date();
+    //   this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
+    // }, 1000)
+    console.log(this.my.code, 'aaaa扫码结果');
     queryallline().then((res) => {
       console.log(res.result);
       this.lineList = res.result.line;
     })
   },
   mounted() {
-    this.my.title = "点检待办事项"; //页面标题
+    this.my.title = "日常点检"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
     this.my.isTabBar = true; //是否开启TabBar
     // this.my.code = '';
     this.drawLine();
-    setInterval(() => {
-      let x = new Date();
-      this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
-    }, 1000)
-    console.log(this.my.code, '扫码结果');
+    // setInterval(() => {
+    //   let x = new Date();
+    //   this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
+    // }, 1000)
+    console.log(this.my.code, 'aaa扫码结果');
     queryallline().then((res) => {
       console.log(res.result);
       this.lineList = res.result.line;
@@ -230,14 +240,17 @@ export default {
     },
     clear() {
       this.tableData = []
-      this.from.deviceId = ''
-      this.from.deviceNumber = ''
+      // this.from.deviceId = ''
+      // this.from.deviceNumber = ''
+      this.deviceInfo = null
       this.from.baoRobotNumber = ''
+      this.from.pageNum = 1
       this.line = ''
       this.dataCount = null
     },
     // 扫码
     toQrCode() {
+      this.clear();
       this.$router.push({ path: '/test' })
     },
     // 底部线图
@@ -248,9 +261,9 @@ export default {
     // 查询机组下设备列表
     selectline(i) {
       this.tableData = []
-      this.from.deviceId = ''
-      this.from.deviceNumber = ''
-      this.from.baoRobotNumber = ''
+      // this.from.deviceId = ''
+      // this.from.deviceNumber = ''
+      // this.from.baoRobotNumber = ''
       this.dataCount = null
       this.$eiInfo.parameter = {
         productionLine: i
@@ -271,17 +284,20 @@ export default {
     // 查询数据
     selectnew() {
       this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
-      this.$eiInfo.parameter.deviceId = this.deviceId
+      this.$eiInfo.parameter.deviceId = this.deviceId;
+      this.$eiInfo.parameter.code = this.my.code;
       newestrecord(this.$eiInfo).then((res) => {
         if (res.sys.status == 1) {
           if (res.sys.msg == '点检项次') {
-
+            console.log('');
           } else {
             this.$notify({ type: "warning", message: res.sys.msg })
           }
         }
         this.tableData = res.result.record
+        this.time = res.result.checkRecordDate
         this.dataCount = res.result.dataCount
+        this.deviceInfo = res.result.deviceInfo
         this.option.series[0].data = res.result.countFinish
         this.drawLine();
       })
