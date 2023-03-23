@@ -14,7 +14,8 @@ const myStore = defineStore('store', {
             itemId: '',
             itemStatus: 1,
             deviceId: 0,
-            userInfo:null
+            userInfo:null,
+            chakData:null
         }
     },
     getters: {

@@ -34,6 +34,17 @@
                     {{ form.cycleInterval }}{{ form.checkCycle == 1 ? '日' : form.checkCycle == 2 ? '周' : '月' }}一次
                 </template>
             </van-field>
+            <van-field v-if="my.itemStatus != 3 && form.checkCycle == 2" label="选择星期几">
+                <template #input>
+                    <el-select v-model="form.cycleDay" placeholder="请选择星期几">
+                        <el-option v-for="item in cycleDayList" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </template>
+            </van-field>
+            <van-field v-if="my.itemStatus != 3 && form.checkCycle == 3" type="digit" placeholder="请输入这个月的第几号" label="输入几号">
+
+            </van-field>
             <van-field label="点检结果类型">
                 <template #input>
                     <el-select @change="change" v-model="form.itemResultType" placeholder="请选择结果类型">
@@ -81,6 +92,36 @@ export default {
                 unit: '',
                 deviceId: ''
             },
+            cycleDayList: [
+                {
+                    label: '周一',
+                    value: 1
+                },
+                {
+                    label: '周二',
+                    value: 2
+                },
+                {
+                    label: '周三',
+                    value: 3
+                },
+                {
+                    label: '周四',
+                    value: 4
+                },
+                {
+                    label: '周五',
+                    value: 5
+                },
+                {
+                    label: '周六',
+                    value: 6
+                },
+                {
+                    label: '周日',
+                    value: 7
+                }
+            ],
             checkCycleList: [{
                 value: 1,
                 label: '日点检'
@@ -157,6 +198,7 @@ export default {
                             checkCycle: this.form.checkCycle,
                             checkDetails: this.form.checkDetails,
                             cycleInterval: parseInt(this.form.cycleInterval),
+                            cycleDay: this.form.cycleDay,
                             maxValue: parseInt(this.form.maxValue),
                             minValue: parseInt(this.form.minValue),
                             unit: this.form.unit,
@@ -175,6 +217,7 @@ export default {
                             checkCycle: this.form.checkCycle,
                             checkDetails: this.form.checkDetails,
                             cycleInterval: parseInt(this.form.cycleInterval),
+                            cycleDay: this.form.cycleDay,
                             id: this.form.itemId,
                             maxValue: parseInt(this.form.maxValue),
                             minValue: parseInt(this.form.minValue),

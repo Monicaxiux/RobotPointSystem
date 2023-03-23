@@ -42,7 +42,7 @@
           <label>查询</label>
           <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small" type="info">查询</van-button>
           <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;
-        color: #687dbb;" size="small" type="info">清空</van-button>
+          color: #687dbb;" size="small" type="info">清空</van-button>
         </div>
       </div>
       <div class="form_item">
@@ -138,6 +138,9 @@ export default {
       }, {
         value: 2,
         label: '已完成'
+      }, {
+        value: 3,
+        label: '逾期未检'
       }]
     };
   },

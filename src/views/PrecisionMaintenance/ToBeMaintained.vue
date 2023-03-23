@@ -7,7 +7,7 @@
                     <img @click="toQrCode" style="width: 20%;margin-left: 10px;" src="../../assets/icon/qrCode.svg" />
                 </div>
                 <div class="inp">
-                    <label>设备工号</label>
+                    <label>宝罗工号</label>
                     <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
                 </div>
             </div>
@@ -16,7 +16,7 @@
                     type="info">查询</van-button>
                 <van-button @click="clear"
                     style="width: 60%;margin: 0 10px;background-color: white;
-                                                                                                                                                                                                                              color: #687dbb;"
+                                                                                                                                                                                                                                                                                          color: #687dbb;"
                     size="small" type="info">清空</van-button>
             </div>
             <div class="form_item2">
@@ -28,15 +28,15 @@
         <div class="tableBox">
             <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }" :data="tableData"
                 border style="width: 100%;font-size: 0.6rem">
-                <el-table-column prop="recordId" width="53" label="编号">
-                </el-table-column>
+                <!-- <el-table-column prop="recordId" width="53" label="编号">
+                </el-table-column> -->
                 <el-table-column prop="createDate" label="日期">
                 </el-table-column>
-                <el-table-column prop="maintainStatus" width="53" label="状态">
+                <el-table-column prop="maintainStatus" width="73" label="状态">
                 </el-table-column>
-                <el-table-column prop="maintainTitle" width="53" label="标题">
+                <el-table-column prop="maintainTitle" width="83" label="标题">
                 </el-table-column>
-                <el-table-column prop="createUser" width="63" label="维护人">
+                <el-table-column prop="createUser" width="93" label="维护人">
                 </el-table-column>
                 <el-table-column prop="address" width="63" label="操作">
                     <template slot-scope="scope">
@@ -69,11 +69,7 @@ export default {
             currentPage: 0,
             line: '',
             from: {
-                deviceId: '',
                 baoRobotNumber: '',
-                deviceNumber: '',
-                checkCycle: 1,
-                recordNumber: '',
                 pageNum: 1
             },//搜索条件
             lineList: [],//机组下拉框
@@ -165,18 +161,13 @@ export default {
         // 查询数据
         selectnew() {
             this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
-            this.$eiInfo.parameter.deviceId = this.deviceId
+            // this.$eiInfo.parameter.deviceId = this.deviceId
             this.$eiInfo.parameter.code = this.my.code
+            this.$eiInfo.parameter.maintainStatus = 0
 
             querypart(this.$eiInfo).then((res) => {
-                if (res.sys.status == 1) {
-                    if (res.sys.msg == '点检项次') {
 
-                    } else {
-                        this.$notify({ type: "warning", message: res.sys.msg })
-                    }
-                }
-                this.tableData = res.result.record
+                this.tableData = res.result.maintainRecord
                 this.dataCount = res.result.dataCount
                 this.deviceInfo = res.result.deviceInfo
 
@@ -187,7 +178,7 @@ export default {
             switch (s) {
                 case 1:
                     this.my.recordId = row.recordId;
-                    this.$router.push({ path: "/toDoDetails" });
+                    this.$router.push({ path: "/preservingHistoryDetails" });
                     break;
                 case 2:
 

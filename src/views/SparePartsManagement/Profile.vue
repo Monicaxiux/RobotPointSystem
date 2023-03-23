@@ -19,7 +19,7 @@
             </div>
             <div class="form_item">
                 <div class="inp">
-                    <label>设备工号</label>
+                    <label>宝罗工号</label>
                     <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
                 </div>
                 <div class="inp">
@@ -48,7 +48,7 @@
                     <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small"
                         type="info">查询</van-button>
                     <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;
-                    color: #687dbb;" size="small" type="info">清空</van-button>
+                        color: #687dbb;" size="small" type="info">清空</van-button>
                 </div>
             </div>
 

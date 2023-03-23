@@ -15,10 +15,11 @@ Vue.prototype.$myStore = myStore
 // VantUi库
 import Vant from 'vant';
 import 'vant/lib/index.css';
-import { Notify, Dialog, Toast } from 'vant';
+import { Notify, Dialog, Toast,Sticky  } from 'vant';
 Vue.use(Notify);//Notify 消息提示
 Vue.use(Dialog);//Dialog 弹出框
 Vue.use(Toast);//Toast 轻提示
+Vue.use(Sticky);//Toast 轻提示
 Vue.use(Vant);
 Vue.prototype.$toast = Toast
 

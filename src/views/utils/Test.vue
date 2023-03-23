@@ -1,15 +1,14 @@
 <template>
-  <div class="scan">
-    <div id="codeId">
-      <div style="height:40%"></div>
-      <p class="tip" style="text-align: center">加载中...</p>
+  <div>
+    <div class="scan">
+      <div id="codeId">
+        <div style="height:40%"></div>
+        <p class="tip" style="text-align: center">加载中...</p>
+      </div>
+      <div class="back">
+        <span @click="backL()">&nbsp;&nbsp;< 返回</span>
+      </div>
     </div>
-    <!-- <footer>
-      <button @click="startRecognize">1.创建控件</button>
-      <button @click="startScan">2.开始扫描</button>
-      <button @click="cancelScan">3.结束扫描</button>
-      <button @click="closeScan">4.关闭控件</button>
-    </footer> -->
   </div>
 </template>
 
@@ -28,6 +27,8 @@ export default {
   mounted() {
     this.my.isNavBar = false; //是否开启NavBar
     this.my.isTabBar = false; //是否开启TabBar
+    // 检测返回键
+    // document.addEventListener("plusready", this.back());
     setTimeout(() => {
       this.startRecognize();
     }, 500)
@@ -62,9 +63,12 @@ export default {
 
         that.closeScan();
         that.$router.back();
-
       }
       that.startScan();
+    },
+    backL() {
+      this.cancelScan()
+      this.$router.back();
     },
     //开始扫描
     startScan() {
@@ -95,6 +99,18 @@ export default {
 
 .tip {
   font-size: 23px;
+}
+
+.back {
+  background-color: #009cdc;
+  text-align: left;
+  height: 40px;
+  color: white;
+  z-index: 9999;
+  top: 0;
+  line-height: 40px;
+  width: 100%;
+  position: absolute;
 }
 
 #codeId {

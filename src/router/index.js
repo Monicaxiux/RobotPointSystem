@@ -149,7 +149,8 @@ const router = new Router({
             path: '/ToBeMaintained',
             name: 'ToBeMaintained',//待维护
             meta: {
-                index: 10
+                index: 10,
+                keepAlive: true
             },
             component: () => import('../views/PrecisionMaintenance/ToBeMaintained.vue')
         },

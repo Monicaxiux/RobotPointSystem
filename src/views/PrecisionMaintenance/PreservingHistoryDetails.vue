@@ -11,7 +11,7 @@
                     {{ form.deviceNumber }}
                 </template>
             </van-field>
-            <van-field label="设备工号">
+            <van-field label="宝罗工号">
                 <template #input>
                     {{ form.baoRobotNumber }}
                 </template>
@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { maintainqueryall, deleterecord, updaterecord } from '@/api/rollers'
+import { recordqueryall, recorddeleterecord, recordupdaterecord } from '@/api/rollers'
 import { ImagePreview } from 'vant';
 
 export default {
@@ -124,7 +124,7 @@ export default {
         this.$eiInfo.parameter = {
             recordId: this.my.recordId
         }
-        maintainqueryall(this.$eiInfo).then((res) => {
+        recordqueryall(this.$eiInfo).then((res) => {
             this.form = JSON.parse(JSON.stringify(res.result.maintainRecord));
             if (this.form.beforeMaintainPic) {
                 for (let i = 0; i < this.form.beforeMaintainPic[0].length; i++) {
@@ -156,6 +156,7 @@ export default {
                     let formData = new FormData();
                     formData.append('recordId', this.my.recordId);
                     formData.append('maintainResult', this.form.maintainResult);
+                    formData.append('userId', this.my.userInfo.id);
 
                     for (let i = 0; i < this.beforeMaintainPic.length; i++) {
                         formData.append('beforeMaintainPic', this.beforeMaintainPic[i].file);
@@ -163,7 +164,7 @@ export default {
                     for (let i = 0; i < this.afterMaintainPic.length; i++) {
                         formData.append('afterMaintainPic', this.afterMaintainPic[i].file);
                     }
-                    updaterecord(formData).then((res) => {
+                    recordupdaterecord(formData).then((res) => {
                         if (res.sys.status == 1) {
                             this.$notify({ type: "success", message: res.sys.msg })
                             this.$router.back();
@@ -179,7 +180,7 @@ export default {
                             this.$eiInfo.parameter = {
                                 recordId: this.my.recordId
                             }
-                            deleterecord(this.$eiInfo).then((res) => {
+                            recorddeleterecord(this.$eiInfo).then((res) => {
                                 if (res.sys.status == 1) {
                                     this.$notify({ type: "success", message: res.sys.msg })
                                     this.$router.back();

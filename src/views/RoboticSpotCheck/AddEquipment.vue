@@ -12,7 +12,7 @@
                 </template>
             </van-field>
             <van-field label="设备编号" v-model="form.deviceNumber" placeholder="请输入设备编号" />
-            <van-field label="设备工号" v-model="form.baoRobotNumber" placeholder="请输入设备工号" />
+            <van-field label="宝罗工号" v-model="form.baoRobotNumber" placeholder="请输入宝罗工号" />
             <van-field label="设备名称" v-model="form.deviceName" placeholder="请输入设备名称" />
             <van-field label="主要功能" v-model="form.mainFunction" placeholder="请输入主要功能" />
             <van-field label="设备品牌" v-model="form.deviceBrand" placeholder="请输入设备品牌" />

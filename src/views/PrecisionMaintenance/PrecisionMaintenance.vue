@@ -1,48 +1,74 @@
 <template>
     <div>
         <van-cell-group>
-            <!-- <van-field v-model="Branch" disabled label="分厂">
-
-            </van-field> -->
-            <van-field label="机组">
+            <div class="form">
+                <div class="form_item">
+                    <div class="inp">
+                        <label>机组</label>
+                        <el-select style=" width: 110px !important;" @change="selectline" v-model="line" placeholder="请选择">
+                            <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName"
+                                :value="item.lineId">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="inp">
+                        <label>设备名称</label>
+                        <el-select style=" width: 110px !important;" @change="selectdevice" v-model="form.deviceId"
+                            placeholder="请选择">
+                            <el-option v-for="(item, i) in deviceList" :key="item.deviceId" :label="item.deviceName"
+                                :value="i">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="form_item">
+                    <div class="inp">
+                        <label>宝罗工号</label>
+                        <el-input style=" width: 110px !important;" v-model="form.baoRobotNumber"
+                            placeholder="请输入内容"></el-input>
+                    </div>
+                    <div class="inp">
+                        <label>设备编码</label>
+                        <el-input style=" width: 110px !important;" v-model="form.deviceNumber"
+                            placeholder="请输入内容"></el-input>
+                    </div>
+                </div>
+                <div class="form_item">
+                    <div class="inp">
+                        <label>扫描设备码</label>
+                        <img @click="toQrCode" style="width: 20%;margin-left: 10px;" src="../../assets/icon/qrCode.svg" />
+                    </div>
+                    <div class="inp">
+                    </div>
+                </div>
+                <div class="form_item">
+                    <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small"
+                        type="info">查询</van-button>
+                    <van-button @click="clear" style="width: 60%;margin:0 10px;background-color: white;color: #687dbb;"
+                        size="small" type="info">清空</van-button>
+                </div>
+            </div>
+            <van-field label="维护标题">
                 <template #input>
-                    <el-select @change="selectline" v-model="line" placeholder="请选择">
-                        <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
+                    <el-select @change="maintainChang" style="width: 100% !important;" v-model="form.itemId"
+                        placeholder="请选择">
+                        <el-option v-for="item in maintainTitleList" :key="item.itemId" :label="item.maintainTitle"
+                            :value="item.itemId">
                         </el-option>
                     </el-select>
                 </template>
             </van-field>
-            <van-field label="设备名称">
+            <van-field v-model="form.maintainDetails" label="维护内容"></van-field>
+            <van-field label="维护前照片">
                 <template #input>
-                    <el-select v-model="form.deviceId" placeholder="请选择">
-                        <el-option v-for="item in deviceList" :key="item.deviceId" :label="item.deviceName"
-                            :value="item.deviceId">
-                        </el-option>
-                    </el-select>
+                    <van-uploader accept="*" v-model="form.beforeMaintainPic" multiple />
                 </template>
             </van-field>
-            <van-field v-model="form.itemId" label="项次编号"></van-field>
             <van-field label="维护日期">
                 <template #input>
                     <van-cell :value="form.planFinishDate" @click="show = true" />
                     <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="show"
                         @confirm="onConfirm" />
-                </template>
-            </van-field>
-            <!-- <van-field v-model="form.maintainTitle" label="维护标题"></van-field> -->
-            <!-- <van-field label="维护标题">
-                <template #input>
-                    <el-select v-model="form.maintainTitle" placeholder="请选择">
-                        <el-option v-for="item in maintainTitleList" :key="item.value" :label="item.title"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </template>
-            </van-field> -->
-            <!-- <van-field v-model="form.maintainDetails" label="维护内容"></van-field> -->
-            <van-field label="维护前照片">
-                <template #input>
-                    <van-uploader accept="*" v-model="form.beforeMaintainPic" multiple />
                 </template>
             </van-field>
         </van-cell-group>
@@ -56,7 +82,7 @@
 </template>
 
 <script>
-import { maintaincreatenew, querysimpleinfo, queryallline } from '@/api/rollers'
+import { maintaincreatenew, querysimpleinfo, queryinfo, queryallline } from '@/api/rollers'
 import { ImagePreview } from 'vant';
 export default {
     name: "Home",
@@ -73,6 +99,9 @@ export default {
                 beforeMaintainPic: []
             },
             date: '',
+            eform: {
+
+            },
             checkPic: [],
             show: false,
             Branch: '宝日汽车板',
@@ -92,11 +121,76 @@ export default {
             this.lineList = res.result.line;
         })
     },
+    watch: {
+        'form.baoRobotNumber'(newVal) {
+            if (newVal != "") {
+                this.$eiInfo.parameter = {
+                    productionLine: 0,
+                    deviceNumber: "",
+                    baoRobotNumber: newVal
+                }
+                querysimpleinfo(this.$eiInfo).then((res) => {
+                    this.deviceList = res.result.deviceList
+                    this.form.deviceId = res.result.deviceList[0].deviceName
+                    this.deviceId = res.result.deviceList[0].deviceId
+                    this.form.deviceNumber = res.result.deviceList[0].deviceNumber
+                    this.selectnew();
+                })
+            } else {
+                this.clear();
+            }
 
+        },
+    },
     methods: {
+        clear() {
+            this.tableData = []
+            this.form.deviceId = ''
+            this.form.deviceNumber = ''
+            this.form.baoRobotNumber = ''
+            this.line = ''
+            this.dataCount = null
+        },
+        // 扫码
+        toQrCode() {
+            this.$router.push({ path: '/test' })
+        },
+        // 设备名称选择事件
+        selectdevice(i) {
+            console.log(i);
+            this.form.baoRobotNumber = this.deviceList[i].baoRobotNumber
+            this.form.deviceNumber = this.deviceList[i].deviceNumber
+            this.deviceId = this.deviceList[i].deviceId
+
+            this.selectnew();
+        },
+        // 维护标题选择事件
+        maintainChang(i) {
+            console.log(i);
+            this.form.maintainDetails = this.maintainTitleList[i - 1].maintainDetails
+            // this.itemId = this.maintainTitleList[i].itemId
+            this.selectnew();
+        },
+        selectnew() {
+            this.$eiInfo.parameter = {
+                deviceId: this.deviceId,
+                code: this.my.code,
+                pageNum: 1,
+                temp: 1
+            }
+            this.$eiInfo.parameter
+            queryinfo(this.$eiInfo).then((res) => {
+                this.maintainTitleList = res.result.maintain;
+                // this.tableData = res.result.maintain
+                // this.dataCount = res.result.dataCount
+                // this.option.series[0].data = res.result.countFinish
+            })
+        },
         // 查询机组下设备列表
         selectline(i) {
             this.form.deviceId = ''
+            this.form.deviceNumber = ''
+            this.form.baoRobotNumber = ''
             this.$eiInfo.parameter = {
                 productionLine: i
             }
@@ -141,15 +235,13 @@ export default {
                     //     this.$notify({ type: "warning", message: "请选择点检结果！" })
                     // } else {
                     let formData = new FormData();
-                    formData.append('deviceId', this.form.deviceId);
+                    formData.append('itemId', this.form.itemId);
+                    formData.append('userId', this.my.userInfo.id);
                     formData.append('planFinishDate', this.form.planFinishDate);
-                    formData.append('maintainTitle', this.form.maintainTitle);
-                    formData.append('maintainDetails', this.form.maintainDetails);
                     // formData.append('beforeMaintainPic', this.form.beforeMaintainPic);
                     for (let i = 0; i < this.form.beforeMaintainPic.length; i++) {
                         formData.append('beforeMaintainPic', this.form.beforeMaintainPic[i].file);
                     }
-
                     // console.log(cList);
                     // console.log(rList);
                     maintaincreatenew(formData).then((res) => {
@@ -171,6 +263,13 @@ export default {
 
 
 <style scoped>
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+    padding: 14px 0;
+}
+
 .van-button--info {
     color: #fff;
     background-color: #687dbb;
@@ -181,7 +280,93 @@ export default {
     background-color: #687dbb;
 }
 
-/deep/.el-input {
+/* /deep/.el-input {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+} */
+
+
+/deep/.el-input__inner {
+    /* width: 110px !important; */
+    margin-left: 4px;
+    height: 32px;
+}
+
+/* 
+/deep/ .el-input--suffix .el-input__inner {
+    width: 110px !important;
+    margin-left: 4px;
+    height: 32px;
+} */
+
+/deep/.el-input__icon {
+    height: 116%;
+}
+
+.pag {
+    background-color: white;
+    padding: 10px 0;
+    justify-content: center;
+    display: flex;
+    overflow: hidden;
+    border-top: 1px solid #ededed;
+}
+
+.chart {
+    width: 100%;
+    height: 400px;
+}
+
+
+.tableBox {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+    padding: 14px 10px;
+    border-top: 1px solid #ededed;
+}
+
+.form_item {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.form_item2 {
+    width: 100%;
+    margin-left: 7%;
+}
+
+.inp {
+    width: 42%;
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    margin: 0 10px;
+}
+
+label {
+    width: 35%;
+    display: flex;
+    font-size: 0.7rem;
+    justify-content: space-between;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.van-button--info {
+    color: #fff;
+    background-color: #687dbb;
+    border: 1px solid #687dbb;
+}
+
+/deep/.el-pagination.is-background .el-pager li:not(.disabled).active {
+    background-color: #687dbb;
+}
+
+/* /deep/.el-input {
     width: 110px !important;
     margin-left: 4px;
     height: 32px;
@@ -197,11 +382,11 @@ export default {
     width: 110px !important;
     margin-left: 4px;
     height: 32px;
-}
+} */
 
-/deep/.el-input__icon {
+/* /deep/.el-input__icon {
     height: 116%;
-}
+} */
 
 .upimg {
     width: 80px;

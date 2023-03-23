@@ -23,7 +23,7 @@
           </el-select>
         </div>
         <div class="inp">
-          <label>设备工号</label>
+          <label>宝罗工号</label>
           <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
         </div>
       </div>
@@ -59,7 +59,7 @@
           <img @click="toQrCode" style="width: 20%;margin-left: 10px;" src="../../assets/icon/qrCode.svg" />
         </div>
         <div class="inp">
-          <label>设备工号</label>
+          <label>宝罗工号</label>
           <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
         </div>
       </div>
@@ -136,8 +136,8 @@ export default {
         // deviceId: '',
         baoRobotNumber: '',
         // deviceNumber: '',
-        // checkStatus: 0,
-        // checkCycle: 1,
+        checkStatus: 0,
+        checkCycle: 1,
         // recordNumber: '',
         pageNum: 1
       },//搜索条件
@@ -198,6 +198,11 @@ export default {
     }
   },
   activated() {
+    if (this.my.chakData) {
+      console.log(this.my.chakData);
+      this.from.baoRobotNumber = this.my.chakData[0]
+      this.from.checkStatus = this.my.chakData[1]
+    }
     this.selectnew();
     this.my.title = "日常点检"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
@@ -205,10 +210,6 @@ export default {
     this.my.isTabBar = true; //是否开启TabBar
     // this.my.code = '';
     this.drawLine();
-    // setInterval(() => {
-    //   let x = new Date();
-    //   this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
-    // }, 1000)
     console.log(this.my.code, 'aaaa扫码结果');
     queryallline().then((res) => {
       console.log(res.result);
@@ -222,10 +223,6 @@ export default {
     this.my.isTabBar = true; //是否开启TabBar
     // this.my.code = '';
     this.drawLine();
-    // setInterval(() => {
-    //   let x = new Date();
-    //   this.time = x.getFullYear() + '.' + (x.getMonth() + 1) + '.' + x.getDate() + '  ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
-    // }, 1000)
     console.log(this.my.code, 'aaa扫码结果');
     queryallline().then((res) => {
       console.log(res.result);

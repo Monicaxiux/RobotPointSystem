@@ -54,7 +54,7 @@
                     <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small"
                         type="info">查询</van-button>
                     <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;
-            color: #687dbb;" size="small" type="info">清空</van-button>
+                    color: #687dbb;" size="small" type="info">清空</van-button>
                 </div>
             </div>
         </div>
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { queryallline, querysimpleinfo, maintainquerypart } from '@/api/rollers'
+import { queryallline, querysimpleinfo, querypart } from '@/api/rollers'
 export default {
     name: "CheckingToDo",
     data() {
@@ -208,7 +208,7 @@ export default {
         // 设备名称选择事件
         selectdevice(i) {
             console.log(i);
-            // this.from.baoRobotNumber = this.deviceList[i].baoRobotNumber
+            this.from.baoRobotNumber = this.deviceList[i].baoRobotNumber
             // this.from.deviceNumber = this.deviceList[i].deviceNumber
             this.deviceId = this.deviceList[i].deviceId
             this.selectnew();
@@ -217,7 +217,7 @@ export default {
         selectnew() {
             this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
             this.$eiInfo.parameter.deviceId = this.deviceId
-            maintainquerypart(this.$eiInfo).then((res) => {
+            querypart(this.$eiInfo).then((res) => {
                 this.tableData = res.result.maintainRecord;
                 this.dataCount = res.result.dataCount
             })

@@ -7,7 +7,7 @@ export const queryallline = (eiInfo) => {
         data: eiInfo
     })
 }
-// 查询设备的id设备工号名称信息
+// 查询设备的id宝罗工号名称信息
 export const querysimpleinfo = (eiInfo) => {
     return req({
         url: '/device/query/simple/info',
@@ -174,10 +174,42 @@ export const maintainqueryall = (eiInfo) => {
     })
 }
 
+// 删除维护记录
+export const recorddeleterecord = (eiInfo) => {
+    return req({
+        url: '/maintain/record/delete/record',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询单条维护记录全部数据
+export const recordqueryall = (eiInfo) => {
+    return req({
+        url: '/maintain/record/query/all',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
 // 创建精密维护记录
 export const maintaincreatenew = (formData) => {
     return req({
-        url: '/maintain/create/new',
+        url: '/maintain/record/create/new',
+        method: 'post',
+        transformRequest: [function (data, headers) {
+            // 去除post请求默认的Content-Type
+            delete headers.post['Content-Type']
+            return data
+        }],
+        data: formData
+    })
+}
+
+// 维护完成后保存记录
+export const recordupdaterecord = (formData) => {
+    return req({
+        url: '/maintain/record/update/record',
         method: 'post',
         transformRequest: [function (data, headers) {
             // 去除post请求默认的Content-Type
@@ -257,8 +289,9 @@ export const maintainitemdelete = (eiInfo) => {
 // 查询登录用户的待办点检
 export const recordtobedone = (eiInfo) => {
     return req({
-        url: '/check/record/to/be/done',
+        url: '/user/to/be/done',
         method: 'post',
         data: eiInfo
     })
 }
+

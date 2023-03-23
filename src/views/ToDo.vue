@@ -1,146 +1,132 @@
 <template>
     <div>
-        <van-tabs @click="onClick">
-            <van-tab title="设备点检">
-                <div class="form">
-                    <div class="form_item">
-                        <div class="inp">
-                            <label>分厂</label>
-                            <el-input v-model="factoryId" disabled placeholder="请输入内容"></el-input>
+        <div class="form">
+            <div class="form_item">
+                <div class="boxnr">
+                    <div>
+                        <div class="boxTitle">{{ tableData[0].title }}
+                            <span @click="Eist(1)">+</span>
                         </div>
-                        <div class="inp">
-                            <label>机组</label>
-                            <el-select @change="selectline" v-model="line" placeholder="请选择">
-                                <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName"
-                                    :value="item.lineId">
-                                </el-option>
-                            </el-select>
+                        <div :style="status1 ? 'height : 654px;' : ' height: 190px;'" class="he"
+                            v-if="tableData[0].content.length != 0">
+                            <div class="bh" v-for="i in tableData[0].content" :key="i">
+                                <!-- <h4>分厂&nbsp;&nbsp;<span>{{ i.factory }}</span></h4> -->
+                                <h4>机组&nbsp;&nbsp;<span>{{ i.productionLine }}</span></h4>
+                                <h4>保罗工号&nbsp;&nbsp;<span>{{ i.baoRobotNumber }}</span></h4>
+                                <h4>设备编号&nbsp;&nbsp;<span>{{ i.deviceNumber }}</span></h4>
+                                <h4>设备名称&nbsp;&nbsp;<span>{{ i.deviceName }}</span></h4><br />
+                                <div class="b">
+                                    <h4>日点检：</h4>
+                                    <h5 :style="x != 0 && index == 0 ? 'background: red;color:white' : ''"
+                                        v-for="x, index in i.dayCheck" :key="x">
+                                        <b @click="seleData(i.baoRobotNumber, 0, 1)" v-if="index == 0">待点检</b>
+                                        <b @click="seleData(i.baoRobotNumber, 1, 1)" v-if="index == 1">待修复</b>
+                                        <b @click="seleData(i.baoRobotNumber, 2, 1)" v-if="index == 2">已完成</b>
+                                        <span>{{ x }}</span>
+                                    </h5>
+                                </div>
+                                <div class="b">
+                                    <h4>周点检：</h4>
+                                    <h5 :style="(x != 0 && index == 0) || (x != 0 && index == 3) ? 'background: red;color:white' : ''"
+                                        v-for="x, index in i.weekCheck" :key="x">
+                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 0">待点检</b>
+                                        <b @click="seleData(i.baoRobotNumber, 1, 2)" v-if="index == 1">待修复</b>
+                                        <b @click="seleData(i.baoRobotNumber, 2, 2)" v-if="index == 2">已完成</b>
+                                        <b v-if="index == 3">逾期未检</b>
+                                        <span>{{ x }}</span>
+                                    </h5>
+                                </div>
+                                <div class="b">
+                                    <h4>月点检：</h4>
+                                    <h5 :style="(x != 0 && index == 0) || (x != 0 && index == 3) ? 'background: red;color:white' : ''"
+                                        v-for="x, index in i.monthCheck" :key="x">
+                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 0">待点检</b>
+                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 1">待修复</b>
+                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 2">已完成</b>
+                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 3">逾期未检</b>
+                                        <span>{{ x }}</span>
+                                    </h5>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form_item">
-                        <div class="inp">
-                            <label>设备名称</label>
-                            <el-select @change="selectdevice" v-model="from.deviceId" placeholder="请选择">
-                                <el-option v-for="(item, i) in deviceList" :key="item.deviceId" :label="item.deviceName"
-                                    :value="i">
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="inp">
-                            <label>设备工号</label>
-                            <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
-                        </div>
-                    </div>
-                    <div class="form_item">
-                        <div class="inp">
-                            <label>设备编码</label>
-                            <el-input v-model="from.deviceNumber" placeholder="请输入内容"></el-input>
-                        </div>
-                        <div class="inp">
-                            <label>点检状态</label>
-                            <el-select @change="getData" v-model="from.checkStatus" placeholder="请选择">
-                                <el-option v-for="item in checkStatusList" :key="item.value" :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="form_item">
-                        <div class="inp">
-                            <label>扫描设备码</label>
-                            <img @click="toQrCode" style="width: 20%;margin-left: 10px;" src="../assets/icon/qrCode.svg" />
-                        </div>
-                        <div class="inp">
-                            <label>点检周期</label>
-                            <el-select @change="getData" v-model="from.checkCycle" placeholder="请选择">
-                                <el-option v-for="item in checkCycleList" :key="item.value" :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="form_item">
-                        <van-button @click="(getData(), my.code = '')" style="width: 60%;margin-left: 10px;" size="small"
-                            type="info">查询</van-button>
-                        <van-button @click="clear" style="width: 60%;margin:0 10px;background-color: white;color: #687dbb;"
-                            size="small" type="info">清空</van-button>
-                    </div>
-                    <div class="form_item">
-                        <div v-for="item in tableData" :key="item" class="boxnr">
-                            <h4>点检项次&nbsp;&nbsp;<a>待点检</a></h4>
-                            <h4>分厂&nbsp;&nbsp;<span>{{ item.factory }}</span></h4>
-                            <h4>设备&nbsp;&nbsp;<span>{{ item.deviceName }}</span></h4>
-                            <h4>点检标题&nbsp;&nbsp;<span>{{ item.checkTitle }}</span></h4>
-                            <!-- <h4>点检内容&nbsp;&nbsp;<span>待点检</span></h4> -->
-                            <van-button @click="toDis(item)" style="width: 50%;float: right;" size="small"
-                                type="info">点检</van-button>
+                        <div class="kon" v-else>
+                            暂无数据
                         </div>
                     </div>
                 </div>
-            </van-tab>
-            <van-tab title="精密维护">
-                <p style="text-align: center;">暂无内容</p>
-            </van-tab>
-        </van-tabs>
+                <div class="boxnr">
+                    <div>
+                        <div class="boxTitle">{{ tableData[1].title }}
+                            <span @click="Eist(2)">+</span>
+                        </div>
+                        <div :style="status2 ? 'height : 654px;' : ' height: 148px;'" class="he"
+                            v-if="tableData[1].content.length != 0">
+                            <div class="bh" v-for="i in tableData[1].content" :key="i">
+                                <!-- <h4>分厂&nbsp;&nbsp;<span>{{ i.factory }}</span></h4> -->
+                                <h4>机组&nbsp;&nbsp;<span>{{ i.productionLine }}</span></h4>
+                                <h4>保罗工号&nbsp;&nbsp;<span>{{ i.baoRobotNumber }}</span></h4>
+                                <h4>设备编号&nbsp;&nbsp;<span>{{ i.deviceNumber }}</span></h4>
+                                <h4>设备名称&nbsp;&nbsp;<span>{{ i.deviceName }}</span></h4><br />
+                                <div class="b">
+                                    <h4 :style="i.notMaintain != 0 ? 'background: red;color:white' : ''">
+                                        待维护：<span>{{ i.notMaintain }}&nbsp;&nbsp;</span></h4>
+                                    <h4>维护中：<span>{{ i.maintaining }}&nbsp;&nbsp;</span></h4>
+                                    <h4>维护完成：<span>{{ i.maintained }}&nbsp;&nbsp;</span></h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kon" v-else>
+                            暂无数据
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
-import { recordtobedone, querysimpleinfo, queryallline } from "@/api/rollers";
+import { recordtobedone } from "@/api/rollers";
 export default {
     name: "Todo",
     data() {
         return {
             my: this.$myStore(), //使用Pinia的值
-            factoryId: '宝日汽车板',
-            from: {
-                factoryId: 0,
-                productionLineId: 0,
-                checkCycle: "",
-                deviceId: "",
-                deviceNumber: "",
-                baoRobotNumber: "",
-                pageNum: 1
-            },
-            checkCycleList: [{
-                value: 1,
-                label: '日'
-            }, {
-                value: 2,
-                label: '周'
-            }, {
-                value: 3,
-                label: '月'
-            }],
-            checkStatusList: [{
-                value: 0,
-                label: '未检查'
-            }, {
-                value: 1,
-                label: '待修复'
-            }, {
-                value: 2,
-                label: '已完成'
-            }],
-            lineList: [],
-            deviceList: [],
-            line: '',
-            tableData: []
+            tableData: [],
+            status1: false,
+            status2: false,
+            status3: false
+
         }
     },
     mounted() {
-        this.my.title = "待办事项"; //页面标题
+        this.my.title = "消息中心"; //页面标题
         this.my.left = false; //NavBar是否开启返回按键
         this.my.isNavBar = true; //是否开启NavBar
         this.my.isTabBar = true; //是否开启TabBar
         this.getData();
-        queryallline().then((res) => {
-            console.log(res.result);
-            this.lineList = res.result.line;
-        })
     },
     methods: {
+        seleData(s, i) {
+            this.my.chakData = [s, i]
+            this.$router.push({ path: '/checkingToDo' })
+        },
+        Eist(s, i) {
+            switch (s) {
+                case 1:
+                    this.status1 = !this.status1;
+                    this.status2 = false
+                    this.status3 = false
+                    break;
+                case 2:
+                    this.status2 = !this.status2;
+                    this.status1 = false
+                    this.status3 = false
+                    break;
+                default:
+                    break;
+            }
+        },
         getData() {
-            this.$eiInfo.parameter = this.from;
             this.$eiInfo.userInfo = {
                 id: this.my.userInfo.id
             }
@@ -148,55 +134,59 @@ export default {
                 this.tableData = res.result.result;
             })
         },
-        clear() {
-            this.tableData = []
-            this.from.deviceId = ''
-            this.from.deviceNumber = ''
-            this.deviceInfo = null
-            this.from.baoRobotNumber = ''
-            this.from.pageNum = 1
-            this.line = ''
-            this.dataCount = null
-        },
-        // 扫码
-        toQrCode() {
-            this.clear();
-            this.$router.push({ path: '/test' })
-        },
         onClick(name, title) {
             console.log(title);
-        },
-        // 查询机组下设备列表
-        selectline(i) {
-            this.tableData = []
-            this.from.deviceId = ''
-            this.from.deviceNumber = ''
-            this.from.baoRobotNumber = ''
-            this.dataCount = null
-            this.$eiInfo.parameter = {
-                productionLine: i
-            }
-            querysimpleinfo(this.$eiInfo).then((res) => {
-                console.log(res.result.deviceList);
-                this.deviceList = res.result.deviceList;
-            })
-        },
-        // 设备名称选择事件
-        selectdevice(i) {
-            console.log(i);
-            this.from.baoRobotNumber = this.deviceList[i].baoRobotNumber
-            this.from.deviceNumber = this.deviceList[i].deviceNumber
-            this.deviceId = this.deviceList[i].deviceId
-            this.getData();
         }
     }
 }
 </script>
 <style scoped lang="less">
+.bh {
+    border: 1px solid #687dbb;
+    padding: 10px;
+    margin-bottom: 10px;
+
+    b {
+        margin: 0 6px;
+    }
+}
+
+.he {
+    overflow: auto;
+    transition: 0.5s;
+}
+
+.kon {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border: 1px solid #687dbb;
+    margin-bottom: 20px;
+}
+
+.boxTitle {
+    height: 30px;
+    padding: 0 10px;
+    background-color: #687dbb;
+    color: white;
+    line-height: 30px;
+    font-weight: bold;
+
+    span {
+        float: right;
+        font-size: 26px;
+    }
+}
+
+.b {
+    display: flex;
+}
+
 .boxnr {
     width: 95%;
-    padding: 15px;
-
+    // padding: 15px;
+    overflow: hidden;
+    margin-bottom: 15px;
     border: 1px solid #687dbb;
 
     h4 {
@@ -205,9 +195,20 @@ export default {
 
         span {
             font-size: 12px;
-            color: #646464;
+            // color: #646464;
             font-weight: 100;
         }
+    }
+}
+
+h5 {
+    padding: 0;
+    margin: 0;
+
+    span {
+        font-size: 12px;
+        // color: #646464;
+        font-weight: 100;
     }
 }
 
@@ -282,6 +283,7 @@ export default {
     width: 100%;
     justify-content: center;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .form_item2 {

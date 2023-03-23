@@ -14,7 +14,7 @@
     <router-view class="rView" v-if="!$route.meta.keepAlive" />
     <!-- </transition> -->
     <van-tabbar v-show="my.isTabBar" route v-model="active" @change="onChange">
-      <van-tabbar-item replace to="/todo" icon="checked">待办</van-tabbar-item>
+      <van-tabbar-item replace to="/todo" icon="checked">消息</van-tabbar-item>
       <van-tabbar-item replace to="/home" icon="wap-home">首页</van-tabbar-item>
       <van-tabbar-item replace to="/my" icon="manager">我的</van-tabbar-item>
     </van-tabbar>
