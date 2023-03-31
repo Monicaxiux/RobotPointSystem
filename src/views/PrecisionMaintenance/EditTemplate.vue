@@ -42,12 +42,12 @@
                     type="info">查询</van-button>
                 <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;color: #687dbb;"
                     size="small" type="info">清空</van-button>
-                <van-button @click="Edit(null, 1)" style="width: 60%;margin:0 10px;" size="small"
-                    type="info">新增模板</van-button>
+                <van-button :disabled="!this.deviceId ? true : false" @click="Edit(null, 1)"
+                    style="width: 60%;margin:0 10px;" size="small" type="info">新增模板</van-button>
             </div>
         </div>
-        <van-dialog @confirm="confirm" v-model="show" title="标题" show-cancel-button>
-            <van-field v-if="eStatus == 1" label="机组">
+        <van-dialog @confirm="confirm" v-model="show" :title="eStatus == 1 ? '新增' : '编辑'" show-cancel-button>
+            <!-- <van-field v-if="eStatus == 1" label="机组">
                 <template #input>
                     <el-select @change="eselectline" v-model="eline" placeholder="请选择">
                         <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
@@ -63,10 +63,10 @@
                         </el-option>
                     </el-select>
                 </template>
-            </van-field>
+            </van-field> -->
             <van-field v-model="eForm.maintainTitle" placeholder="请输入维护标题" label="维护标题"></van-field>
             <van-field v-model="eForm.maintainDetails" placeholder="请输入维护内容" label="维护内容"></van-field>
-            <div v-if="eForm.maintainCycle != 0">
+            <div>
                 <van-field label="维护周期">
                     <template #input>
                         <el-select size="mini" v-model="eForm.maintainCycle" placeholder="请选择">
@@ -78,7 +78,7 @@
                 </van-field>
                 <van-field v-model="eForm.cycleInterval" placeholder="请输入周期间隔" label="周期间隔"></van-field>
                 <van-field v-model="eForm.maintainDays" placeholder="请输入持续天数" label="持续天数"></van-field>
-                <van-field label="维护周期">
+                <van-field v-if="eStatus == 1" label="下次维护日期">
                     <template #input>
                         <van-cell :value="eForm.nextMaintainDate" @click="eshow = true" />
                         <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="eshow"
@@ -107,8 +107,8 @@
             </el-table>
         </div>
         <div class="pag">
-            <el-pagination :page-size="15" background @current-change="handleCurrentChange" :current-page="currentPage"
-                layout="prev, pager, next,total" :total="dataCount">
+            <el-pagination :page-size="15" pager-count="6" background @current-change="handleCurrentChange"
+                :current-page="currentPage" layout="prev, pager, next,total" :total="dataCount">
             </el-pagination>
         </div>
     </div>
@@ -166,6 +166,7 @@ export default {
         }
     },
     activated() {
+        this.from.pageNum = 1
         this.selectnew();
         this.my.title = "编辑模板"; //页面标题
         this.my.left = true; //NavBar是否开启返回按键
@@ -234,6 +235,7 @@ export default {
             switch (this.eStatus) {
                 case 1:
                     this.$eiInfo.parameter = this.eForm;
+                    this.$eiInfo.parameter.deviceId = this.deviceId
                     maintainitemadd(this.$eiInfo).then(() => {
                         this.$toast.success('新增成功');
                         this.selectnew();
@@ -286,6 +288,7 @@ export default {
                             }
                             maintainitemdelete(this.$eiInfo).then(() => {
                                 this.$toast.success('删除成功');
+                                this.selectnew();
                             })
                         })
 
@@ -328,7 +331,7 @@ export default {
 
         // 查询机组下设备列表
         eselectline(i) {
-            this.from.edeviceId = ''
+            this.eForm.deviceId = ''
             this.$eiInfo.parameter = {
                 productionLine: i
             }

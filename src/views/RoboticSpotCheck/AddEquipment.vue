@@ -65,15 +65,17 @@ export default {
     },
 
     mounted() {
-        this.my.title = "添加点检设备"; //页面标题
+
         this.my.left = true; //NavBar是否开启返回按键
         this.my.isNavBar = true; //是否开启NavBar
         this.my.isTabBar = true; //是否开启TabBar
         console.log(this.my.itemId);
         if (this.my.itemStatus == 1) {
             console.log('是添加');
+            this.my.title = "添加点检设备"; //页面标题
         } else if (this.my.itemStatus == 2) {
             console.log('是编辑');
+            this.my.title = "编辑点检设备"; //页面标题
             this.$eiInfo.parameter = {
                 deviceId: this.my.deviceId
             }
@@ -185,7 +187,7 @@ export default {
                             this.$eiInfo.parameter = {
                                 id: this.my.deviceId
                             }
-                            itemdelete(this.$eiInfo).then((res) => {
+                            devicedelete(this.$eiInfo).then((res) => {
                                 if (res.sys.status == 1) {
                                     this.$notify({ type: "success", message: res.sys.msg })
                                     this.$router.back();

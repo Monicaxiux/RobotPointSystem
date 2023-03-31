@@ -1,5 +1,7 @@
 <template>
   <div>
+    <div class="call"><a>当前用户：{{ my.userInfo.username }}</a></div>
+    <div @click="qh" class="call"><a>当前环境：{{ status }}</a></div>
     <div class="call"><a>权限管理</a><a>></a></div>
     <div class="call"><a>修改密码</a><a>></a></div>
     <div @click="logOut" class="call"><a>退出登录</a><a>></a></div>
@@ -15,6 +17,7 @@ export default {
     return {
       progress: 0,
       my: this.$myStore(),
+      status: localStorage.baseURL == 'http://47.101.183.203:8192' ? '正式环境' : '测试环境'
     };
   },
 
@@ -25,6 +28,23 @@ export default {
   },
 
   methods: {
+    qh() {
+      if (localStorage.baseURL == 'http://47.101.183.203:8192') {
+        localStorage.baseURL = 'http://192.168.0.92:8192'
+        this.$toast.success('地址切换成功');
+        console.log('正式');
+        setTimeout(() => {
+          location.reload();
+        }, 500)
+      } else {
+        localStorage.baseURL = 'http://47.101.183.203:8192'
+        this.$toast.success('地址切换成功');
+        console.log('测式');
+        setTimeout(() => {
+          location.reload();
+        }, 500)
+      }
+    },
     // 退出登录
     logOut() {
       this.$dialog

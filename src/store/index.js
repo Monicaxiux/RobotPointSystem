@@ -15,7 +15,9 @@ const myStore = defineStore('store', {
             itemStatus: 1,
             deviceId: 0,
             userInfo:null,
-            chakData:null
+            chakData:null,
+            MaintaData:null,
+            faultId:0,
         }
     },
     getters: {
@@ -25,9 +27,9 @@ const myStore = defineStore('store', {
 
     },
     // 开启数据持久化 默认存localStorage
-    persist: {
-        storage: window.sessionStorage,
-    }
-    // persist: true
+    // persist: {
+    //     storage: window.sessionStorage,
+    // }
+    persist: true
 })
 export default myStore

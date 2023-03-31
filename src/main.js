@@ -7,7 +7,12 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate);
 Vue.use(PiniaVuePlugin)
-
+ if (localStorage.baseURL) {
+  console.log('有地址，不更改环境');
+} else {
+  console.log('没有地址，默认正式环境');
+  localStorage.baseURL = 'http://47.101.183.203:8192'
+}
 
 //全局挂载Pinia
 import myStore from "@/store";
@@ -15,11 +20,12 @@ Vue.prototype.$myStore = myStore
 // VantUi库
 import Vant from 'vant';
 import 'vant/lib/index.css';
-import { Notify, Dialog, Toast,Sticky  } from 'vant';
+import { Notify, Dialog, Toast,Sticky,NoticeBar   } from 'vant';
 Vue.use(Notify);//Notify 消息提示
 Vue.use(Dialog);//Dialog 弹出框
 Vue.use(Toast);//Toast 轻提示
 Vue.use(Sticky);//Toast 轻提示
+Vue.use(NoticeBar);
 Vue.use(Vant);
 Vue.prototype.$toast = Toast
 

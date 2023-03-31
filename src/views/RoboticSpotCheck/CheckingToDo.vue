@@ -1,58 +1,6 @@
 <template>
   <div>
     <div class="form">
-      <!-- <div class="form_item">
-        <div class="inp">
-          <label>分厂</label>
-          <el-input v-model="Branch" disabled placeholder="请输入内容"></el-input>
-        </div>
-        <div class="inp">
-          <label>机组</label>
-          <el-select @change="selectline" v-model="line" placeholder="请选择">
-            <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
-      <div class="form_item">
-        <div class="inp">
-          <label>设备名称</label>
-          <el-select @change="selectdevice" v-model="from.deviceId" placeholder="请选择">
-            <el-option v-for="(item, i) in deviceList" :key="item.deviceId" :label="item.deviceName" :value="i">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="inp">
-          <label>宝罗工号</label>
-          <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
-        </div>
-      </div>
-      <div class="form_item">
-        <div class="inp">
-          <label>设备编码</label>
-          <el-input v-model="from.deviceNumber" placeholder="请输入内容"></el-input>
-        </div>
-        <div class="inp">
-          <label>点检状态</label>
-          <el-select @change="selectnew" v-model="from.checkStatus" placeholder="请选择">
-            <el-option v-for="item in checkStatusList" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
-      <div class="form_item">
-        <div class="inp">
-          <label>点检单号</label>
-          <el-input v-model="input" placeholder="请输入内容"></el-input>
-        </div>
-        <div class="inp">
-          <label>点检周期</label>
-          <el-select @change="selectnew" v-model="from.checkCycle" placeholder="请选择">
-            <el-option v-for="item in checkCycleList" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-      </div> -->
       <div class="form_item">
         <div class="inp">
           <label>扫描设备码</label>
@@ -198,10 +146,12 @@ export default {
     }
   },
   activated() {
+    this.from.pageNum = 1
     if (this.my.chakData) {
       console.log(this.my.chakData);
       this.from.baoRobotNumber = this.my.chakData[0]
       this.from.checkStatus = this.my.chakData[1]
+      this.from.checkCycle = this.my.chakData[2]
     }
     this.selectnew();
     this.my.title = "日常点检"; //页面标题
@@ -236,9 +186,15 @@ export default {
       this.selectnew();
     },
     clear() {
+      this.my.code = '';
+      this.my.chakData = null;
       this.tableData = []
+      this.option.series[0].data = []
+      this.drawLine();
       // this.from.deviceId = ''
       // this.from.deviceNumber = ''
+      delete this.from.checkStatus
+      delete this.from.checkCycle
       this.deviceInfo = null
       this.from.baoRobotNumber = ''
       this.from.pageNum = 1
@@ -294,7 +250,7 @@ export default {
         this.tableData = res.result.record
         this.time = res.result.checkRecordDate
         this.dataCount = res.result.dataCount
-        this.deviceInfo = res.result.deviceInfo
+        this.deviceInfo = res.result.deviceInfo[0]
         this.option.series[0].data = res.result.countFinish
         this.drawLine();
       })

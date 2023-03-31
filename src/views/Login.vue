@@ -17,7 +17,8 @@
         <input v-model="userForm.password" type="password" placeholder="请输入密码" />
       </div>
       <div class="form_tools">
-        <div style="text-align: right;">忘记密码?</div>
+        <!-- <div style="text-align: right;">忘记密码?</div> -->
+        <div @click="qh" style="text-align: right;">{{ status }}</div>
       </div>
       <div class="btn" @click="submit">登录</div>
       <!-- <span>注册</span> -->
@@ -39,6 +40,7 @@ export default {
         workNumber: "",
         password: "",
       },
+      status: localStorage.baseURL == 'http://47.101.183.203:8192' ? '当前：正式环境' : '当前：测试环境'
     };
   },
   mounted() {
@@ -46,20 +48,25 @@ export default {
     this.my.isNavBar = false; //是否开启NavBar
   },
   methods: {
+    qh() {
+      if (localStorage.baseURL == 'http://47.101.183.203:8192') {
+        localStorage.baseURL = 'http://192.168.0.92:8192'
+        this.$toast.success('地址切换成功');
+        console.log('正式');
+        setTimeout(() => {
+          location.reload();
+        }, 500)
+      } else {
+        localStorage.baseURL = 'http://47.101.183.203:8192'
+        this.$toast.success('地址切换成功');
+        console.log('测式');
+        setTimeout(() => {
+          location.reload();
+        }, 500)
+      }
+    },
     // 登录
     submit() {
-      // this.$toast.loading({
-      //   message: '加载中...',
-      //   duration: 0,
-      //   forbidClick: true,
-      // });
-      // setTimeout(() => {
-      //   this.$toast.clear();
-      //   this.$toast.success('欢迎回来');
-      //   this.$router.replace({ path: "/home" })
-      //   this.my.userStatus = true
-      // }, 1300);
-
       this.$eiInfo.parameter = this.userForm
       if (this.userForm.workNumber == "" || this.userForm.password == "") {
         this.$toast.fail('请输入账号或密码！');
@@ -72,7 +79,6 @@ export default {
             this.my.userStatus = true
           } else {
             this.$toast.fail('工号或密码错误');
-
             this.clear();
           }
 

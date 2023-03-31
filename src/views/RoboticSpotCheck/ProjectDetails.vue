@@ -22,7 +22,7 @@
             <van-field label="点检内容" v-model="form.checkDetails" placeholder="请输入点检内容" />
             <van-field v-if="my.itemStatus != 3" label="点检周期">
                 <template #input>
-                    <el-select v-model="form.checkCycle" placeholder="请选择点检周期">
+                    <el-select @change="form.cycleDay = ''" v-model="form.checkCycle" placeholder="请选择点检周期">
                         <el-option v-for="item in checkCycleList" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
@@ -42,8 +42,13 @@
                     </el-select>
                 </template>
             </van-field>
-            <van-field v-if="my.itemStatus != 3 && form.checkCycle == 3" type="digit" placeholder="请输入这个月的第几号" label="输入几号">
-
+            <van-field v-if="my.itemStatus != 3 && form.checkCycle == 3" label="选择几号">
+                <template #input>
+                    <el-select v-model="form.cycleDay" placeholder="请选择几号">
+                        <el-option v-for="item in cycleMList" :key="item.value" :label="item.value" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </template>
             </van-field>
             <van-field label="点检结果类型">
                 <template #input>
@@ -89,6 +94,7 @@ export default {
                 itemResultType: 1,
                 maxValue: 0,
                 minValue: 0,
+                cycleDay: '',
                 unit: '',
                 deviceId: ''
             },
@@ -122,6 +128,8 @@ export default {
                     value: 7
                 }
             ],
+            cycleMList: [
+            ],
             checkCycleList: [{
                 value: 1,
                 label: '日点检'
@@ -149,6 +157,9 @@ export default {
         this.my.left = true; //NavBar是否开启返回按键
         this.my.isNavBar = true; //是否开启NavBar
         this.my.isTabBar = true; //是否开启TabBar
+        for (let i = 1; i <= 31; i++) {
+            this.cycleMList.push({ value: i })
+        }
         console.log(this.my.itemId);
         if (this.my.itemStatus == 1) {
             console.log('是添加');

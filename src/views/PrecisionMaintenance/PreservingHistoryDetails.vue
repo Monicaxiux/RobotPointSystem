@@ -21,6 +21,11 @@
                     {{ form.createDate }}
                 </template>
             </van-field>
+            <van-field label="计划完成日期">
+                <template #input>
+                    {{ form.planFinishDate }}
+                </template>
+            </van-field>
             <van-field label="创建人">
                 <template #input>
                     {{ form.createUser }}
@@ -39,6 +44,11 @@
             <van-field label="维护状态">
                 <template #input>
                     {{ form.maintainStatus }}
+                </template>
+            </van-field>
+            <van-field label="备注信息">
+                <template #input>
+                    {{ form.remark }}
                 </template>
             </van-field>
             <van-field label="维护前照片">
@@ -94,7 +104,7 @@
             <div class="bottom_box">
                 <van-button class="bt" @click="edit(1)" type="info">提交</van-button>
                 <van-button class="bt" @click="edit(3)" type="default">取消</van-button>
-                <van-button class="bt" @click="edit(2)" type="danger">删除</van-button>
+                <!-- <van-button class="bt" @click="edit(2)" type="danger">删除</van-button> -->
             </div>
             <br />
             <br />

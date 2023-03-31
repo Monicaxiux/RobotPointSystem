@@ -1,5 +1,6 @@
 <template>
     <div>
+        <van-notice-bar left-icon="volume-o" text="请先选择设备或扫码选择设备后再选择维护标题" />
         <van-cell-group>
             <div class="form">
                 <div class="form_item">
@@ -52,19 +53,19 @@
                 <template #input>
                     <el-select @change="maintainChang" style="width: 100% !important;" v-model="form.itemId"
                         placeholder="请选择">
-                        <el-option v-for="item in maintainTitleList" :key="item.itemId" :label="item.maintainTitle"
-                            :value="item.itemId">
+                        <el-option v-for="item, i in maintainTitleList" :key="item.itemId" :label="item.maintainTitle"
+                            :value="i">
                         </el-option>
                     </el-select>
                 </template>
             </van-field>
-            <van-field v-model="form.maintainDetails" label="维护内容"></van-field>
+            <van-field v-model="form.maintainDetails" disabled label="维护内容"></van-field>
             <van-field label="维护前照片">
                 <template #input>
                     <van-uploader accept="*" v-model="form.beforeMaintainPic" multiple />
                 </template>
             </van-field>
-            <van-field label="维护日期">
+            <van-field label="计划完成时间">
                 <template #input>
                     <van-cell :value="form.planFinishDate" @click="show = true" />
                     <van-calendar :min-date="new Date(2000, 0, 1)" :max-date="new Date(2100, 0, 31)" v-model="show"
@@ -102,6 +103,7 @@ export default {
             eform: {
 
             },
+            itemId: 0,
             checkPic: [],
             show: false,
             Branch: '宝日汽车板',
@@ -148,6 +150,7 @@ export default {
             this.form.deviceId = ''
             this.form.deviceNumber = ''
             this.form.baoRobotNumber = ''
+            this.form.itemId = ''
             this.line = ''
             this.dataCount = null
         },
@@ -161,14 +164,13 @@ export default {
             this.form.baoRobotNumber = this.deviceList[i].baoRobotNumber
             this.form.deviceNumber = this.deviceList[i].deviceNumber
             this.deviceId = this.deviceList[i].deviceId
-
             this.selectnew();
         },
         // 维护标题选择事件
         maintainChang(i) {
             console.log(i);
-            this.form.maintainDetails = this.maintainTitleList[i - 1].maintainDetails
-            // this.itemId = this.maintainTitleList[i].itemId
+            this.form.maintainDetails = this.maintainTitleList[i].maintainDetails
+            this.itemId = this.maintainTitleList[i].itemId
             this.selectnew();
         },
         selectnew() {
@@ -235,7 +237,7 @@ export default {
                     //     this.$notify({ type: "warning", message: "请选择点检结果！" })
                     // } else {
                     let formData = new FormData();
-                    formData.append('itemId', this.form.itemId);
+                    formData.append('itemId', this.itemId);
                     formData.append('userId', this.my.userInfo.id);
                     formData.append('planFinishDate', this.form.planFinishDate);
                     // formData.append('beforeMaintainPic', this.form.beforeMaintainPic);

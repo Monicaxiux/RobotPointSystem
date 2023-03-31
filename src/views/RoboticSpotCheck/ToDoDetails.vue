@@ -6,31 +6,6 @@
                     {{ form.recordNumber }}
                 </template>
             </van-field>
-            <!-- <van-field label="点检类型">
-                <template #input>
-                    {{ form.itemCycleResult }}
-                </template>
-            </van-field>
-            <van-field label="点检日期">
-                <template #input>
-                    {{ form.checkRecordDate }}
-                </template>
-            </van-field>
-            <van-field label="点检分厂">
-                <template #input>
-                    {{ form.factory }}
-                </template>
-            </van-field>
-            <van-field label="点检机组">
-                <template #input>
-                    {{ form.productionLine }}
-                </template>
-            </van-field>
-            <van-field label="点检设备">
-                <template #input>
-                    {{ form.deviceName }}
-                </template>
-            </van-field> -->
             <van-field label="点检标题">
                 <template #input>
                     {{ form.checkItem }}
@@ -46,14 +21,21 @@
                     <div style="display: flex;flex-wrap: wrap;">
                         <div v-if="form.checkPic">
                             <div style="width: 100%;display: flex;flex-wrap: wrap;">
-                                <div style="width: 100%;">
-                                    <img class="upimg" v-for="item, index in form.checkPic[0]"
-                                        @click="Preview(form.checkPic[0], index)" :src="item.url">
+                                <div style="width: 100%;display: flex;flex-wrap: wrap;">
+                                    <div style="text-align: center;margin: 3px;" v-for="item, index in form.checkPic[0]"
+                                        :key="item">
+                                        <img class="upimg" @click="Preview(form.checkPic[0], index)" :src="item.url"><br />
+                                        <van-button style="width: 40px;" @click="imgdelete(item.url)" size="mini"
+                                            type="danger">删除</van-button>
+                                    </div>
                                 </div>
-                                <div style="width: 100%;">
-
-                                    <video style="width: 100%;height: 100px;" controls
-                                        v-for="item, index in form.checkPic[1]" @click="play(item)" :src="item.url"></video>
+                                <div style="width: 100%;display: flex;flex-wrap: wrap;">
+                                    <div style="text-align: center;margin: 3px;" v-for="item, index in form.checkPic[1]"
+                                        :key="item">
+                                        <video class="upimg" controls :src="item.url"></video><br />
+                                        <van-button style="width: 40px;" @click="imgdelete(item.url)" size="mini"
+                                            type="danger">删除</van-button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -65,21 +47,56 @@
             </van-field>
             <van-field label="点检结果">
                 <template #input>
-                    <el-select size="mini" v-model="form.checkResult" placeholder="请选择">
+                    <van-radio-group v-model="form.checkResult" direction="horizontal">
+                        <van-radio name="检查正常">检查正常</van-radio>
+                        <van-radio name="检查异常">检查异常</van-radio>
+                    </van-radio-group>
+                    <!-- <el-select size="mini" v-model="form.checkResult" placeholder="请选择">
                         <el-option v-for="item in checkResultList" :key="item.value" :label="item.label"
                             :value="item.value">
                         </el-option>
-                    </el-select>
+                    </el-select> -->
                 </template>
             </van-field>
-            <van-field v-if="form.checkResult == '检查异常'" label="是否模板">
+            <van-field v-if="form.checkResult == '检查异常'" label="是否添加到精密维护关注项">
                 <template #input>
                     <van-radio-group v-model="needMaintain" direction="horizontal">
                         <van-radio name="1">是</van-radio>
                         <van-radio name="0">否</van-radio>
                     </van-radio-group>
+                    <el-button @click="help">帮助</el-button>
                 </template>
             </van-field>
+            <van-dialog v-model="show" title="帮助">
+                <div style="padding: 20px;">
+                    <div style="display: flex;">
+                        <el-input style="width: 300px;" size="mini" placeholder="故障标题" v-model="from.title" clearable>
+                        </el-input>&nbsp;&nbsp;
+                        <el-select @change="getData()" size="mini" v-model="from.faultResponsible" placeholder="责任方">
+                            <el-option v-for="item in faultResponsibleList" :key="item.value" :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                        &nbsp;&nbsp;
+                        <van-button style="width: 70px;height: 28px;" @click="getData()" size="mini" plain
+                            type="info">查询</van-button>
+                    </div>
+                    <br />
+                    <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }"
+                        :data="tableData" border style="width: 100%;font-size: 0.6rem">
+                        <el-table-column prop="faultTitle" label="故障标题">
+                        </el-table-column>
+                        <el-table-column prop="faultDetails" label="故障描述">
+                        </el-table-column>
+                        <el-table-column prop="address" width="63" label="操作">
+                            <template slot-scope="scope">
+                                <van-button style="width: 40px;" @click="handleEdit(scope.row)" size="mini" plain
+                                    type="info">查看</van-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </van-dialog>
             <van-field label="问题描述">
                 <template #input>
                     <van-field v-model="form.resultDetails" placeholder="请输入问题" />
@@ -104,21 +121,24 @@
             <van-field label="修复图片">
                 <template #input>
                     <div style="display: flex;flex-wrap: wrap;">
-                        <!-- <div style="width: 100%;">
-                            <img class="upimg" v-for="item, index in form.repairPic" @click="Preview(form.repairPic, index)"
-                                :src="item.url">
-                        </div> -->
                         <div v-if="form.repairPic">
                             <div style="width: 100%;display: flex;flex-wrap: wrap;">
-                                <div style="width: 100%;">
-                                    <img class="upimg" v-for="item, index in form.repairPic[0]"
-                                        @click="Preview(form.repairPic[0], index)" :src="item.url">
+                                <div style="width: 100%;display: flex;flex-wrap: wrap;">
+                                    <div style="text-align: center;margin: 3px;" v-for="item, index in form.repairPic[0]"
+                                        :key="item">
+                                        <img class="upimg" @click="Preview(form.repairPic[0], index)" :src="item.url"><br />
+                                        <van-button style="width: 40px;" @click="imgdelete(item.url)" size="mini"
+                                            type="danger">删除</van-button>
+                                    </div>
                                 </div>
-                                <div style="width: 100%;">
-                                    <video class="upimg" controls v-for="item, index in form.repairPic[1]"
-                                        :src="item.url"></video>
+                                <div style="width: 100%;display: flex;flex-wrap: wrap;">
+                                    <div style="text-align: center;margin: 3px;" v-for="item, index in form.repairPic[1]"
+                                        :key="item">
+                                        <video class="upimg" controls :src="item.url"></video><br />
+                                        <van-button style="width: 40px;" @click="imgdelete(item.url)" size="mini"
+                                            type="danger">删除</van-button>
+                                    </div>
                                 </div>
-
                             </div>
                         </div>
                         <div style="width: 100%;">
@@ -158,7 +178,7 @@
 </template>
 
 <script>
-import { recordallinfo, recorduploaddata } from '@/api/rollers'
+import { recordallinfo, recorduploaddata, querytypical, checkrecorddeletepic } from '@/api/rollers'
 import { ImagePreview } from 'vant';
 export default {
     name: "Home",
@@ -166,9 +186,22 @@ export default {
         return {
             my: this.$myStore(), //使用Pinia的值
             form: {},
+            from: {
+                title: '',
+                faultResponsible: '',
+                checkResult: '',
+                pageNum: 1
+            },
             needMaintain: '0',
             checkPic: [],
             repairPic: [],
+            currentPage: 1,
+            dataCount: 0,
+            show: false,
+            tableData: [{
+                value: '外观异常',
+                name: '机器人外观'
+            }],
             checkResultList: [
                 {
                     value: '检查正常',
@@ -211,6 +244,20 @@ export default {
                     label: '无需修复'
                 }
             ],
+            faultResponsibleList: [
+                {
+                    value: '机械',
+                    label: '机械'
+                },
+                {
+                    value: '电气',
+                    label: '电气'
+                },
+                {
+                    value: '仪表',
+                    label: '仪表'
+                }
+            ],
         };
     },
     mounted() {
@@ -219,40 +266,85 @@ export default {
         this.my.isNavBar = true; //是否开启NavBar
         this.my.isTabBar = true; //是否开启TabBar
         console.log(this.my.recordId);
-        this.$eiInfo.parameter = {
-            recordId: this.my.recordId
-        }
-
-        recordallinfo(this.$eiInfo).then((res) => {
-            console.log(res.result.result);
-            this.form = JSON.parse(JSON.stringify(res.result.result))
-            this.form.repairUser = '乙'
-            this.form.checkUser = '甲'
-            if (this.form.checkPic) {
-                for (let i = 0; i < this.form.checkPic[0].length; i++) {
-                    this.form.checkPic[0][i] = { url: this.form.checkPic[0][i] }
-                }
-                if (this.form.checkPic[1]) {
-                    for (let i = 0; i < this.form.checkPic[1].length; i++) {
-                        this.form.checkPic[1][i] = { url: this.form.checkPic[1][i] }
-                    }
-                }
-            }
-            if (this.form.repairPic) {
-                for (let i = 0; i < this.form.repairPic[0].length; i++) {
-                    this.form.repairPic[0][i] = { url: this.form.repairPic[0][i] }
-                }
-                if (this.form.repairPic[1]) {
-                    for (let i = 0; i < this.form.repairPic[1].length; i++) {
-                        this.form.repairPic[1][i] = { url: this.form.repairPic[1][i] }
-                    }
-                }
-            }
-
-        })
+        this.getList();
     },
 
     methods: {
+        handleEdit(row) {
+            this.my.faultId = row.faultId;
+            this.$router.push({ path: "/addFault" });
+        },
+        getList() {
+            this.$eiInfo.parameter = {
+                recordId: this.my.recordId
+            }
+
+            recordallinfo(this.$eiInfo).then((res) => {
+                console.log(res.result.result);
+                this.form = JSON.parse(JSON.stringify(res.result.result))
+                if (this.form.checkPic) {
+                    for (let i = 0; i < this.form.checkPic[0].length; i++) {
+                        this.form.checkPic[0][i] = { url: this.form.checkPic[0][i] }
+                    }
+                    if (this.form.checkPic[1]) {
+                        for (let i = 0; i < this.form.checkPic[1].length; i++) {
+                            this.form.checkPic[1][i] = { url: this.form.checkPic[1][i] }
+                        }
+                    }
+                }
+                if (this.form.repairPic) {
+                    for (let i = 0; i < this.form.repairPic[0].length; i++) {
+                        this.form.repairPic[0][i] = { url: this.form.repairPic[0][i] }
+                    }
+                    if (this.form.repairPic[1]) {
+                        for (let i = 0; i < this.form.repairPic[1].length; i++) {
+                            this.form.repairPic[1][i] = { url: this.form.repairPic[1][i] }
+                        }
+                    }
+                }
+
+            })
+        },
+        imgdelete(url) {
+            this.$dialog.confirm({
+                title: '确认',
+                message: '是否删除？',
+            })
+                .then(() => {
+                    this.$eiInfo.parameter = {
+                        deletePic: url,
+                        recordId: this.my.recordId
+                    }
+                    checkrecorddeletepic(this.$eiInfo).then((res) => {
+                        if (res.sys.status == 1) {
+                            this.$notify({ type: "success", message: res.sys.msg })
+                            this.getList();
+                        }
+                    })
+                })
+                .catch(() => {
+                    // on cancel
+                });
+        },
+        handleCurrentChange(val) {
+            this.from.pageNum = val;
+            this.getData();
+        },
+        getData() {
+            this.$eiInfo.parameter = {
+                recordId: this.my.recordId,
+                faultResponsible: this.from.faultResponsible,
+                title: this.from.title
+            }
+            querytypical(this.$eiInfo).then((res) => {
+                this.tableData = res.result.faultList
+                this.dataCount = res.result.dataCount
+            })
+        },
+        help() {
+            this.getData();
+            this.show = true;
+        },
         play(url) {
             console.log(url);
         },
@@ -274,8 +366,6 @@ export default {
                 case 1:
                     if (!this.form.checkPic && this.checkPic.length == 0) {
                         this.$notify({ type: "warning", message: "请上传检查照片！" })
-                    } else if (this.form.checkResult == "") {
-                        this.$notify({ type: "warning", message: "请选择点检结果！" })
                     } else {
                         let formData = new FormData();
                         formData.append('recordId', this.form.recordId);
@@ -317,6 +407,19 @@ export default {
 
 
 <style scoped>
+/deep/.el-pagination.is-background .el-pager li:not(.disabled).active {
+    background-color: #687dbb;
+}
+
+.pag {
+    background-color: white;
+    padding: 10px 0;
+    justify-content: center;
+    display: flex;
+    overflow: hidden;
+    border-top: 1px solid #ededed;
+}
+
 .upimg {
     width: 80px;
     height: 80px;

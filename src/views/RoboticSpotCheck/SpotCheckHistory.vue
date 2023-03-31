@@ -42,7 +42,8 @@
           <label>查询</label>
           <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small" type="info">查询</van-button>
           <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;
-          color: #687dbb;" size="small" type="info">清空</van-button>
+                                                                                                      color: #687dbb;"
+            size="small" type="info">清空</van-button>
         </div>
       </div>
       <div class="form_item">
@@ -84,6 +85,9 @@
         layout="prev, pager, next,total" :total="dataCount">
       </el-pagination>
     </div>
+    <div class="chart">
+      <div id="myChart" style="height:100%;width:100%;"></div>
+    </div>
     <br />
     <br />
   </div>
@@ -116,9 +120,137 @@ export default {
       },//搜索条件
       lineList: [],//机组下拉框
       deviceList: [],//设备名称下拉框
-      tableData: [
-
-      ],
+      tableData: [],
+      statistic: {},
+      option: {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        // legend: {},
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: []
+            // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            // data: ['2023-03-29', '2023-03-30', '2023-03-31', '2023-03-33', '2023-03-33', '2023-03-34', '2023-03-35']
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          //   {
+          //     name: 'day-notFinsih',
+          //     type: 'bar',
+          //     stack: 'day',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [17, 13, 14, 15, 15, 19, 18]
+          //   },
+          //   {
+          //     name: 'day-notRepair',
+          //     type: 'bar',
+          //     stack: 'day',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [13, 17, 15, 15, 19, 10, 10]
+          //   },
+          //   {
+          //     name: 'day-haveComplated',
+          //     type: 'bar',
+          //     stack: 'day',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [14, 12, 17, 18, 12, 12, 16]
+          //   },
+          //   {
+          //     name: 'week-notFinsih',
+          //     type: 'bar',
+          //     stack: 'week',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [16, 13, 17, 16, 14, 16, 10]
+          //   },
+          //   {
+          //     name: 'week-notRepair',
+          //     type: 'bar',
+          //     stack: 'week',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [12, 18, 10, 18, 11, 17, 15]
+          //   },
+          //   {
+          //     name: 'week-haveComplated',
+          //     type: 'bar',
+          //     stack: 'week',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [14, 14, 16, 14, 13, 17, 11]
+          //   },
+          //   {
+          //     name: 'week-overTime',
+          //     type: 'bar',
+          //     stack: 'week',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [14, 19, 19, 10, 19, 18, 12]
+          //   },
+          //   {
+          //     name: 'month-notFinsih',
+          //     type: 'bar',
+          //     stack: 'month',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [11, 11, 12, 16, 19, 19, 16]
+          //   },
+          //   {
+          //     name: 'month-notRepair',
+          //     type: 'bar',
+          //     stack: 'month',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [10, 15, 18, 14, 13, 13, 18]
+          //   },
+          //   {
+          //     name: 'month-haveComplated',
+          //     type: 'bar',
+          //     stack: 'month',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [10, 11, 18, 12, 13, 10, 16]
+          //   },
+          //   {
+          //     name: 'month-overTime',
+          //     type: 'bar',
+          //     stack: 'month',
+          //     emphasis: {
+          //       focus: 'series'
+          //     },
+          //     data: [14, 17, 15, 17, 17, 13, 19]
+          //   }
+        ]
+      },
       checkCycleList: [{
         value: 1,
         label: '日'
@@ -145,11 +277,13 @@ export default {
     };
   },
   activated() {
+    this.from.pageNum = 1
     this.selectnew();
     this.my.title = "历史信息"; //页面标题
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
     this.my.isTabBar = true; //是否开启TabBar
+    this.drawLine();
     // this.my.code = '';
     queryallline().then((res) => {
       console.log(res.result);
@@ -161,6 +295,7 @@ export default {
     this.my.left = true; //NavBar是否开启返回按键
     this.my.isNavBar = true; //是否开启NavBar
     this.my.isTabBar = true; //是否开启TabBar
+    this.drawLine();
     // this.my.code = '';
     queryallline().then((res) => {
       console.log(res.result);
@@ -169,6 +304,11 @@ export default {
   },
 
   methods: {
+    // 底部线图
+    drawLine() {
+      let myChart = this.$echarts.init(document.getElementById("myChart"));
+      myChart.setOption(this.option);
+    },
     clear() {
       this.tableData = []
       this.dataCount = null
@@ -243,6 +383,11 @@ export default {
         recordhistory(this.$eiInfo).then((res) => {
           this.tableData = res.result.result;
           this.dataCount = res.result.dataCount
+          this.statistic = res.result.statistic
+          this.option.xAxis[0].data = res.result.statistic.xAxisDate[0]
+          this.option.series = res.result.statistic.yAxisList;
+          this.drawLine();
+
         })
       }
 

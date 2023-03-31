@@ -7,7 +7,7 @@
                         <div class="boxTitle">{{ tableData[0].title }}
                             <span @click="Eist(1)">+</span>
                         </div>
-                        <div :style="status1 ? 'height : 654px;' : ' height: 190px;'" class="he"
+                        <div :style="status1 ? 'height : 654px;' : ' height: 210px;'" class="he"
                             v-if="tableData[0].content.length != 0">
                             <div class="bh" v-for="i in tableData[0].content" :key="i">
                                 <!-- <h4>分厂&nbsp;&nbsp;<span>{{ i.factory }}</span></h4> -->
@@ -32,7 +32,7 @@
                                         <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 0">待点检</b>
                                         <b @click="seleData(i.baoRobotNumber, 1, 2)" v-if="index == 1">待修复</b>
                                         <b @click="seleData(i.baoRobotNumber, 2, 2)" v-if="index == 2">已完成</b>
-                                        <b v-if="index == 3">逾期未检</b>
+                                        <b @click="seleData(i.baoRobotNumber, 3, 2)" v-if="index == 3">逾期未检</b>
                                         <span>{{ x }}</span>
                                     </h5>
                                 </div>
@@ -40,10 +40,10 @@
                                     <h4>月点检：</h4>
                                     <h5 :style="(x != 0 && index == 0) || (x != 0 && index == 3) ? 'background: red;color:white' : ''"
                                         v-for="x, index in i.monthCheck" :key="x">
-                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 0">待点检</b>
-                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 1">待修复</b>
-                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 2">已完成</b>
-                                        <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 3">逾期未检</b>
+                                        <b @click="seleData(i.baoRobotNumber, 0, 3)" v-if="index == 0">待点检</b>
+                                        <b @click="seleData(i.baoRobotNumber, 1, 3)" v-if="index == 1">待修复</b>
+                                        <b @click="seleData(i.baoRobotNumber, 2, 3)" v-if="index == 2">已完成</b>
+                                        <b @click="seleData(i.baoRobotNumber, 3, 3)" v-if="index == 3">逾期未检</b>
                                         <span>{{ x }}</span>
                                     </h5>
                                 </div>
@@ -59,7 +59,7 @@
                         <div class="boxTitle">{{ tableData[1].title }}
                             <span @click="Eist(2)">+</span>
                         </div>
-                        <div :style="status2 ? 'height : 654px;' : ' height: 148px;'" class="he"
+                        <div :style="status2 ? 'height : 654px;' : ' height: 158px;'" class="he"
                             v-if="tableData[1].content.length != 0">
                             <div class="bh" v-for="i in tableData[1].content" :key="i">
                                 <!-- <h4>分厂&nbsp;&nbsp;<span>{{ i.factory }}</span></h4> -->
@@ -68,16 +68,36 @@
                                 <h4>设备编号&nbsp;&nbsp;<span>{{ i.deviceNumber }}</span></h4>
                                 <h4>设备名称&nbsp;&nbsp;<span>{{ i.deviceName }}</span></h4><br />
                                 <div class="b">
-                                    <h4 :style="i.notMaintain != 0 ? 'background: red;color:white' : ''">
+                                    <h4 @click="selemData(i.baoRobotNumber, 0)"
+                                        :style="i.notMaintain != 0 ? 'background: red;color:white' : ''">
                                         待维护：<span>{{ i.notMaintain }}&nbsp;&nbsp;</span></h4>
-                                    <h4>维护中：<span>{{ i.maintaining }}&nbsp;&nbsp;</span></h4>
-                                    <h4>维护完成：<span>{{ i.maintained }}&nbsp;&nbsp;</span></h4>
+                                    <h4 @click="selemData(i.baoRobotNumber, 1)">维护中：<span>{{ i.maintaining
+                                    }}&nbsp;&nbsp;</span></h4>
+                                    <h4 @click="selemData(i.baoRobotNumber, 2)">维护完成：<span>{{ i.maintained
+                                    }}&nbsp;&nbsp;</span></h4>
                                 </div>
                             </div>
                         </div>
                         <div class="kon" v-else>
                             暂无数据
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="title">公告栏</div>
+            <div class="box">
+                <div class="li_box">
+                    <div class="li">
+                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;精整C371机组-拆捆机器人-日点检还剩12项待点检</div>
+                    </div>
+                    <div class="li">
+                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;精整C372机组-拆捆机器人-日点检还剩12项待点检</div>
+                    </div>
+                    <div class="li">
+                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;精整C373机组-拆捆机器人-日点检还剩12项待点检</div>
+                    </div>
+                    <div class="li">
+                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;精整C371机组-拆捆机器人-还剩12项待维护</div>
                     </div>
                 </div>
             </div>
@@ -95,7 +115,6 @@ export default {
             status1: false,
             status2: false,
             status3: false
-
         }
     },
     mounted() {
@@ -106,9 +125,15 @@ export default {
         this.getData();
     },
     methods: {
-        seleData(s, i) {
-            this.my.chakData = [s, i]
+        seleData(s, i, c) {
+            this.my.code = '';
+            this.my.chakData = [s, i, c]
             this.$router.push({ path: '/checkingToDo' })
+        },
+        selemData(s, i) {
+            this.my.code = '';
+            this.my.MaintaData = [s, i]
+            this.$router.push({ path: '/ToBeMaintained' })
         },
         Eist(s, i) {
             switch (s) {
@@ -141,6 +166,63 @@ export default {
 }
 </script>
 <style scoped lang="less">
+.title {
+    background: #687dbb;
+    width: 95%;
+    margin: 0 auto;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    font-weight: bold;
+    // text-align: center;
+    color: white;
+}
+
+.box {
+    width: 95%;
+    margin: 0 auto;
+    height: 200px;
+    position: relative;
+    border: 1px solid #687dbb;
+    box-shadow: 0 0 5px #ccc;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.box .li {
+    width: 100%;
+    height: 50px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 50px;
+    border: 1px solid #687dbb;
+
+    div {
+        display: flex;
+        width: 100%;
+        padding-left: 15px;
+    }
+}
+
+.li_box {
+    animation: li_move 5s linear 1s infinite;
+
+    img {
+        width: 20px;
+    }
+}
+
+@keyframes li_move {
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        /* 此处50px 与上面设置的高度相对应 */
+        transform: translateY(calc((100% - 50px)*-1));
+    }
+}
+
 .bh {
     border: 1px solid #687dbb;
     padding: 10px;
@@ -180,6 +262,7 @@ export default {
 
 .b {
     display: flex;
+    margin: 5px 0;
 }
 
 .boxnr {

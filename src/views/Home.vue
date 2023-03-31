@@ -53,7 +53,7 @@
           <br />
           故障记录
         </div>
-        <div @click="toRoute('/profile', 5)">
+        <div>
           <img style="width: 100%;" src="../assets/icon/i.svg" />
           <br />
           资料管理

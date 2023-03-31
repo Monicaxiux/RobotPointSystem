@@ -8,7 +8,7 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            redirect: '/login'
+            redirect: '/home'
         },
         {
             path: '/login',
@@ -158,9 +158,18 @@ const router = new Router({
             path: '/FaultLog',
             name: 'FaultLog',//待维护
             meta: {
-                index: 10
+                index: 10,
+                keepAlive: true
             },
             component: () => import('../views/SparePartsManagement/FaultLog.vue')
+        },
+        {
+            path: '/addFault',
+            name: 'addFault',//待维护
+            meta: {
+                index: 10
+            },
+            component: () => import('../views/SparePartsManagement/addFault.vue')
         },
         {
             path: '/test',
@@ -181,17 +190,15 @@ const router = new Router({
     ]
 })
 // 路由全局守卫：登录拦截 检查登录状态, 请重新登录
-// router.beforeEach((to, from, next) => {
-//     // 延时10毫秒，等待Pinia挂载完成
-//     setTimeout(() => {
-//         //使用Pinia的值
-//         const my = myStore()
-//         // 判断登录状态、联网状态
-//         !my.onLine ?
-//             to.name == "Login" || to.name == "Error" ? next() : (Notify({ type: "danger", message: "网络断开连接!", duration: 0 }), router.replace('/error')) :
-//             !my.userStatus ?
-//                 to.name == "Login" || to.name == "Error" ? next() : (Notify({ type: "danger", message: "请先登录！" }), router.replace('/login'))
-//                 : next();
-//     }, 10)
-// });
+router.beforeEach((to, from, next) => {
+    // 延时10毫秒，等待Pinia挂载完成
+    setTimeout(() => {
+        //使用Pinia的值
+        const my = myStore()
+        // 判断登录状态、联网状态
+         !my.userStatus ?
+                to.name == "Login" ? next() : (Notify({ type: "danger", message: "请先登录！" }), router.replace('/login'))
+                : next();
+    }, 10)
+});
 export default router

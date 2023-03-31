@@ -29,15 +29,6 @@
             </div>
             <div class="form_item">
                 <div class="inp">
-                    <label>文档名称</label>
-                    <el-input v-model="from.deviceNumber" placeholder="请输入文档名称"></el-input>
-                </div>
-                <div class="inp">
-
-                </div>
-            </div>
-            <div class="form_item">
-                <div class="inp">
                     <label>扫描设备码</label>
                     <img @click="toQrCode" style="width: 20%;margin-left: 10px;" src="../../assets/icon/qrCode.svg" />
                 </div>
@@ -45,29 +36,29 @@
                     <label>查询</label>
                     <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small"
                         type="info">查询</van-button>
-                    <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;
-                                                                                color: #687dbb;" size="small"
-                        type="info">清空</van-button>
+                    <van-button @click="clear"
+                        style="width: 60%;margin-left: 10px;background-color: white;                                                                                                                                                               color: #687dbb;"
+                        size="small" type="info">清空</van-button>
                 </div>
             </div>
-            <van-button @click="selectnew" style="width: 30%;margin-left: 10px;" size="small" type="info">新增故障</van-button>
-
+            <van-button :disabled="deviceId ? false : true" @click="handleEdit(null, null, 2)"
+                style=" width: 30%;margin-left: 10px;" size="small" type="info">新增故障</van-button>
         </div>
         <div class="tableBox">
             <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }" :data="tableData"
                 border style="width: 100%;font-size: 0.6rem">
-                <el-table-column type="index" width="35" label="序号">
-                </el-table-column>
-                <el-table-column prop="checkTitle" label="名称">
-                </el-table-column>
-                <el-table-column prop="checkCycle" label="故障描述">
-                </el-table-column>
-                <!-- <el-table-column prop="checkStatus" width="105" label=" ">
+                <!-- <el-table-column type="index" width="35" label="序号">
                 </el-table-column> -->
-                <el-table-column prop="address" width="63" label="操作">
+                <el-table-column prop="faultTitle" label="名称">
+                </el-table-column>
+                <el-table-column prop="faultDetails" label="故障描述">
+                </el-table-column>
+                <el-table-column prop="address" width="113" label="操作">
                     <template slot-scope="scope">
                         <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row, 1)" size="mini" plain
-                            type="info">查看</van-button>
+                            type="info">编辑</van-button>
+                        <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row, 3)" size="mini"
+                            type="danger">删除</van-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -81,7 +72,7 @@
 </template>
 
 <script>
-import { queryallline, querysimpleinfo, newestrecord } from '@/api/rollers'
+import { queryallline, querysimpleinfo, faultqueryall, faultdeleterecord } from '@/api/rollers'
 export default {
     name: "CheckingToDo",
     data() {
@@ -119,6 +110,7 @@ export default {
         }
     },
     activated() {
+        this.from.pageNum = 1
         this.selectnew();
         this.my.title = "故障记录"; //页面标题
         this.my.left = true; //NavBar是否开启返回按键
@@ -189,9 +181,11 @@ export default {
         },
         // 查询数据
         selectnew() {
-            this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
-            this.$eiInfo.parameter.deviceId = this.deviceId
-            newestrecord(this.$eiInfo).then((res) => {
+            this.$eiInfo.parameter = {
+                deviceId: this.deviceId,
+                pageNum: this.pageNum
+            }
+            faultqueryall(this.$eiInfo).then((res) => {
                 if (res.sys.status == 1) {
                     if (res.sys.msg == '点检项次') {
 
@@ -199,19 +193,41 @@ export default {
                         this.$notify({ type: "warning", message: res.sys.msg })
                     }
                 }
-                this.tableData = res.result.record
+                this.tableData = res.result.faultList
                 this.dataCount = res.result.dataCount
-                this.option.series[0].data = res.result.countFinish
             })
         },
         handleEdit(i, row, s) {
             switch (s) {
                 case 1:
-                    this.my.recordId = row.recordId;
-                    this.$router.push({ path: "/toDoDetails" });
+                    this.my.itemStatus = 2;
+                    this.my.faultId = row.faultId;
+                    this.$router.push({ path: "/addFault" });
                     break;
                 case 2:
-
+                    this.my.itemStatus = 1;
+                    this.my.deviceId = this.deviceId;
+                    this.$router.push({ path: '/addFault' })
+                    break;
+                case 3:
+                    this.$dialog.confirm({
+                        title: '确认',
+                        message: '是否删除？',
+                    })
+                        .then(() => {
+                            this.$eiInfo.parameter = {
+                                faultId: row.faultId
+                            }
+                            faultdeleterecord(this.$eiInfo).then((res) => {
+                                if (res.sys.status == 1) {
+                                    this.$notify({ type: "success", message: res.sys.msg })
+                                    this.selectnew();
+                                }
+                            })
+                        })
+                        .catch(() => {
+                            // on cancel
+                        });
                     break;
             }
         }

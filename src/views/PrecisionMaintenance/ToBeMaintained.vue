@@ -16,7 +16,7 @@
                     type="info">查询</van-button>
                 <van-button @click="clear"
                     style="width: 60%;margin: 0 10px;background-color: white;
-                                                                                                                                                                                                                                                                                          color: #687dbb;"
+                                                                                                                                                                                                                                                                                                                                                                                                      color: #687dbb;"
                     size="small" type="info">清空</van-button>
             </div>
             <div class="form_item2">
@@ -30,13 +30,13 @@
                 border style="width: 100%;font-size: 0.6rem">
                 <!-- <el-table-column prop="recordId" width="53" label="编号">
                 </el-table-column> -->
-                <el-table-column prop="createDate" label="日期">
+                <el-table-column prop="createDate" label="创建日期">
                 </el-table-column>
                 <el-table-column prop="maintainStatus" width="73" label="状态">
                 </el-table-column>
                 <el-table-column prop="maintainTitle" width="83" label="标题">
                 </el-table-column>
-                <el-table-column prop="createUser" width="93" label="维护人">
+                <el-table-column prop="createUser" width="60" label="维护人">
                 </el-table-column>
                 <el-table-column prop="address" width="63" label="操作">
                     <template slot-scope="scope">
@@ -70,6 +70,7 @@ export default {
             line: '',
             from: {
                 baoRobotNumber: '',
+                // maintainStatus: 0,
                 pageNum: 1
             },//搜索条件
             lineList: [],//机组下拉框
@@ -90,6 +91,11 @@ export default {
         }
     },
     activated() {
+        this.from.pageNum = 1
+        if (this.my.MaintaData) {
+            this.from.baoRobotNumber = this.my.MaintaData[0]
+            this.from.maintainStatus = this.my.MaintaData[1]
+        }
         this.selectnew();
         this.my.title = "待精密维护"; //页面标题
         this.my.left = true; //NavBar是否开启返回按键
@@ -122,6 +128,9 @@ export default {
             this.selectnew();
         },
         clear() {
+            this.my.code = '';
+            this.my.chakData = null;
+            this.my.MaintaData = null;
             this.tableData = []
             this.from.deviceId = ''
             this.from.deviceNumber = ''
@@ -163,13 +172,10 @@ export default {
             this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
             // this.$eiInfo.parameter.deviceId = this.deviceId
             this.$eiInfo.parameter.code = this.my.code
-            this.$eiInfo.parameter.maintainStatus = 0
-
             querypart(this.$eiInfo).then((res) => {
-
                 this.tableData = res.result.maintainRecord
                 this.dataCount = res.result.dataCount
-                this.deviceInfo = res.result.deviceInfo
+                this.deviceInfo = res.result.deviceInfo[0]
 
                 this.option.series[0].data = res.result.countFinish
             })

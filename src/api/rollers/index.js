@@ -192,6 +192,15 @@ export const recordqueryall = (eiInfo) => {
     })
 }
 
+// 查询一个故障的详细信息
+export const faultquerysingle = (eiInfo) => {
+    return req({
+        url: '/fault/query/single',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
 // 创建精密维护记录
 export const maintaincreatenew = (formData) => {
     return req({
@@ -295,3 +304,73 @@ export const recordtobedone = (eiInfo) => {
     })
 }
 
+// 查询设备的典型故障
+export const querytypical = (eiInfo) => {
+    return req({
+        url: '/fault/query/typical',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 查询设备的所有故障记录清单
+export const faultqueryall = (eiInfo) => {
+    return req({
+        url: '/fault/query/all',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 新增一个故障记录
+export const faultaddrecord = (formData) => {
+    return req({
+        url: '/fault/add/record',
+        method: 'post',
+        transformRequest: [function (data, headers) {
+            // 去除post请求默认的Content-Type
+            delete headers.post['Content-Type']
+            return data
+        }],
+        data: formData
+    })
+}
+
+// 修改一个故障记录
+export const faultupdaterecord = (formData) => {
+    return req({
+        url: '/fault/update/record',
+        method: 'post',
+        transformRequest: [function (data, headers) {
+            // 去除post请求默认的Content-Type
+            delete headers.post['Content-Type']
+            return data
+        }],
+        data: formData
+    })
+}
+
+// 删除故障记录
+export const faultdeleterecord = (eiInfo) => {
+    return req({
+        url: '/fault/delete/record',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 删除故障记录照片
+export const faultdeleterecordpic = (eiInfo) => {
+    return req({
+        url: '/fault/delete/record/pic',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 删除点检记录照片
+export const checkrecorddeletepic = (eiInfo) => {
+    return req({
+        url: '/check/record/delete/pic',
+        method: 'post',
+        data: eiInfo
+    })
+}
