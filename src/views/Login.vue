@@ -81,10 +81,8 @@ export default {
             this.$toast.fail('工号或密码错误');
             this.clear();
           }
-
         })
       }
-
     },
     // 清空文本框与验证规则
     clear() {

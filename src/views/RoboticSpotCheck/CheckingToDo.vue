@@ -37,10 +37,10 @@
         </el-table-column>
         <el-table-column prop="checkStatus" width="65" label="检状态">
         </el-table-column>
-        <el-table-column prop="address" width="63" label="检查">
+        <el-table-column prop="address" width="73" label="检查">
           <template slot-scope="scope">
-            <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row, 1)" size="mini" plain
-              type="info">检查</van-button>
+            <van-button style="width: 60px;height: 30px;margin: 8px 0;" @click="handleEdit(scope.$index, scope.row, 1)"
+              size="mini" plain type="info">检查</van-button>
           </template>
         </el-table-column>
         <!-- <el-table-column prop="address" width="65" label="修状态">
@@ -179,7 +179,15 @@ export default {
       this.lineList = res.result.line;
     })
   },
+  watch: {
+    'from.baoRobotNumber'(newVal) {
+      if (newVal != "") {
 
+      } else {
+        this.clear();
+      }
+    },
+  },
   methods: {
     handleCurrentChange(val) {
       this.from.pageNum = val;
@@ -188,6 +196,7 @@ export default {
     clear() {
       this.my.code = '';
       this.my.chakData = null;
+      this.time = ''
       this.tableData = []
       this.option.series[0].data = []
       this.drawLine();

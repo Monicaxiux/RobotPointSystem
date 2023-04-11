@@ -244,6 +244,7 @@ export const updaterecord = (formData) => {
         url: '/maintain/update/record',
         method: 'post',
         transformRequest: [function (data, headers) {
+
             // 去除post请求默认的Content-Type
             delete headers.post['Content-Type']
             return data
@@ -370,6 +371,68 @@ export const faultdeleterecordpic = (eiInfo) => {
 export const checkrecorddeletepic = (eiInfo) => {
     return req({
         url: '/check/record/delete/pic',
+        method: 'post',
+        data: eiInfo
+    })
+}
+// 查询用户列表
+export const userinfopart = (eiInfo) => {
+    return req({
+        url: '/user/info/part',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询公司列表
+export const companylist = (eiInfo) => {
+    return req({
+        url: '/company/list',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询部门
+export const departmentlist = (eiInfo) => {
+    return req({
+        url: '/department/list',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询组
+export const grouplist = (eiInfo) => {
+    return req({
+        url: '/group/list',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询单个用户的全部信息
+export const userinfoall = (eiInfo) => {
+    return req({
+        url: '/user/info/all',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 管理员修改用户
+export const userupdate = (eiInfo) => {
+    return req({
+        url: '/user/update',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 管理员新增新用户
+export const userregister = (eiInfo) => {
+    return req({
+        url: '/user/register',
         method: 'post',
         data: eiInfo
     })

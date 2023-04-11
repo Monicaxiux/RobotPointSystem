@@ -173,11 +173,28 @@ const router = new Router({
         },
         {
             path: '/test',
-            name: 'Test',//测试页
+            name: 'Test',
             meta: {
                 index: 11
             },
             component: () => import('../views/utils/Test.vue')
+        },
+        {
+            path: '/UserManage',
+            name: 'UserManage',
+            meta: {
+                index: 11,
+                keepAlive: true
+            },
+            component: () => import('../views/User/UserManage.vue')
+        },
+         {
+            path: '/UserEitd',
+            name: 'UserEitd',
+            meta: {
+                index: 11
+            },
+            component: () => import('../views/User/UserEitd.vue')
         },
         {
             path: '/error',

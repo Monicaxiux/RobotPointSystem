@@ -16,7 +16,7 @@
                     type="info">查询</van-button>
                 <van-button @click="clear"
                     style="width: 60%;margin: 0 10px;background-color: white;
-                                                                                                                                                                                                                                                                                                                                                                                                      color: #687dbb;"
+                                                                                                                                                                                                                                                                                                                                                                                                                                              color: #687dbb;"
                     size="small" type="info">清空</van-button>
             </div>
             <div class="form_item2">
@@ -38,10 +38,10 @@
                 </el-table-column>
                 <el-table-column prop="createUser" width="60" label="维护人">
                 </el-table-column>
-                <el-table-column prop="address" width="63" label="操作">
+                <el-table-column prop="address" width="73" label="操作">
                     <template slot-scope="scope">
-                        <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row, 1)" size="mini" plain
-                            type="info">查看</van-button>
+                        <van-button style="width: 60px;height: 30px;margin: 8px 0;"
+                            @click="handleEdit(scope.$index, scope.row, 1)" size="mini" plain type="info">查看</van-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -121,7 +121,15 @@ export default {
             this.lineList = res.result.line;
         })
     },
+    watch: {
+        'from.baoRobotNumber'(newVal) {
+            if (newVal != "") {
 
+            } else {
+                this.clear();
+            }
+        },
+    },
     methods: {
         handleCurrentChange(val) {
             this.from.pageNum = val;
@@ -129,6 +137,7 @@ export default {
         },
         clear() {
             this.my.code = '';
+            delete this.from.maintainStatus
             this.my.chakData = null;
             this.my.MaintaData = null;
             this.tableData = []

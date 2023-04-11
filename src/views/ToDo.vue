@@ -5,7 +5,7 @@
                 <div class="boxnr">
                     <div>
                         <div class="boxTitle">{{ tableData[0].title }}
-                            <span @click="Eist(1)">+</span>
+                            <span @click="Eist(1)">{{ status1 ? '收起' : '展开' }}</span>
                         </div>
                         <div :style="status1 ? 'height : 654px;' : ' height: 210px;'" class="he"
                             v-if="tableData[0].content.length != 0">
@@ -17,8 +17,7 @@
                                 <h4>设备名称&nbsp;&nbsp;<span>{{ i.deviceName }}</span></h4><br />
                                 <div class="b">
                                     <h4>日点检：</h4>
-                                    <h5 :style="x != 0 && index == 0 ? 'background: red;color:white' : ''"
-                                        v-for="x, index in i.dayCheck" :key="x">
+                                    <h5 :style="colorStyle(x, index)" v-for="x, index in i.dayCheck" :key="x">
                                         <b @click="seleData(i.baoRobotNumber, 0, 1)" v-if="index == 0">待点检</b>
                                         <b @click="seleData(i.baoRobotNumber, 1, 1)" v-if="index == 1">待修复</b>
                                         <b @click="seleData(i.baoRobotNumber, 2, 1)" v-if="index == 2">已完成</b>
@@ -27,8 +26,7 @@
                                 </div>
                                 <div class="b">
                                     <h4>周点检：</h4>
-                                    <h5 :style="(x != 0 && index == 0) || (x != 0 && index == 3) ? 'background: red;color:white' : ''"
-                                        v-for="x, index in i.weekCheck" :key="x">
+                                    <h5 :style="colorStyle(x, index)" v-for="x, index in i.weekCheck" :key="x">
                                         <b @click="seleData(i.baoRobotNumber, 0, 2)" v-if="index == 0">待点检</b>
                                         <b @click="seleData(i.baoRobotNumber, 1, 2)" v-if="index == 1">待修复</b>
                                         <b @click="seleData(i.baoRobotNumber, 2, 2)" v-if="index == 2">已完成</b>
@@ -38,8 +36,7 @@
                                 </div>
                                 <div class="b">
                                     <h4>月点检：</h4>
-                                    <h5 :style="(x != 0 && index == 0) || (x != 0 && index == 3) ? 'background: red;color:white' : ''"
-                                        v-for="x, index in i.monthCheck" :key="x">
+                                    <h5 :style="colorStyle(x, index)" v-for="x, index in i.monthCheck" :key="x">
                                         <b @click="seleData(i.baoRobotNumber, 0, 3)" v-if="index == 0">待点检</b>
                                         <b @click="seleData(i.baoRobotNumber, 1, 3)" v-if="index == 1">待修复</b>
                                         <b @click="seleData(i.baoRobotNumber, 2, 3)" v-if="index == 2">已完成</b>
@@ -57,7 +54,7 @@
                 <div class="boxnr">
                     <div>
                         <div class="boxTitle">{{ tableData[1].title }}
-                            <span @click="Eist(2)">+</span>
+                            <span @click="Eist(2)">{{ status2 ? '收起' : '展开' }}</span>
                         </div>
                         <div :style="status2 ? 'height : 654px;' : ' height: 158px;'" class="he"
                             v-if="tableData[1].content.length != 0">
@@ -83,21 +80,33 @@
                         </div>
                     </div>
                 </div>
+                <div class="boxnr">
+                    <div>
+                        <div class="boxTitle">{{ tableData[2].title }}
+                            <span @click="Eist(3)">{{ status3 ? '收起' : '展开' }}</span>
+                        </div>
+                        <div :style="status3 ? 'height : 654px;' : ' height: 158px;'" class="he"
+                            v-if="tableData[1].content.length != 0">
+                            <div class="bh" v-for="i in tableData[2].content" :key="i">
+                                <!-- <h4>分厂&nbsp;&nbsp;<span>{{ i.factory }}</span></h4> -->
+                                <h4>审核内容&nbsp;&nbsp;<span>{{ i.handleMsg }}</span></h4>
+                                <h4>审核结果&nbsp;&nbsp;<span :style="colorStyleX(i.auditResult)">{{ i.auditResult }}</span>
+                                </h4>
+                                <h4>提审日期&nbsp;&nbsp;<span>{{ i.createDate }}</span></h4>
+                                <h4>审核类型&nbsp;&nbsp;<span>{{ i.handleType }}</span></h4><br />
+                            </div>
+                        </div>
+                        <div class="kon" v-else>
+                            暂无数据
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="title">公告栏</div>
             <div class="box">
                 <div class="li_box">
-                    <div class="li">
-                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;精整C371机组-拆捆机器人-日点检还剩12项待点检</div>
-                    </div>
-                    <div class="li">
-                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;精整C372机组-拆捆机器人-日点检还剩12项待点检</div>
-                    </div>
-                    <div class="li">
-                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;精整C373机组-拆捆机器人-日点检还剩12项待点检</div>
-                    </div>
-                    <div class="li">
-                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;精整C371机组-拆捆机器人-还剩12项待维护</div>
+                    <div v-for="i in tableData[3].content" :key="i" class="li">
+                        <div><img src="../assets/icon/tonzhi.svg" />&nbsp;{{ i }}</div>
                     </div>
                 </div>
             </div>
@@ -114,7 +123,7 @@ export default {
             tableData: [],
             status1: false,
             status2: false,
-            status3: false
+            status3: false,
         }
     },
     mounted() {
@@ -125,6 +134,48 @@ export default {
         this.getData();
     },
     methods: {
+        colorStyle(x, index) {
+            // x != 0 && index == 0 ? 'background: red;color:white' : ''
+            let style = ''
+            switch (index) {
+                case 0:
+                    if (x != 0) {
+                        style = 'background: yellow;color:black'
+                    }
+                    break;
+                case 1:
+                    if (x != 0) {
+                        style = 'background: red;color:white'
+                    }
+                    break;
+                case 2:
+                    if (x != 0) {
+                        style = 'background: green;color:white'
+                    }
+                    break;
+                case 3:
+                    if (x != 0) {
+                        style = 'background: red;color:white'
+                    }
+                    break;
+            }
+            return style;
+        },
+        colorStyleX(auditResult) {
+            let style = ''
+            switch (auditResult) {
+                case '待审核':
+                    style = 'background: yellow;color:black'
+                    break;
+                case '通过':
+                    style = 'background: green;color:white'
+                    break;
+                case '驳回':
+                    style = 'background: red;color:white'
+                    break;
+            }
+            return style;
+        },
         seleData(s, i, c) {
             this.my.code = '';
             this.my.chakData = [s, i, c]
@@ -146,6 +197,11 @@ export default {
                     this.status2 = !this.status2;
                     this.status1 = false
                     this.status3 = false
+                    break;
+                case 3:
+                    this.status3 = !this.status3;
+                    this.status1 = false
+                    this.status2 = false
                     break;
                 default:
                     break;
@@ -205,7 +261,7 @@ export default {
 }
 
 .li_box {
-    animation: li_move 5s linear 1s infinite;
+    animation: li_move 30s linear 1s infinite;
 
     img {
         width: 20px;
@@ -256,7 +312,7 @@ export default {
 
     span {
         float: right;
-        font-size: 26px;
+        font-size: 16px;
     }
 }
 
@@ -286,7 +342,7 @@ export default {
 
 h5 {
     padding: 0;
-    margin: 0;
+    margin: 0 3px;
 
     span {
         font-size: 12px;

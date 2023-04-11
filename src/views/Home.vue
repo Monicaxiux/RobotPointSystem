@@ -85,8 +85,21 @@
         </div>
       </div>
     </div>
-
-
+    <div class="box">
+      <span>用户管理</span><br />
+      <div class="box_nr">
+        <div>
+          <img style="width: 100%;" src="../assets/icon/d.svg" />
+          <br />
+          申请批假
+        </div>
+        <div @click="toRoute('/UserManage', 5)">
+          <img style="width: 100%;" src="../assets/icon/e.svg" />
+          <br />
+          员工管理
+        </div>
+      </div>
+    </div>
     <br />
     <br />
   </div>
@@ -108,6 +121,7 @@ export default {
   },
 
   methods: {
+
     toRoute(to, i) {
       this.my.scheduling = i;
       this.$router.push({ path: to });

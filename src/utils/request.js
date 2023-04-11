@@ -8,7 +8,7 @@ const req = axios.create({
     // baseURL: 'http://192.168.0.26:8192',
     // baseURL: 'http://192.168.0.92:8192',
     // baseURL: 'http://47.101.183.203:8192',
-    baseURL: localStorage.baseURL,
+    baseURL: localStorage.baseURL?localStorage.baseURL:'http://47.101.183.203:8192',
     // timeout: 7000 //请求超时时间
 })
 console.log(localStorage.baseURL);

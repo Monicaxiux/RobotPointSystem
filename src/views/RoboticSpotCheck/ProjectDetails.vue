@@ -215,6 +215,9 @@ export default {
                             unit: this.form.unit,
                             deviceId: this.form.deviceId
                         }
+                        this.$eiInfo.userInfo = {
+                            id: this.my.userInfo.id
+                        }
                         itemadd(this.$eiInfo).then((res) => {
                             if (res.sys.status == 1) {
                                 this.$notify({ type: "success", message: res.sys.msg })
@@ -233,6 +236,9 @@ export default {
                             maxValue: parseInt(this.form.maxValue),
                             minValue: parseInt(this.form.minValue),
                             unit: this.form.unit
+                        }
+                        this.$eiInfo.userInfo = {
+                            id: this.my.userInfo.id
                         }
                         itemupdate(this.$eiInfo).then((res) => {
                             if (res.sys.status == 1) {
@@ -270,6 +276,9 @@ export default {
                         .then(() => {
                             this.$eiInfo.parameter = {
                                 id: this.form.itemId
+                            }
+                            this.$eiInfo.userInfo = {
+                                id: this.my.userInfo.id
                             }
                             itemdelete(this.$eiInfo).then((res) => {
                                 if (res.sys.status == 1) {

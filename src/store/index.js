@@ -18,6 +18,7 @@ const myStore = defineStore('store', {
             chakData:null,
             MaintaData:null,
             faultId:0,
+            userId:0
         }
     },
     getters: {

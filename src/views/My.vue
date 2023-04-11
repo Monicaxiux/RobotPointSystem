@@ -12,7 +12,6 @@
 <script>
 export default {
   name: "My",
-
   data() {
     return {
       progress: 0,
