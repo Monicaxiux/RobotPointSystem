@@ -18,6 +18,11 @@
           <br />
           点检历史
         </div>
+        <div @click="toRoute('/Scheduling', 3)">
+          <img style="width: 100%;" src="../assets/icon/c.svg" />
+          <br />
+          点检排程
+        </div>
       </div>
     </div>
     <div class="box">

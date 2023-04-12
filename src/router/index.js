@@ -196,6 +196,14 @@ const router = new Router({
             },
             component: () => import('../views/User/UserEitd.vue')
         },
+         {
+            path: '/Scheduling',
+            name: 'Scheduling',
+            meta: {
+                index: 11
+            },
+            component: () => import('../views/RoboticSpotCheck/Scheduling.vue')
+        },
         {
             path: '/error',
             name: 'Error',//网络错误

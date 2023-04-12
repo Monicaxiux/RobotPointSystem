@@ -163,7 +163,7 @@ export default {
       this.deviceId = ''
       this.from.deviceNumber = ''
       this.from.baoRobotNumber = ''
-      this.line = ''
+      // this.line = ''
       this.dataCount = null
     },
     // 扫码
@@ -211,7 +211,7 @@ export default {
     },
     selectnew() {
       this.$eiInfo.parameter = {
-        deviceId: this.from.deviceId,
+        deviceId: this.deviceId,
         pageNum: this.from.pageNum
       }
       itempartinfo(this.$eiInfo).then((res) => {

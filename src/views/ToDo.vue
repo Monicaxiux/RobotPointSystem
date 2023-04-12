@@ -86,7 +86,7 @@
                             <span @click="Eist(3)">{{ status3 ? '收起' : '展开' }}</span>
                         </div>
                         <div :style="status3 ? 'height : 654px;' : ' height: 158px;'" class="he"
-                            v-if="tableData[1].content.length != 0">
+                            v-if="tableData[2].content.length != 0">
                             <div class="bh" v-for="i in tableData[2].content" :key="i">
                                 <!-- <h4>分厂&nbsp;&nbsp;<span>{{ i.factory }}</span></h4> -->
                                 <h4>审核内容&nbsp;&nbsp;<span>{{ i.handleMsg }}</span></h4>
