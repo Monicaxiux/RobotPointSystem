@@ -87,7 +87,8 @@
                         </div>
                         <div :style="status3 ? 'height : 654px;' : ' height: 158px;'" class="he"
                             v-if="tableData[2].content.length != 0">
-                            <div class="bh" v-for="i in tableData[2].content" :key="i">
+                            <div class="bh" v-for="i in tableData[2].content"
+                                @click="auditData(i.auditRecordId, i.auditItemType)" :key="i">
                                 <!-- <h4>分厂&nbsp;&nbsp;<span>{{ i.factory }}</span></h4> -->
                                 <h4>审核内容&nbsp;&nbsp;<span>{{ i.handleMsg }}</span></h4>
                                 <h4>审核结果&nbsp;&nbsp;<span :style="colorStyleX(i.auditResult)">{{ i.auditResult }}</span>
@@ -185,6 +186,10 @@ export default {
             this.my.code = '';
             this.my.MaintaData = [s, i]
             this.$router.push({ path: '/ToBeMaintained' })
+        },
+        auditData(s, i) {
+            this.my.audData = [s, i]
+            this.$router.push({ path: '/ApprovalDetails' })
         },
         Eist(s, i) {
             switch (s) {

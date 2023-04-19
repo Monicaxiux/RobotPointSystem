@@ -19,7 +19,7 @@
           点检历史
         </div>
         <div @click="toRoute('/Scheduling', 3)">
-          <img style="width: 100%;" src="../assets/icon/c.svg" />
+          <img style="width: 100%;" src="../assets/icon/zw.svg" />
           <br />
           点检排程
         </div>
@@ -93,7 +93,7 @@
     <div class="box">
       <span>用户管理</span><br />
       <div class="box_nr">
-        <div>
+        <div @click="toRoute('/Approval', 5)">
           <img style="width: 100%;" src="../assets/icon/d.svg" />
           <br />
           申请批假

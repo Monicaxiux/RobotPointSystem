@@ -437,3 +437,39 @@ export const userregister = (eiInfo) => {
         data: eiInfo
     })
 }
+
+// 查询审核信息
+export const auditquery = (eiInfo) => {
+    return req({
+        url: '/audit/query/info/single',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 审核需要审核的内容
+export const auditverify = (eiInfo) => {
+    return req({
+        url: '/audit/verify',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 查询某年某月的点检排程计划
+export const plandatequery = (eiInfo) => {
+    return req({
+        url: '/plan/date/query/month',
+        method: 'post',
+        data: eiInfo
+    })
+}
+
+// 修改某一天的点检计划与历史记录
+export const plandatechange = (eiInfo) => {
+    return req({
+        url: '/plan/date/change',
+        method: 'post',
+        data: eiInfo
+    })
+}

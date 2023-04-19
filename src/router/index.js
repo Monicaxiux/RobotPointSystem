@@ -205,6 +205,22 @@ const router = new Router({
             component: () => import('../views/RoboticSpotCheck/Scheduling.vue')
         },
         {
+            path: '/Approval',
+            name: 'Approval',
+            meta: {
+                index: 11
+            },
+            component: () => import('../views/User/Approval.vue')
+        },
+         {
+            path: '/ApprovalDetails',
+            name: 'ApprovalDetails',
+            meta: {
+                index: 11
+            },
+            component: () => import('../views/User/ApprovalDetails.vue')
+        },
+        {
             path: '/error',
             name: 'Error',//网络错误
             meta: {
