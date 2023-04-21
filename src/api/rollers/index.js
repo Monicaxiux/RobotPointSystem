@@ -473,3 +473,12 @@ export const plandatechange = (eiInfo) => {
         data: eiInfo
     })
 }
+
+// 输入条件查询审核信息列表
+export const auditqueryinfolist = (eiInfo) => {
+    return req({
+        url: '/audit/query/info/list',
+        method: 'post',
+        data: eiInfo
+    })
+}
