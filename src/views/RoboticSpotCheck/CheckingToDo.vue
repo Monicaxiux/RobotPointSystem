@@ -5,15 +5,16 @@
         <div class="inp">
           <label>扫描设备码</label>
           <img @click="toQrCode" style="width: 20%;margin-left: 10px;" src="../../assets/icon/qrCode.svg" />
+          <label style="margin-left: 30px;">宝罗工号</label>
         </div>
         <div class="inp">
-          <label>宝罗工号</label>
-          <el-input v-model="from.baoRobotNumber" placeholder="请输入内容"></el-input>
+          <el-input style="width: 130px !important;" disabled v-model="from.baoRobotNumber1"
+            placeholder="请输入内容1"></el-input>
+          <el-input maxlength="3" v-model="from.baoRobotNumber2" placeholder="请输入内容2"></el-input>
         </div>
       </div>
       <div class="form_item">
-        <van-button @click="(selectnew(), my.code = '')" style="width: 60%;margin-left: 10px;" size="small"
-          type="info">查询</van-button>
+        <van-button @click="sele" style="width: 60%;margin-left: 10px;" size="small" type="info">查询</van-button>
         <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;color: #687dbb;"
           size="small" type="info">清空</van-button>
         <van-button @click="$router.push({ path: '/projectDetails' }), my.itemStatus = 3"
@@ -24,6 +25,8 @@
         <div v-if="deviceInfo">
           设备名称：{{ deviceInfo.deviceName }}<br />设备机组：{{ deviceInfo.productionLine }}
         </div>
+        <van-button :disabled="!deviceInfo" @click="toCheck" style="width: 100%;margin:0 10px;float: right;" size="small"
+          type="info">无法点检</van-button>
       </div>
     </div>
     <div class="tableBox">
@@ -53,6 +56,10 @@
         </el-table-column> -->
       </el-table>
     </div>
+    <van-dialog :before-close="dialogClose" v-model="show" title="是否无法点检" show-cancel-button>
+      <van-field v-model="remark" placeholder="请输入备注" label="备注">
+      </van-field>
+    </van-dialog>
     <div class="pag">
       <el-pagination :page-size="15" background @current-change="handleCurrentChange" :current-page="currentPage"
         layout="prev, pager, next,total" :total="dataCount">
@@ -65,7 +72,7 @@
 </template>
 
 <script>
-import { queryallline, querysimpleinfo, newestrecord } from '@/api/rollers'
+import { queryallline, querysimpleinfo, checkrecordunable, newestrecord } from '@/api/rollers'
 export default {
   name: "CheckingToDo",
   data() {
@@ -77,6 +84,7 @@ export default {
       time: '',
       deviceId: 0,
       dataCount: null,
+      show: false,
       deviceInfo: null,
       currentPage: 0,
       line: '',
@@ -86,6 +94,8 @@ export default {
         // deviceNumber: '',
         checkStatus: 0,
         checkCycle: 1,
+        baoRobotNumber1: 'BLS0110',
+        baoRobotNumber2: '',
         // recordNumber: '',
         pageNum: 1
       },//搜索条件
@@ -149,7 +159,7 @@ export default {
     this.from.pageNum = 1
     if (this.my.chakData) {
       console.log(this.my.chakData);
-      this.from.baoRobotNumber = this.my.chakData[0]
+      this.from.baoRobotNumber2 = this.my.chakData[0].substring(this.my.chakData[0].length - 3)
       this.from.checkStatus = this.my.chakData[1]
       this.from.checkCycle = this.my.chakData[2]
     }
@@ -180,7 +190,9 @@ export default {
     })
   },
   watch: {
-    'from.baoRobotNumber'(newVal) {
+    'from.baoRobotNumber2'(newVal) {
+      delete this.from.checkStatus
+      delete this.from.checkCycle
       if (newVal != "") {
 
       } else {
@@ -189,6 +201,42 @@ export default {
     },
   },
   methods: {
+    sele() {
+      this.my.code = ''
+      delete this.from.checkStatus;
+      delete this.from.checkCycle;
+      console.log(this.from);
+      this.selectnew()
+    },
+    toCheck() {
+      this.remark = '';
+      this.show = true;
+    },
+    dialogClose(action, done) {
+      switch (action) {
+        case "cancel":
+          done();
+          break;
+        case "confirm":
+          this.$eiInfo.parameter = {
+            deviceId: this.deviceInfo.deviceId,
+            reason: this.remark
+          }
+          checkrecordunable(this.$eiInfo).then((res) => {
+            if (res.sys.status != -1) {
+              this.$notify({ type: "success", message: res.sys.msg })
+              this.$router.back();
+              done();
+
+            } else {
+              done();
+
+            }
+
+          })
+          break;
+      }
+    },
     handleCurrentChange(val) {
       this.from.pageNum = val;
       this.selectnew();
@@ -205,7 +253,7 @@ export default {
       delete this.from.checkStatus
       delete this.from.checkCycle
       this.deviceInfo = null
-      this.from.baoRobotNumber = ''
+      this.from.baoRobotNumber2 = ''
       this.from.pageNum = 1
       this.line = ''
       this.dataCount = null
@@ -245,7 +293,13 @@ export default {
     },
     // 查询数据
     selectnew() {
+      this.from.baoRobotNumber = this.from.baoRobotNumber1 + this.from.baoRobotNumber2
       this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
+      delete this.$eiInfo.parameter.baoRobotNumber1
+      delete this.$eiInfo.parameter.baoRobotNumber2
+      if (this.my.code.length != 0) {
+        delete this.$eiInfo.parameter.baoRobotNumber
+      }
       this.$eiInfo.parameter.deviceId = this.deviceId;
       this.$eiInfo.parameter.code = this.my.code;
       newestrecord(this.$eiInfo).then((res) => {
@@ -260,6 +314,7 @@ export default {
         this.time = res.result.checkRecordDate
         this.dataCount = res.result.dataCount
         this.deviceInfo = res.result.deviceInfo[0]
+        this.from.baoRobotNumber2 = this.deviceInfo.baoRobotNumber.substring(this.deviceInfo.baoRobotNumber.length - 3)
         this.option.series[0].data = res.result.countFinish
         this.drawLine();
       })
@@ -297,6 +352,7 @@ export default {
   background-color: #687dbb;
 }
 
+
 /deep/.el-input {
   width: 110px !important;
   margin-left: 4px;
@@ -304,7 +360,7 @@ export default {
 }
 
 /deep/.el-input__inner {
-  width: 110px !important;
+  /* width: 110px !important; */
   margin-left: 4px;
   height: 32px;
 }
@@ -350,7 +406,7 @@ export default {
 }
 
 .form_item2 {
-  width: 100%;
+  /* width: 100%; */
   margin-left: 7%;
 }
 

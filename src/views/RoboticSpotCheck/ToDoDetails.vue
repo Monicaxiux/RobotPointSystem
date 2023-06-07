@@ -58,9 +58,14 @@
                     </el-select> -->
                 </template>
             </van-field>
+            <van-field label="检查时间">
+                <template #input>
+                    {{ form.checkDate }}
+                </template>
+            </van-field>
             <van-field v-if="form.checkResult == '检查异常'" label="是否添加到精密维护关注项">
                 <template #input>
-                    <van-radio-group v-model="needMaintain" direction="horizontal">
+                    <van-radio-group v-model="form.needMaintain" direction="horizontal">
                         <van-radio name="1">是</van-radio>
                         <van-radio name="0">否</van-radio>
                     </van-radio-group>
@@ -71,12 +76,12 @@
                 <div style="padding: 20px;">
                     <div style="display: flex;">
                         <el-input style="width: 300px;" size="mini" placeholder="故障标题" v-model="from.title" clearable>
-                        </el-input>&nbsp;&nbsp;
-                        <el-select @change="getData()" size="mini" v-model="from.faultResponsible" placeholder="责任方">
+                        </el-input>
+                        <!-- <el-select @change="getData()" size="mini" v-model="from.faultResponsible" placeholder="责任方">
                             <el-option v-for="item in faultResponsibleList" :key="item.value" :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select>
+                        </el-select> -->
                         &nbsp;&nbsp;
                         <van-button style="width: 70px;height: 28px;" @click="getData()" size="mini" plain
                             type="info">查询</van-button>
@@ -84,9 +89,9 @@
                     <br />
                     <el-table :row-style="{ height: '30px' }" align="center" :cell-style="{ padding: '0px' }"
                         :data="tableData" border style="width: 100%;font-size: 0.6rem">
-                        <el-table-column prop="faultTitle" label="故障标题">
-                        </el-table-column>
-                        <el-table-column prop="faultDetails" label="故障描述">
+                        <!-- <el-table-column prop="faultTitle" label="故障标题">
+                        </el-table-column> -->
+                        <el-table-column prop="faultTitle" label="故障描述">
                         </el-table-column>
                         <el-table-column prop="address" width="63" label="操作">
                             <template slot-scope="scope">
@@ -156,6 +161,11 @@
                     </el-select>
                 </template>
             </van-field>
+            <van-field label="修复时间">
+                <template #input>
+                    {{ form.repairDate }}
+                </template>
+            </van-field>
             <van-field label="修复人">
                 <template #input>
                     {{ form.repairUser }}
@@ -188,20 +198,16 @@ export default {
             form: {},
             from: {
                 title: '',
-                faultResponsible: '',
+                // faultResponsible: '',
                 checkResult: '',
                 pageNum: 1
             },
-            needMaintain: '0',
             checkPic: [],
             repairPic: [],
             currentPage: 1,
             dataCount: 0,
             show: false,
-            tableData: [{
-                value: '外观异常',
-                name: '机器人外观'
-            }],
+            tableData: [],
             checkResultList: [
                 {
                     value: '检查正常',
@@ -333,7 +339,7 @@ export default {
         getData() {
             this.$eiInfo.parameter = {
                 recordId: this.my.recordId,
-                faultResponsible: this.from.faultResponsible,
+                // faultResponsible: this.from.faultResponsible,
                 title: this.from.title
             }
             querytypical(this.$eiInfo).then((res) => {
@@ -342,7 +348,7 @@ export default {
             })
         },
         help() {
-            this.getData();
+            // this.getData();
             this.show = true;
         },
         play(url) {
@@ -376,7 +382,7 @@ export default {
                         formData.append('repairResult', this.form.repairResult);
                         formData.append('repairUser', this.form.repairUser);
                         formData.append('remark', this.form.remark);
-                        formData.append('needMaintain', parseInt(this.needMaintain));
+                        formData.append('needMaintain', parseInt(this.form.needMaintain));
                         formData.append('userId', this.my.userInfo.id);
                         console.log(this.checkPic);
                         for (let i = 0; i < this.checkPic.length; i++) {
@@ -385,7 +391,6 @@ export default {
                         for (let i = 0; i < this.repairPic.length; i++) {
                             formData.append('repairPic', this.repairPic[i].file);
                         }
-
                         // console.log(cList);
                         // console.log(rList);
                         recorduploaddata(formData).then((res) => {

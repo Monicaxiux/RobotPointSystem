@@ -11,7 +11,7 @@ Vue.use(PiniaVuePlugin)
   console.log('有地址，不更改环境');
 } else {
   console.log('没有地址，默认正式环境');
-  localStorage.baseURL = 'http://47.101.183.203:8192'
+  localStorage.baseURL = 'http://106.15.73.222:8192'
 }
 
 //全局挂载Pinia

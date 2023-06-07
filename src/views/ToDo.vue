@@ -21,6 +21,7 @@
                                         <b @click="seleData(i.baoRobotNumber, 0, 1)" v-if="index == 0">待点检</b>
                                         <b @click="seleData(i.baoRobotNumber, 1, 1)" v-if="index == 1">待修复</b>
                                         <b @click="seleData(i.baoRobotNumber, 2, 1)" v-if="index == 2">已完成</b>
+                                        <b @click="seleData(i.baoRobotNumber, 4, 1)" v-if="index == 3">无法点检</b>
                                         <span>{{ x }}</span>
                                     </h5>
                                 </div>

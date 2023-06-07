@@ -5,8 +5,7 @@
             </van-field>
             <van-field v-model="form.faultDetails" placeholder="请输入内容" label="故障内容">
             </van-field>
-            <van-field v-model="form.solution" placeholder="请输入解决方案" label="解决方案">
-            </van-field>
+            <van-field v-model="form.solution" rows="1" autosize label="解决方案" type="textarea" placeholder="请输入解决方案" />
             <van-field label="故障类型">
                 <template #input>
                     <el-select size="mini" v-model="form.faultResponsible" placeholder="请选择">
@@ -15,7 +14,6 @@
                         </el-option>
                     </el-select>
                 </template>
-            </van-field>
             </van-field>
             <van-field label="典型案例">
                 <template #input>
@@ -92,6 +90,8 @@
                 <template #input>
                     {{ form.faultTime }}
                 </template>
+            </van-field>
+            <van-field v-model="form.remark" placeholder="请输入内容" label="备注">
             </van-field>
             <div class="bottom_box">
                 <van-button class="bt" @click="edit(1)" type="info">提交</van-button>

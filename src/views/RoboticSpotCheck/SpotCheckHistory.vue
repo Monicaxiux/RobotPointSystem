@@ -8,7 +8,7 @@
         </div>
         <div class="inp">
           <label>机组</label>
-          <el-select @change="selectline" v-model="line" placeholder="请选择">
+          <el-select @change="selectline" v-model="from.productionLineId" placeholder="请选择">
             <el-option v-for="item in lineList" :key="item.lineId" :label="item.lineName" :value="item.lineId">
             </el-option>
           </el-select>
@@ -41,8 +41,9 @@
         <div class="inp">
           <label>查询</label>
           <van-button @click="selectnew" style="width: 60%;margin-left: 10px;" size="small" type="info">查询</van-button>
-          <van-button @click="clear" style="width: 60%;margin-left: 10px;background-color: white;
-                                                                                                      color: #687dbb;"
+          <van-button @click="clear"
+            style="width: 60%;margin-left: 10px;background-color: white;
+                                                                                                                          color: #687dbb;"
             size="small" type="info">清空</van-button>
         </div>
       </div>
@@ -85,6 +86,7 @@
         layout="prev, pager, next,total" :total="dataCount">
       </el-pagination>
     </div>
+
     <div class="chart">
       <div id="myChart" style="height:100%;width:100%;"></div>
     </div>
@@ -106,16 +108,15 @@ export default {
       show: false,
       show2: false,
       deviceId: 0,
-      line: '',
       dataCount: null,
       currentPage: 1,
       from: {
         deviceId: '',
         baoRobotNumber: '',
         deviceNumber: '',
-        checkStatus: 0,
-        checkCycle: 1,
-        recordNumber: '',
+        checkStatus: null,
+        checkCycle: null,
+        productionLineId: null,
         pageNum: 1
       },//搜索条件
       lineList: [],//机组下拉框
@@ -139,9 +140,9 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: []
+            // data: []
             // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            // data: ['2023-03-29', '2023-03-30', '2023-03-31', '2023-03-33', '2023-03-33', '2023-03-34', '2023-03-35']
+            // data: ['03-40', '03-30', '03-31', '03-33', '03-33', '03-34', '03-35']
           }
         ],
         yAxis: [
@@ -149,107 +150,7 @@ export default {
             type: 'value'
           }
         ],
-        series: [
-          //   {
-          //     name: 'day-notFinsih',
-          //     type: 'bar',
-          //     stack: 'day',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [17, 13, 14, 15, 15, 19, 18]
-          //   },
-          //   {
-          //     name: 'day-notRepair',
-          //     type: 'bar',
-          //     stack: 'day',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [13, 17, 15, 15, 19, 10, 10]
-          //   },
-          //   {
-          //     name: 'day-haveComplated',
-          //     type: 'bar',
-          //     stack: 'day',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [14, 12, 17, 18, 12, 12, 16]
-          //   },
-          //   {
-          //     name: 'week-notFinsih',
-          //     type: 'bar',
-          //     stack: 'week',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [16, 13, 17, 16, 14, 16, 10]
-          //   },
-          //   {
-          //     name: 'week-notRepair',
-          //     type: 'bar',
-          //     stack: 'week',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [12, 18, 10, 18, 11, 17, 15]
-          //   },
-          //   {
-          //     name: 'week-haveComplated',
-          //     type: 'bar',
-          //     stack: 'week',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [14, 14, 16, 14, 13, 17, 11]
-          //   },
-          //   {
-          //     name: 'week-overTime',
-          //     type: 'bar',
-          //     stack: 'week',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [14, 19, 19, 10, 19, 18, 12]
-          //   },
-          //   {
-          //     name: 'month-notFinsih',
-          //     type: 'bar',
-          //     stack: 'month',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [11, 11, 12, 16, 19, 19, 16]
-          //   },
-          //   {
-          //     name: 'month-notRepair',
-          //     type: 'bar',
-          //     stack: 'month',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [10, 15, 18, 14, 13, 13, 18]
-          //   },
-          //   {
-          //     name: 'month-haveComplated',
-          //     type: 'bar',
-          //     stack: 'month',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [10, 11, 18, 12, 13, 10, 16]
-          //   },
-          //   {
-          //     name: 'month-overTime',
-          //     type: 'bar',
-          //     stack: 'month',
-          //     emphasis: {
-          //       focus: 'series'
-          //     },
-          //     data: [14, 17, 15, 17, 17, 13, 19]
-          //   }
-        ]
+        series: []
       },
       checkCycleList: [{
         value: 1,
@@ -312,16 +213,19 @@ export default {
     clear() {
       this.tableData = []
       this.dataCount = null
+      this.from.productionLineId = null
       this.from.deviceId = ''
       this.from.baoRobotNumber = ''
       this.from.pageNum = 1
       this.from.recordNumber = ''
-      this.from.checkCycle = 1
-      this.from.checkStatus = 0
+      this.from.checkCycle = null
+      this.from.checkStatus = null
       this.from.deviceNumber = ''
-
+      this.deviceList = []
       this.from.endDate = ''
       this.from.startDate = ''
+      this.option.xAxis[0].data = []
+      this.drawLine();
     },
     handleCurrentChange(val) {
       this.from.pageNum = val;
@@ -366,6 +270,7 @@ export default {
         console.log(res.result.deviceList);
         this.deviceList = res.result.deviceList;
       })
+      this.selectnew();
     },
     // 设备名称选择事件
     selectdevice(i) {
@@ -377,19 +282,18 @@ export default {
     },
     // 查询数据
     selectnew() {
-      if (this.deviceId) {
-        this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
-        this.$eiInfo.parameter.deviceId = this.deviceId
-        recordhistory(this.$eiInfo).then((res) => {
-          this.tableData = res.result.result;
-          this.dataCount = res.result.dataCount
-          this.statistic = res.result.statistic
-          this.option.xAxis[0].data = res.result.statistic.xAxisDate[0]
-          this.option.series = res.result.statistic.yAxisList;
-          this.drawLine();
-
-        })
-      }
+      // if (this.deviceId) {
+      this.$eiInfo.parameter = JSON.parse(JSON.stringify(this.from))
+      this.$eiInfo.parameter.deviceId = this.deviceId
+      recordhistory(this.$eiInfo).then((res) => {
+        this.tableData = res.result.result;
+        this.dataCount = res.result.dataCount
+        this.statistic = res.result.statistic
+        this.option.xAxis[0].data = res.result.statistic.xAxisDate
+        this.option.series = res.result.statistic.yAxisList;
+        this.drawLine();
+      })
+      // }  
 
     },
     handleEdit(i, row, s) {

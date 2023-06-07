@@ -64,7 +64,11 @@
                     {{ form.checkResult }}
                 </template>
             </van-field>
-
+            <van-field label="检查时间">
+                <template #input>
+                    {{ form.checkDate }}
+                </template>
+            </van-field>
             <van-field label="问题描述">
                 <template #input>
                     {{ form.resultDetails }}
@@ -104,6 +108,11 @@
                     {{ form.repairResult }}
                 </template>
             </van-field>
+            <van-field label="修复时间">
+                <template #input>
+                    {{ form.repairDate }}
+                </template>
+            </van-field>
             <van-field label="修复人">
                 <template #input>
                     {{ form.repairUser }}
@@ -115,6 +124,9 @@
                 </template>
             </van-field>
         </van-cell-group>
+        <br />
+        <br />
+        <br />
     </div>
 </template>
 

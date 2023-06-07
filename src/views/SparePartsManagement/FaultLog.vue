@@ -27,6 +27,15 @@
                     <el-input v-model="from.deviceNumber" placeholder="请输入内容"></el-input>
                 </div>
             </div>
+            <!-- <div class="form_item">
+                <div class="inp">
+                    <label>故障标题</label>
+                    <el-input v-model="from.faultTitle" placeholder="请输入故障标题"></el-input>
+                </div>
+                <div class="inp">
+
+                </div>
+            </div> -->
             <div class="form_item">
                 <div class="inp">
                     <label>扫描设备码</label>
@@ -53,6 +62,8 @@
                 </el-table-column>
                 <el-table-column prop="faultDetails" label="故障描述">
                 </el-table-column>
+                <el-table-column prop="faultTypicalStatus" label="状态">
+                </el-table-column>
                 <el-table-column prop="address" width="113" label="操作">
                     <template slot-scope="scope">
                         <van-button style="width: 40px;" @click="handleEdit(scope.$index, scope.row, 1)" size="mini" plain
@@ -68,6 +79,9 @@
                 layout="prev, pager, next,total" :total="dataCount">
             </el-pagination>
         </div>
+        <br />
+        <br />
+        <br />
     </div>
 </template>
 
@@ -111,7 +125,7 @@ export default {
     },
     activated() {
         this.from.pageNum = 1
-        this.selectnew();
+        // this.selectnew();
         this.my.title = "故障记录"; //页面标题
         this.my.left = true; //NavBar是否开启返回按键
         this.my.isNavBar = true; //是否开启NavBar
@@ -183,14 +197,14 @@ export default {
         selectnew() {
             this.$eiInfo.parameter = {
                 deviceId: this.deviceId,
-                pageNum: this.pageNum
+                pageNum: this.from.pageNum
             }
             faultqueryall(this.$eiInfo).then((res) => {
                 if (res.sys.status == 1) {
                     if (res.sys.msg == '点检项次') {
 
                     } else {
-                        this.$notify({ type: "warning", message: res.sys.msg })
+                        // this.$notify({ type: "warning", message: res.sys.msg })
                     }
                 }
                 this.tableData = res.result.faultList

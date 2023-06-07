@@ -482,3 +482,11 @@ export const auditqueryinfolist = (eiInfo) => {
         data: eiInfo
     })
 }
+// 无法点检设备
+export const checkrecordunable = (eiInfo) => {
+    return req({
+        url: '/check/record/unable',
+        method: 'post',
+        data: eiInfo
+    })
+}

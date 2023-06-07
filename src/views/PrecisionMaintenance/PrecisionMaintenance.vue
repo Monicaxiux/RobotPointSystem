@@ -40,6 +40,10 @@
                         <img @click="toQrCode" style="width: 20%;margin-left: 10px;" src="../../assets/icon/qrCode.svg" />
                     </div>
                     <div class="inp">
+                        <van-radio-group v-model="temp" direction="horizontal">
+                            <van-radio name="1">临时</van-radio>
+                            <van-radio name="2">周期</van-radio>
+                        </van-radio-group>
                     </div>
                 </div>
                 <div class="form_item">
@@ -91,6 +95,7 @@ export default {
         return {
             my: this.$myStore(), //使用Pinia的值
             line: '',
+            temp: 0,
             form: {
                 deviceId: '',
                 resultDetails: '',
@@ -153,6 +158,7 @@ export default {
             this.form.itemId = ''
             this.line = ''
             this.dataCount = null
+            this.temp = 0
         },
         // 扫码
         toQrCode() {
@@ -178,7 +184,7 @@ export default {
                 deviceId: this.deviceId,
                 code: this.my.code,
                 pageNum: 1,
-                temp: 1
+                temp: parseInt(this.temp)
             }
             this.$eiInfo.parameter
             queryinfo(this.$eiInfo).then((res) => {

@@ -179,6 +179,14 @@ const router = new Router({
             },
             component: () => import('../views/utils/Test.vue')
         },
+         {
+            path: '/text',
+            name: 'Text',
+            meta: {
+                index: 11
+            },
+            component: () => import('../views/utils/text.vue')
+        },
         {
             path: '/UserManage',
             name: 'UserManage',
@@ -227,6 +235,16 @@ const router = new Router({
                 index: 12
             },
             component: () => import('../views/error/Error.vue')
+        },
+         {
+            path: '/upload',
+            name: 'upload',
+            component: () => import('../views/utils/upload.vue')
+        },
+        {
+            path: '/video',
+            name: 'video',
+            component: () => import('../views/utils/Video.vue')
         },
     ]
 })

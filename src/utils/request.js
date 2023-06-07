@@ -1,14 +1,14 @@
 import axios from 'axios';// Axios 请求库
 import { Indicator } from 'mint-ui';// Indicator  加载圆圈
-import { Notify } from 'vant';//Notify 消息提示
+import { Notify,Toast } from 'vant';//Notify 消息提示
 import router from '../router'
 
 //实例化请求对象
 const req = axios.create({
     // baseURL: 'http://192.168.0.26:8192',
-    // baseURL: 'http://192.168.0.92:8192',
-    // baseURL: 'http://47.101.183.203:8192',
-    baseURL: localStorage.baseURL?localStorage.baseURL:'http://47.101.183.203:8192',
+    // baseURL: 'http://192.168.0.108:8192',
+    // baseURL: 'http://106.15.73.222:8192',
+    baseURL: localStorage.baseURL?localStorage.baseURL:'http://106.15.73.222:8192',
     // timeout: 7000 //请求超时时间
 })
 console.log(localStorage.baseURL);
@@ -33,7 +33,8 @@ req.interceptors.response.use(
     response => {
         Indicator.close();
          if(response.data.sys.status == -1){
-            Notify({ type: "danger", message: response.data.sys.msg, duration: 1500 }); 
+            // Notify({ type: "danger", message: response.data.sys.msg, duration: 1500 }); 
+            Toast(response.data.sys.msg)
          }
         return response.data
     },

@@ -40,7 +40,7 @@ export default {
         workNumber: "",
         password: "",
       },
-      status: localStorage.baseURL == 'http://47.101.183.203:8192' ? '当前：正式环境' : '当前：测试环境'
+      status: localStorage.baseURL == 'http://106.15.73.222:8192' ? '当前：正式环境' : '当前：测试环境'
     };
   },
   mounted() {
@@ -49,15 +49,15 @@ export default {
   },
   methods: {
     qh() {
-      if (localStorage.baseURL == 'http://47.101.183.203:8192') {
-        localStorage.baseURL = 'http://192.168.0.92:8192'
+      if (localStorage.baseURL == 'http://106.15.73.222:8192') {
+        localStorage.baseURL = 'http://192.168.0.108:8192'
         this.$toast.success('地址切换成功');
         console.log('正式');
         setTimeout(() => {
           location.reload();
         }, 500)
       } else {
-        localStorage.baseURL = 'http://47.101.183.203:8192'
+        localStorage.baseURL = 'http://106.15.73.222:8192'
         this.$toast.success('地址切换成功');
         console.log('测式');
         setTimeout(() => {

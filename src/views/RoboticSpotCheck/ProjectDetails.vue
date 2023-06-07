@@ -59,9 +59,9 @@
                     </el-select>
                 </template>
             </van-field>
-            <van-field label="最大值" v-model="form.maxValue" type="digit" :disabled="form.itemResultType == 2 ? false : true"
+            <van-field label="最大值" v-model="form.maxValue" type="number" :disabled="form.itemResultType == 2 ? false : true"
                 placeholder="请输入最大值" />
-            <van-field label="最小值" v-model="form.minValue" type="digit" :disabled="form.itemResultType == 2 ? false : true"
+            <van-field label="最小值" v-model="form.minValue" type="number" :disabled="form.itemResultType == 2 ? false : true"
                 placeholder="请输入最小值" />
             <van-field label="单位" v-model="form.unit" :disabled="form.itemResultType == 2 ? false : true"
                 placeholder="请输入单位" />
